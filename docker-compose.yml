@@ -43,16 +43,16 @@ services:
   #     - tests
 
   tests: 
-    image: fairdatasystems/fair_tests:v1.0.22
+    image: markw/fair-core-tests:0.0.1
     container_name: tests
     environment:
       TEST_PROTOCOL: http
-      TEST_HOST: "tests:8080" # from the perspective of the evaluator container
+      TEST_HOST: "tests:4567" # from the perspective of the evaluator container
       TEST_PATH: /tests/     # becomes http://tests:8080/tests/test_name_here
       FAIRSHARING_KEY: your_fairsharing_key_here
       BING_API: your_bing_api_key_here
     ports:
-      - "8080:8080"
+      - "8080:4567"
 
   tika:
     image: apache/tika:1.23
@@ -67,12 +67,10 @@ services:
     command: ruby index.rb -o 0.0.0.0
     environment:
       - RUBYOPT=-W0 -KU -E utf-8:utf-8
-    links:
-      - evaluator
 
 
-volumes:
-  evaluator-mysql:
-    external: true
+# volumes:
+#   evaluator-mysql:
+#     external: true
 
  
