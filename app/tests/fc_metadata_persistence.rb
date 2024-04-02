@@ -24,7 +24,7 @@ class FAIRTest
       metric:self.fc_metadata_persistence_meta[:metric]
     )
 
-    output.comments << "INFO: TEST VERSION '#{TESTVERSION}'\n"
+    output.comments << "INFO: TEST VERSION '#{self.fc_metadata_persistence_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
