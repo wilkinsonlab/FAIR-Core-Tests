@@ -4,11 +4,11 @@ class FAIRTest
   def self.fc_structured_metadata_meta
     return {
              testversion: HARVESTER_VERSION + ":" + "Tst-2.0.0",
-             testname: "FAIR Champion: Structured Metadata",
-             testid: "fc_structured_metadata",
-             description: "Tests whether a machine is able to find structured metadata.  This could be (for example) RDFa, embedded json, json-ld, or content-negotiated structured metadata such as RDF Turtle.",
-             metric: "https://purl.org/fair-metrics/Gen2_FM_F2A",
-             principle: "F2",
+             testname: 'FAIR Champion: Structured Metadata',
+             testid: 'fc_structured_metadata',
+             description: 'Tests whether a machine is able to find structured metadata.  This could be (for example) RDFa, embedded json, json-ld, or content-negotiated structured metadata such as RDF Turtle.',
+             metric: 'https://purl.org/fair-metrics/Gen2_FM_F2A',
+             principle: 'F2'
            }
   end
 
@@ -17,10 +17,10 @@ class FAIRTest
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      name: self.fc_structured_metadata_meta[:testname],
-      version: self.fc_structured_metadata_meta[:testversion],
-      description: self.fc_structured_metadata_meta[:description],
-      metric: self.fc_structured_metadata_meta[:metric],
+      name: fc_structured_metadata_meta[:testname],
+      version: fc_structured_metadata_meta[:testversion],
+      description: fc_structured_metadata_meta[:description],
+      metric: fc_structured_metadata_meta[:metric],
     )
 
     output.comments << "INFO: TEST VERSION '#{self.fc_structured_metadata_meta[:testversion]}'\n"
