@@ -1,0 +1,7 @@
+<html><body>
+<h2>FAIR Tests on this server</h2>
+<% @tests.each do |t| %>
+    <a href="./tests/<%= t.to_s[0..-4] %>"><%= t.to_s[0..-4] %></a><br/>
+<% end %>
+
+</body></html>

@@ -42,7 +42,6 @@ module FAIRChampion
       triplify(uniqueid, RDF.type, ftr.TestResult, g)
       triplify(uniqueid, schema.identifier, uniqueid, g)
       triplify(uniqueid, schema.name, name, g)
-      triplify(uniqueid, schema.version, version, g)
       triplify(uniqueid, schema.description, description, g)
       triplify(uniqueid, schema.license, license, g)
       triplify(uniqueid, ftr.status, score, g)
@@ -54,12 +53,19 @@ module FAIRChampion
       triplify(metric, RDF.type, ftr.TestSpecification, g)
       
 
-      tid = "urn:fairtestentity:" + SecureRandom.uuid
+      tid = "urn:ostrails:fairtestentity:" + SecureRandom.uuid
       triplify(uniqueid, RDF::Vocab::PROV.wasDerivedFrom, tid, g)
       triplify(tid, RDF.type, RDF::Vocab::PROV.Entity, g)
       triplify(tid, schema.identifier, testedGUID, g)
       triplify(tid, schema.url, testedGUID, g) if testedGUID =~ /^https?\:\/\//
       
+      softwareid = 'urn:ostrails:fairtestsoftware:' + SecureRandom.uuid
+      triplify(uniqueid, RDF::Vocab::PROV.wasAttributedTo, softwareid, g)
+      triplify(softwareid, RDF.type, RDF::Vocab::PROV.SoftwareAgent, g)
+      triplify(softwareid, RDF.type, schema.SoftwareApplication, g)
+      triplify(softwareid, schema.softwareVersion, version, g)
+      triplify(softwareid, schema.url, 'https://github.com/wilkinsonlab/FAIR-Core-Tests', g)
+      triplify(softwareid, schema.license, "https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE", g)
 
       g.dump(:jsonld)
     end

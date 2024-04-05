@@ -5,17 +5,16 @@ def set_routes(classes: allclasses)
   set :public_folder, 'public'
 
   get '/' do
-    redirect '/tests/list'
-  end
-
-  get '/tests/' do
     content_type :json
     response.body = JSON.dump(Swagger::Blocks.build_root_json(classes))
   end
 
-  get '/tests/list' do
+  get '/tests' do
+    ts = Dir[File.dirname(__FILE__) + "/../tests/*.rb"]
+    @tests = ts.map {|t| t.match(/.*\/(\S+\.rb)$/)[1]}
     erb :listtests
   end
+
   post '/tests/:id' do
     content_type :json
     id = params[:id]
