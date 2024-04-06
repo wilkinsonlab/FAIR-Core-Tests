@@ -18,11 +18,11 @@ class FAIRTest
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
-      testedGUID: guid,
-      name: self.fc_data_authorization_meta[:testname], 
-      version: self.fc_data_authorization_meta[:testversion],
-      description: self.fc_data_authorization_meta[:description], 
-      metric:self.fc_data_authorization_meta[:metric]
+      testedGUID: guid, testid: fc_data_authorization_meta[:testid], 
+      name: fc_data_authorization_meta[:testname], 
+      version: fc_data_authorization_meta[:testversion],
+      description: fc_data_authorization_meta[:description], 
+      metric:fc_data_authorization_meta[:metric]
       )
 
     output.comments << "INFO: TEST VERSION '#{self.fc_data_authorization_meta[:testversion]}'\n"

@@ -20,11 +20,12 @@ def set_routes(classes: allclasses)
     id = params[:id]
     payload = JSON.parse(request.body.read)
     guid = payload['subject']
-    begin
+    warn "now testing #{guid}"
+    #begin
       @result = FAIRTest.send(id, **{ guid: guid })
-    rescue StandardError
-      @result = '{}'
-    end
+    #rescue StandardError
+    #  @result = '{}'
+    #end
     @result.to_json
   end
 

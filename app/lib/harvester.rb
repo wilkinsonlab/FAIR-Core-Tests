@@ -19,7 +19,6 @@ require 'rest-client'
 require 'cgi'
 require 'digest'
 require 'open3'
-gem 'metainspector', '=1.15.0'
 require 'metainspector'
 require 'rdf/xsd'
 require 'sparql'
@@ -33,6 +32,14 @@ HARVESTER_VERSION = 'Hvst-1.4.2'.freeze
 # different dealing with DataCite (they have a unique type header)
 # handle large extruct output,
 # deal correctly with unknown identifier types
+
+def URI.escape(g)  # monkey patch to bring back functionality for metainspector
+  URI::Parser.new.escape(g)
+end
+def URI.encode(g)  # monkey patch to bring back functionality for metainspector
+  URI::Parser.new.escape(g)
+end
+  
 
 module FAIRChampion
   class Harvester

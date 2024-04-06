@@ -7,10 +7,10 @@ include RDF
 module FAIRChampion
   class Output
 
-    attr_accessor :score, :testedGUID, :uniqueid, :name, :description, :license, :dt, :metric, :version, :summary, :completeness
+    attr_accessor :score, :testedGUID, :testid, :uniqueid, :name, :description, :license, :dt, :metric, :version, :summary, :completeness
     @@comments = []
 
-    def initialize(  testedGUID:, name:, description:, version:, metric:, summary: "Summary", completeness: "100", license: "https://creativecommons.org/licenses/by/4.0/", score: 'indeterminate')
+    def initialize(  testedGUID:, name:, testid:, description:, version:, metric:, summary: "Summary", completeness: "100", license: "https://creativecommons.org/licenses/by/4.0/", score: 'indeterminate')
       @score = score
       @testedGUID = testedGUID
       @uniqueid = "urn:fairtestoutput:" + SecureRandom.uuid
@@ -22,6 +22,7 @@ module FAIRChampion
       @version = version
       @summary = summary
       @completeness = completeness
+      @testid = testid
 
 
     end
@@ -66,6 +67,7 @@ module FAIRChampion
       triplify(softwareid, schema.softwareVersion, version, g)
       triplify(softwareid, schema.url, 'https://github.com/wilkinsonlab/FAIR-Core-Tests', g)
       triplify(softwareid, schema.license, "https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE", g)
+      triplify(softwareid, schema.identifier, "https://github.com/wilkinsonlab/FAIR-Core-Tests/tree/main/app/tests/#{testid}.rb", g)
 
       g.dump(:jsonld)
     end
