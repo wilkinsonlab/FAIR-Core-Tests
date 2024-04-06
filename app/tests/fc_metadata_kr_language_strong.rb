@@ -18,6 +18,7 @@ class FAIRTest
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
+      testid: fc_metadata_kr_language_strong_meta[:testid], 
       name: fc_metadata_kr_language_strong_meta[:testname],
       version: fc_metadata_kr_language_strong_meta[:testversion],
       description: fc_metadata_kr_language_strong_meta[:description],

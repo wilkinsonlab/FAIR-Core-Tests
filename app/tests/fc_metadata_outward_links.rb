@@ -17,13 +17,14 @@ class FAIRTest
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      name: fc_metadata_outward_links[:testname],
-      version: fc_metadata_outward_links[:testversion],
-      description: fc_metadata_outward_links[:description],
-      metric: fc_metadata_outward_links[:metric]
+      testid: fc_metadata_outward_links_meta[:testid], 
+      name: fc_metadata_outward_links_meta[:testname],
+      version: fc_metadata_outward_links_meta[:testversion],
+      description: fc_metadata_outward_links_meta[:description],
+      metric: fc_metadata_outward_links_meta[:metric]
     )
 
-    output.comments << "INFO: TEST VERSION '#{fc_metadata_outward_links[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{fc_metadata_outward_links_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -56,7 +57,7 @@ class FAIRTest
 
     success = 0 # we will accept 5/10 failures
     count = 0
-    finalURI.each do |uri|
+    metadata.finalURI.each do |uri|
       next unless uri.is_a?(URI::HTTP)
 
       output.comments << "INFO: Now testing for any triples whose Object is an outward link (i.e. not #{uri.host})\n"
@@ -64,7 +65,7 @@ class FAIRTest
 
     hosts = []
     # fill the list of domains that this resource is found i
-    finalURI.each do |uri|
+    metadata.finalURI.each do |uri|
       next unless uri =~ /http/
 
       this = URI(uri)

@@ -18,7 +18,8 @@ class FAIRTest
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
-      testedGUID: guid, testid: fc_data_authorization_meta[:testid], 
+      testedGUID: guid, 
+      testid: fc_data_authorization_meta[:testid], 
       name: fc_data_authorization_meta[:testname], 
       version: fc_data_authorization_meta[:testversion],
       description: fc_data_authorization_meta[:description], 

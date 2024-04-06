@@ -17,6 +17,7 @@ class FAIRTest
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
+      testid: fc_metadata_uses_fair_vocabularies_meta[:testid], 
       name: fc_metadata_uses_fair_vocabularies_meta[:testname],
       version: fc_metadata_uses_fair_vocabularies_meta[:testversion],
       description: fc_metadata_uses_fair_vocabularies_meta[:description],
@@ -58,63 +59,63 @@ class FAIRTest
 
     hosthash.keys.each do |host|
       predicate = hosthash[host].sort.first
-      output.comment << "INFO:  Testing resolution of predicates from the domain #{host}\n"
+      output.comments << "INFO:  Testing resolution of predicates from the domain #{host}\n"
       # $stderr.puts "testing host #{host}"
       count += hosthash[host].uniq.count
 
       case predicate.value
       when %r{purl.org/dc/} # these resolve very slowly, so just accept that they are ok!
-        output.comment << "INFO:  resolution of DC predicate #{predicate.value} accepted\n"
+      output.comments << "INFO:  resolution of DC predicate #{predicate.value} accepted\n"
         # $stderr.puts "adding #{hosthash[host].uniq.count} to successes"
         success += hosthash[host].uniq.count
         next
       when %r{/vcard/} # these resolve very slowly, so just accept that they are ok!
-        output.comment << "INFO:  resolution of VCARD predicate #{predicate.value} accepted\n"
+      output.comments << "INFO:  resolution of VCARD predicate #{predicate.value} accepted\n"
         # $stderr.puts "adding #{hosthash[host].uniq.count} to successes"
         success += hosthash[host].uniq.count
         next
       when %r{w3\.org/ns/dcat}
-        output.comment << "INFO:  resolution of DCAT predicate #{predicate.value} accepted\n"
+      output.comments << "INFO:  resolution of DCAT predicate #{predicate.value} accepted\n"
         # $stderr.puts "adding #{hosthash[host].uniq.count} to successes"
         success += hosthash[host].uniq.count
         next
       when %r{xmlns\.com/foaf/}
-        output.comment << "INFO:  resolution of FOAF predicate #{predicate.value} accepted\n"
+      output.comments << "INFO:  resolution of FOAF predicate #{predicate.value} accepted\n"
         # $stderr.puts "adding #{hosthash[host].uniq.count} to successes"
         success += hosthash[host].uniq.count
         next
       end
 
-      output.comment << "INFO:  testing resolution of predicate #{predicate.value}\n"
-      metadata2 = FAIRChampion::Utils.resolveit(predicate.value) # this  sends the content-negotiation for linked data
+      output.comments << "INFO:  testing resolution of predicate #{predicate.value}\n"
+      metadata2 = FAIRChampion::Harvester.resolveit(predicate.value) # this  sends the content-negotiation for linked data
       g2 = metadata2.graph
-      output.comment << if g2.size > 0
+      output.comments << if g2.size > 0
                           "INFO:  predicate #{predicate.value} resolved to linked data.\n"
                         else
                           "WARN:  predicate #{predicate.value} did not resolve to linked data.\n"
                         end
 
-      output.comment << "INFO: If linked data was found in the previous line, it will now be tested by the following SPARQL query: 'select * where {<#{predicate.value}> ?p ?o}' \n"
+                        output.comments << "INFO: If linked data was found in the previous line, it will now be tested by the following SPARQL query: 'select * where {<#{predicate.value}> ?p ?o}' \n"
 
       query = SPARQL.parse("select * where {<#{predicate.value}> ?p ?o}")
       results = query.execute(g2)
       if results.any?
-        output.comment << "INFO: Resolving #{predicate.value}returned linked data, including that URI as a triple Subject.\n"
+        output.comments << "INFO: Resolving #{predicate.value}returned linked data, including that URI as a triple Subject.\n"
         # $stderr.puts "adding #{hosthash[host].uniq.count} to successes"
         success += hosthash[host].uniq.count
       else
-        output.comment << "WARN:  predicate #{predicate.value} was not found as the SUBJECT of a triple, indicating that it did not resolve to its definition.\n"
+        output.comments << "WARN:  predicate #{predicate.value} was not found as the SUBJECT of a triple, indicating that it did not resolve to its definition.\n"
       end
     end
 
     if count > 0 and success >= count * 0.66
-      output.comment << "SUCCESS: #{success} of a total of #{count} predicates discovered in the metadata resolved to Linked Data data.  This is sufficient to pass the test.\n"
+      output.comments << "SUCCESS: #{success} of a total of #{count} predicates discovered in the metadata resolved to Linked Data data.  This is sufficient to pass the test.\n"
       output.score = 'pass'
     elsif count == 0
-      output.comment << "FAILURE: No predicates were found that resolved to Linked Data.\n"
+      output.comments << "FAILURE: No predicates were found that resolved to Linked Data.\n"
       output.score = 'fail'
     else
-      output.comment << "FAILURE: #{success} of a total of #{count} predicates discovered in the metadata resolved to Linked Data data.  The minimum to pass this test is 2/3 (with a minimum of 3 predicates in total).\n"
+      output.comments << "FAILURE: #{success} of a total of #{count} predicates discovered in the metadata resolved to Linked Data data.  The minimum to pass this test is 2/3 (with a minimum of 3 predicates in total).\n"
       output.score = 'fail'
     end
     output.createEvaluationResponse

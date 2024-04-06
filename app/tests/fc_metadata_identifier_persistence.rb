@@ -17,6 +17,7 @@ class FAIRTest
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
+      testid: fc_metadata_identifier_persistence_meta[:testid], 
       name: fc_metadata_identifier_persistence_meta[:testname],
       version: fc_metadata_identifier_persistence_meta[:testversion],
       description: fc_metadata_identifier_persistence_meta[:description],
@@ -25,7 +26,7 @@ class FAIRTest
 
     output.comments << "INFO: TEST VERSION '#{fc_metadata_identifier_persistence_meta[:testversion]}'\n"
 
-    type = FAIRChampion::Utils.typeit(guid)
+    type = FAIRChampion::Harvester.typeit(guid)
 
     # metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 

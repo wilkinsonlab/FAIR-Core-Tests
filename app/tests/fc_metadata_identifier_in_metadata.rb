@@ -17,13 +17,14 @@ class FAIRTest
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      name: fc_metadata_identifier_in_metadata[:testname],
-      version: fc_metadata_identifier_in_metadata[:testversion],
-      description: fc_metadata_identifier_in_metadata[:description],
-      metric: fc_metadata_identifier_in_metadata[:metric]
+      testid: fc_metadata_identifier_in_metadata_meta[:testid], 
+      name: fc_metadata_identifier_in_metadata_meta[:testname],
+      version: fc_metadata_identifier_in_metadata_meta[:testversion],
+      description: fc_metadata_identifier_in_metadata_meta[:description],
+      metric: fc_metadata_identifier_in_metadata_meta[:metric]
     )
 
-    output.comments << "INFO: TEST VERSION '#{fc_metadata_identifier_in_metadata[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{fc_metadata_identifier_in_metadata_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
