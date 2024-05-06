@@ -1,10 +1,10 @@
-FROM ruby:3.0
+FROM ruby:3.0.5
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US:UTF-8" LC_ALL="C.UTF-8"
-RUN chmod a+r /etc/resolv.conf
+# RUN chmod a+r /etc/resolv.conf
 RUN apt-get update -q
-RUN apt-get dist-upgrade -y -q && \
-    apt-get update -q
+RUN apt-get dist-upgrade -y -q
+RUN apt-get update -q
 RUN apt-get install -y --no-install-recommends build-essential lighttpd && \
   apt-get install -y --no-install-recommends libxml++2.6-dev  libraptor2-0 && \
   apt-get install -y --no-install-recommends libxslt1-dev locales software-properties-common cron && \

@@ -4,7 +4,7 @@ class FAIRTest
   def self.fc_metadata_authorization_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Grounded Metadata',
+      testname: 'FAIR Champion: Metadata Authorization',
       testid: 'fc_metadata_authorization',
       description: "Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.",
       metric: 'https://purl.org/fair-metrics/Gen2_FM_A1.2',

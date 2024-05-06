@@ -3,6 +3,7 @@
 def set_routes(classes: allclasses)
   set :server_settings, timeout: 180
   set :public_folder, 'public'
+  set :port, 8282
 
   get '/' do
     content_type :json
