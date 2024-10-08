@@ -26,21 +26,6 @@ class FAIRTest
 
     output.comments << "INFO: TEST VERSION '#{fc_metadata_authorization_meta[:testversion]}'\n"
 
-    # metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
-
-    # metadata.comments.each do |c|
-    #   output.comments << c
-    # end
-
-    # if metadata.guidtype == 'unknown'
-    #   output.score = "indeterminate"
-    #   output.comments << "INDETERMINATE: The identifier #{guid} did not match any known identification system.\n"
-    #   return output.createEvaluationResponse
-    # end
-
-    # hash = metadata.hash
-    # graph = metadata.graph
-    # properties = FAIRChampion::Harvester.deep_dive_properties(hash)
 
     type = FAIRChampion::Harvester.typeit(guid) # this is where the magic happens!
 
@@ -81,4 +66,29 @@ class FAIRTest
 
     api.get_api
   end
+
+
+  def self.fc_metadata_authorization_about
+
+    dcat = DCAT_Record.new(
+      title: fc_metadata_authorization_meta[:testname],
+                      description: fc_metadata_authorization_meta[:description],
+                      tests_metric: fc_metadata_authorization_meta[:metric],
+                      version: fc_metadata_authorization_meta[:testversion],
+                      applies_to_principle: fc_metadata_authorization_meta[:principle],
+                      path: fc_metadata_authorization_meta[:testid],
+                      organization: 'OSTrails Project',
+                      org_url: 'https://ostrails.eu/',
+                      responsible_developer: 'Mark D Wilkinson',
+                      email: 'mark.wilkinson@upm.es',
+                      developer_ORCiD: '0000-0001-6960-357X',
+                      protocol: ENV.fetch('TEST_PROTOCOL', nil),
+                      host: ENV.fetch('TEST_HOST', nil),
+                      basePath: ENV.fetch('TEST_PATH', nil),
+                      response_description: 'The response is "pass", "fail" or "indeterminate"',
+                      schemas: schemas)
+
+    dcat.get_dcat
+  end
+
 end

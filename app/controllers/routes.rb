@@ -48,6 +48,19 @@ def set_routes(classes: allclasses)
     @result
   end
 
+
+  get '/tests/:id/about' do
+    content_type 'text/turtle'
+    id = params[:id]
+    id += '_about'
+    begin
+      @result = FAIRTest.send(id)
+    rescue StandardError
+      @result = ''
+    end
+    @result
+  end
+
   before do
   end
 end

@@ -139,10 +139,11 @@ module FAIRChampion
       true
     end
 
-    def self.triplify(s, p, o, repo)
+    def self.triplify_this(s, p, o, repo)
       triplify(s, p, o, repo)
     end
 
 
   end
+    
 end
