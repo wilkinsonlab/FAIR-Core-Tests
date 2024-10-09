@@ -7,6 +7,11 @@ include RDF
 module FAIRChampion
   class Output
 
+    include RDF
+    extend Forwardable
+    
+    def_delegators FAIRChampion::Output, :triplify
+
     attr_accessor :score, :testedGUID, :testid, :uniqueid, :name, :description, :license, :dt, :metric, :version, :summary, :completeness
     @@comments = []
 
@@ -92,7 +97,7 @@ module FAIRChampion
     end
 
 
-    def triplify(s, p, o, repo, datatype = nil)
+    def self.triplify(s, p, o, repo, datatype = nil)
       s = s.strip if s.instance_of?(String)
       p = p.strip if p.instance_of?(String)
       o = o.strip if o.instance_of?(String)

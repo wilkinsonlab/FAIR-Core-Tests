@@ -1,99 +1,128 @@
-class DCAT_Record
-  attr_accessor :title, :tests_metric, :description, :applies_to_principle, :organization, :org_url, :version
-  attr_accessor :responsible_developer, :email, :developer_ORCiD, :protocol,
-  attr_accessor :theme
+module ChampionDCAT
+  class DCAT_Record
+  attr_accessor :identifier, :title, :descriptions, :keywords, :creator, :indicators, :end_desc, :end_url, :dctype, :license, :themes, :version
+  attr_accessor :implementations, :organizations, :individuals
 
-  def initialize(title:, tests_metric:, description:, applies_to_principle:, organization:, org_url:, responsible_developer:, 
-    email:, developer_ORCiD:, protocol:, host:, basePath:, path:, response_description:, schemas:, version:, theme)
+  include RDF
+  extend Forwardable
+  require_rel "./output.rb"
 
+  def initialize(identifier:, title:, descriptions: [], keywords: [], creator:, indicators:, end_desc:, end_url:, dctype:, license:, themes: [], version:,
+    implementations:, organizations: {}, individuals: {})
+
+    @identifier = identifier 
     @title = title
-    @tests_metric = tests_metric
-    @description = description 
-    @applies_to_principle = applies_to_principle 
-    @version = version 
-    @organization = organization 
-    @org_url = org_url 
-    @responsible_develper = responsible_developer 
-    @email = email 
-    @developer_ORCiD = developer_ORCiD 
-    @host = host 
-    @protocol = protocol 
-    @basePath = basePath 
-    @path = path 
-    @response_description = response_description 
-    @schemas = schemas 
+    @descriptions = descriptions; @descriptions = [@descriptions] unless @descriptions.is_a? Array
+    @keywords = keywords; @keywords = [@keywords] unless @keywords.is_a? Array
+    @creator = creator
+    @indicators = indicators 
+    @end_desc = end_desc 
+    @end_url = end_url 
+    @dctype = dctype 
+    @license = license 
+    @themes = themes ; @themes = [@themes] unless @themes.is_a? Array
+    @version = version
+    @implementations = implementations 
+    @organizations = organizations
+    @individuals = individuals
   end
 
 
   def get_dcat
     schema = RDF::Vocab::SCHEMA
     dcterms = RDF::Vocab::DC
+    vcard = RDF::Vocab::VCARD
+    dcat = RDF::Vocab::DCAT
+    sio = RDF::Vocabulary.new('http://semanticscience.org/ontology/')
     ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
+    vcard = RDF::Vocabulary.new('http://www.w3.org/2006/vcard/ns#')
     dct = RDF::Vocab::DCAT
     g = RDF::Graph.new
+    me = "#{identifier}/about"
 
-#triplify tests and rejects anything that is empty or nil  --> SAFE
-# Test Unique Identifier	dcterms:identifier	Literal
-Champion::Output.triplify_this(me, dcterms.identifier, identifier, g)
+    FAIRChampion::Output.triplify(me, RDF.type, dcat.DataService, g)
 
-# Title/Name of the test	dcterms:title	Literal
-Champion::Output.triplify_this(me, dcterms.title, title, g)
+    #triplify tests and rejects anything that is empty or nil  --> SAFE
+    # Test Unique Identifier	dcterms:identifier	Literal
+    FAIRChampion::Output.triplify(me, dcterms.identifier, identifier, g)
 
-# Description	dcterms:description	Literal
-Champion::Output.triplify_this(me, dcterms.description, description, g)
+    # Title/Name of the test	dcterms:title	Literal
+    FAIRChampion::Output.triplify(me, dcterms.title, title, g)
 
-# Keywords	dcat:keyword	Literal
-keywords.each do |kw|
-  Champion::Output.triplify_this(me, dcat.keyword, kw, g)
-end
+    # Description	dcterms:description	Literal
+    descriptions.each do |d|
+      FAIRChampion::Output.triplify(me, dcterms.description, d, g)
+    end
 
-# Test creator	dcterms:creator	dcat:Agent (URI)
-Champion::Output.triplify_this(me, dcterms.description, creator, g)
+    # Keywords	dcat:keyword	Literal
+    keywords.each do |kw|
+      FAIRChampion::Output.triplify(me, dcat.keyword, kw, g)
+    end
 
-# Dimension	ftr:indicator	
-indicators.each do |ind|
-  Champion::Output.triplify_this(me, ftr.indicator, ind, g)
-end
+    # Test creator	dcterms:creator	dcat:Agent (URI)
+    FAIRChampion::Output.triplify(me, dcterms.creator, creator, g)
 
-# API description	dcat:endpointDescription	rdfs:Resource
-Champion::Output.triplify_this(me, dcat.endpointDescription, end_desc, g)
+    # Dimension	ftr:indicator	
+    indicators.each do |ind|
+      FAIRChampion::Output.triplify(me, ftr.indicator, ind, g)
+    end
 
-# API URL	dcat:endpointURL	rdfs:Resource
-Champion::Output.triplify_this(me, dcat.endpointURL, end_url, g)
+    # API description	dcat:endpointDescription	rdfs:Resource
+    FAIRChampion::Output.triplify(me, dcat.endpointDescription, end_desc, g)
 
-# Source of the test	codemeta:hasSourceCode/schema:codeRepository/ doap:repository	schema:SoftwareSourceCode/URL
-# TODO
-Champion::Output.triplify_this(me, dcat.endpointDescription, end_desc, g)
+    # API URL	dcat:endpointURL	rdfs:Resource
+    FAIRChampion::Output.triplify(me, dcat.endpointURL, end_url, g)
+
+    # Source of the test	codemeta:hasSourceCode/schema:codeRepository/ doap:repository	schema:SoftwareSourceCode/URL
+    # TODO
+    # FAIRChampion::Output.FAIRChampion::Output.triplify(me, dcat.endpointDescription, end_desc, g)
 
 
-# Functional Descriptor/Operation	dcterms:type	xsd:anyURI
-Champion::Output.triplify_this(me, dcterms.type, dctype, g)
+    # Functional Descriptor/Operation	dcterms:type	xsd:anyURI
+    FAIRChampion::Output.triplify(me, dcterms.type, dctype, g)
 
 
-# License	dcterms:license	xsd:anyURI
-Champion::Output.triplify_this(me, dcterms.license, license, g)
+    # License	dcterms:license	xsd:anyURI
+    FAIRChampion::Output.triplify(me, dcterms.license, license, g)
 
-# Semantic Annotation	dcat:theme	xsd:anyURI
-themes.each do |theme|
-  Champion::Output.triplify_this(me, dcat:theme, theme, g)
-end
+    # Semantic Annotation	dcat:theme	xsd:anyURI
+    themes.each do |theme|
+      FAIRChampion::Output.triplify(me, dcat.theme, theme, g)
+    end
 
-# Version	dcat:version	rdfs:Literal
-Champion::Output.triplify_this(me, dcat.version, version, g)
+    # Version	dcat:version	rdfs:Literal
+    FAIRChampion::Output.triplify(me, RDF::Vocab::DCAT.to_s + "version", version, g)
 
-# Version notes	adms:versionNotes	rdfs:Literal
-#Champion::Output.triplify_this(me, dcterms.license, license, g)
-		
-# Responsible	dcat:contactPoint	dcat:Kind (includes Individual/Organization)
-# Metadata thas describes an Organization		
-# Organization name	dcterms:publisher/foaf:name	xsd:string
-# Organization URL	[part of vcard:Organization] vcard:url	xsd:anyURI
-		
-# Metadata that describes a Person/Agent/Kind		
-# Responsable/owner name	dcat:contactPoint/vcard:fn	dcat:Kind (includes Individual/Organization)
-# Responsible/owner id	dcat:contactPoint/vcard:hasUID (or dcterms:identifier)	
-# Responsible/Email to contact	dcat:contactPoint/vcard:email	rdf:Resource
+    # # Version notes	adms:versionNotes	rdfs:Literal
+    # FAIRChampion::Output.FAIRChampion::Output.triplify(me, dcat.version, version, g)
 
-  
+    implementations.each do |i| 
+      FAIRChampion::Output.triplify(me, sio["SIO_000223"], i, g)  # is implementation of
+    end
+
+    # Responsible	dcat:contactPoint	dcat:Kind (includes Individual/Organization)
+    individuals.each do |i|
+      # i = {name: "Mark WAilkkinson", "email": "asmlkfj;askjf@a;lksdjfas"}
+      guid = SecureRandom.uuid
+      cp = "urn:fairchampion:testmetadata:individual#{guid}"
+      FAIRChampion::Output.triplify(me, dcat.contactPoint, cp, g)
+      FAIRChampion::Output.triplify(cp, RDF.type, vcard.Individual, g)
+      FAIRChampion::Output.triplify(cp, vcard.fn, i["name"], g)
+      FAIRChampion::Output.triplify(cp, vcard.email, RDF::URI.new(i["email"].to_s), g)
+      
+    end
+
+    organizations.each do |o|
+      # i = {name: "CBGP", "url": "https://dbdsf.orhf"}
+      guid = SecureRandom.uuid
+      cp = "urn:fairchampion:testmetadata:org:#{guid}"
+      FAIRChampion::Output.triplify(me, dcat.contactPoint, cp, g)
+      FAIRChampion::Output.triplify(cp, RDF.type, vcard.Organization, g)
+      FAIRChampion::Output.triplify(cp, vcard['organization-name'], o["name"], g)
+      FAIRChampion::Output.triplify(cp, vcard.url, RDF::URI.new(o["url"].to_s), g)
+      
+    end  
+    return g
   end
+end
 end

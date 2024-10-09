@@ -50,15 +50,15 @@ def set_routes(classes: allclasses)
 
 
   get '/tests/:id/about' do
-    content_type 'text/turtle'
+    content_type 'application/ld+json'
     id = params[:id]
     id += '_about'
-    begin
-      @result = FAIRTest.send(id)
-    rescue StandardError
-      @result = ''
-    end
-    @result
+    # begin
+      graph = FAIRTest.send(id)
+    # rescue StandardError
+    #   graph = ''
+    # end
+    graph.dump(:jsonld)
   end
 
   before do
