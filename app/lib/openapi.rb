@@ -1,49 +1,52 @@
 class OpenAPI
-  attr_accessor :title, :tests_metric, :description, :applies_to_principle, :organization, :org_url, :version,
-                :responsible_developer, :email, :developer_ORCiD, :protocol, :host, :basePath, :path, :response_description, :schemas
+  attr_accessor :title, :tests_metric, :description, :indicator,
+                :organization, :org_url, :version, :creator,
+                :responsible_developer, :email, :developer_ORCiD, :protocol,
+                :host, :basePath, :path, :response_description, :schemas
 
   def initialize(meta:)
-    @title = title
-    @tests_metric = tests_metric
-    @description = description
-    @applies_to_principle = applies_to_principle
-    @version = version
-    @organization = organization
-    @org_url = org_url
-    @responsible_develper = responsible_developer
-    @email = email
-    @creator = creator
-    @host = host
-    @protocol = protocol
-    @basePath = basePath
-    @path = path
-    @response_description = response_description
-    @schemas = schemas
+    indics = [meta[:indicators]] unless meta[:indicators].is_a? Array
+    @title = meta[:title]
+    @tests_metric = meta[:tests_metric]
+    @description = meta[:description]
+    @indicator = meta[:indicators].first
+    @version = meta[:version]
+    @organization = meta[:organization]
+    @org_url = meta[:org_url]
+    @responsible_developer = meta[:responsible_developer]
+    @email = meta[:email]
+    @creator = meta[:creator]
+    @host =  meta[:host]
+    @protocol =  meta[:protocol]
+    @basePath =  meta[:basePath]
+    @path = meta[:path]
+    @response_description = meta[:response_description]
+    @schemas = meta[:schemas]
   end
 
   def get_api
     message = <<~"EOF_EOF"
       swagger: '2.0'
       info:
-       version: '#{@version}'
-       title: "#{@title}"
-       x-tests_metric: '#{@tests_metric}'
+       version: '#{version}'
+       title: "#{title}"
+       x-tests_metric: '#{tests_metric}'
        description: >-
-         #{@description}
-       x-applies_to_principle: "#{@applies_to_principle}"
+         #{description}
+       x-applies_to_principle: "#{indicator}"
        contact:
-        x-organization: "#{@organization}"
-        url: "#{@org_url}"
-        name: '#{@responsible_develper}'
+        x-organization: "#{organization}"
+        url: "#{org_url}"
+        name: '#{responsible_developer}'
         x-role: "responsible developer"
-        email: #{@email}
+        email: #{email}
         x-id: '#{creator}'
-      host: #{@host}
-      basePath: #{@basePath}
+      host: #{host}
+      basePath: #{basePath}
       schemes:
-        - #{@protocol}
+        - #{protocol}
       paths:
-       #{@path}:
+       #{path}:
         post:
          parameters:
           - name: content
@@ -58,7 +61,7 @@ class OpenAPI
          responses:
            "200":
              description: >-
-              #{@response_description}
+              #{response_description}
       definitions:
         schemas:
           required:

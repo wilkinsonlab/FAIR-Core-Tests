@@ -10,8 +10,7 @@ module ChampionDCAT
     require_rel './output.rb'
 
     def initialize(meta:)
-      # identifier:, title:, creator:, indicators:, end_desc:, end_url:, dctype:, license:, version:,
-      #              implementations:, descriptions: [], keywords: [], themes: [], organizations: {}, individuals: {})
+      indics = [meta[:indicators]] unless meta[:indicators].is_a? Array
       @testid = meta[:testid]
       @title =  meta[:title]
       @descriptions = meta[:descriptions]
@@ -19,7 +18,7 @@ module ChampionDCAT
       @keywords = meta[:keywords]
       @keywords = [@keywords] unless @keywords.is_a? Array
       @creator =  meta[:creator]
-      @indicators = meta[:indicators]
+      @indicators = indics
       @end_desc = meta[:end_desc]
       @end_url = meta[:end_url]
       @dctype = meta[:dctype]
@@ -27,15 +26,15 @@ module ChampionDCAT
       @themes = meta[:themes]
       @themes = [@themes] unless @themes.is_a? Array
       @version = meta[:version]
-      @implementations = meta[:implementations]
       @organizations = meta[:organizations]
       @individuals = meta[:individuals]
       @protocol =  meta[:protocol]
       @host = meta[:host]
       @basePath = meta[:basePath]
-      @end_url = "#{protocol}://#{host}/#{basePath}/#{fc_metadata_authorization_meta[:testid]}"
-      @end_desc = "#{protocol}://#{host}/#{basePath}/#{fc_metadata_authorization_meta[:testid]}"
+      @end_url = "#{protocol}://#{host}/#{basePath}/#{testid}"
+      @end_desc = "#{protocol}://#{host}/#{basePath}/#{testid}"
       @identifier = @end_url
+      @implementations = [@end_url]
     end
 
     def get_dcat
