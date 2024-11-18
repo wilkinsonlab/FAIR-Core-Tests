@@ -9,7 +9,7 @@ class OpenAPI
     @title = meta[:title]
     @tests_metric = meta[:tests_metric]
     @description = meta[:description]
-    @indicator = meta[:indicators].first
+    @indicator = indics.first
     @version = meta[:version]
     @organization = meta[:organization]
     @org_url = meta[:org_url]
