@@ -1,28 +1,25 @@
 class OpenAPI
-  attr_accessor :title, :tests_metric, :description, :applies_to_principle, :organization, :org_url, :version
-  attr_accessor :responsible_developer, :email, :developer_ORCiD, :protocol, :host, :basePath, :path, :response_description, :schemas
+  attr_accessor :title, :tests_metric, :description, :applies_to_principle, :organization, :org_url, :version,
+                :responsible_developer, :email, :developer_ORCiD, :protocol, :host, :basePath, :path, :response_description, :schemas
 
-  def initialize(title:, tests_metric:, description:, applies_to_principle:, organization:, org_url:, responsible_developer:, 
-    email:, developer_ORCiD:, protocol:, host:, basePath:, path:, response_description:, schemas:, version:)
-
+  def initialize(meta:)
     @title = title
     @tests_metric = tests_metric
-    @description = description 
-    @applies_to_principle = applies_to_principle 
-    @version = version 
-    @organization = organization 
-    @org_url = org_url 
-    @responsible_develper = responsible_developer 
-    @email = email 
-    @developer_ORCiD = developer_ORCiD 
-    @host = host 
-    @protocol = protocol 
-    @basePath = basePath 
-    @path = path 
-    @response_description = response_description 
-    @schemas = schemas 
+    @description = description
+    @applies_to_principle = applies_to_principle
+    @version = version
+    @organization = organization
+    @org_url = org_url
+    @responsible_develper = responsible_developer
+    @email = email
+    @creator = creator
+    @host = host
+    @protocol = protocol
+    @basePath = basePath
+    @path = path
+    @response_description = response_description
+    @schemas = schemas
   end
-
 
   def get_api
     message = <<~"EOF_EOF"
@@ -40,7 +37,7 @@ class OpenAPI
         name: '#{@responsible_develper}'
         x-role: "responsible developer"
         email: #{@email}
-        x-id: '#{developer_ORCiD}'
+        x-id: '#{creator}'
       host: #{@host}
       basePath: #{@basePath}
       schemes:
@@ -65,7 +62,7 @@ class OpenAPI
       definitions:
         schemas:
           required:
-EOF_EOF
+    EOF_EOF
 
     schemas.each_key do |key|
       message += "     - #{key}\n"
