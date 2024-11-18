@@ -1,6 +1,6 @@
 module ChampionDCAT
   class DCAT_Record
-    attr_accessor :identifier, :title, :descriptions, :keywords, :creator,
+    attr_accessor :identifier, :title, :description, :keywords, :creator,
                   :indicators, :end_desc, :end_url, :dctype, :testid,
                   :license, :themes, :version, :implementations,
                   :organizations, :individuals, :protocol, :host, :basePath
@@ -13,8 +13,7 @@ module ChampionDCAT
       indics = [meta[:indicators]] unless meta[:indicators].is_a? Array
       @testid = meta[:testid]
       @title =  meta[:title]
-      @descriptions = meta[:descriptions]
-      @descriptions = [@descriptions] unless @descriptions.is_a? Array
+      @description = meta[:description]
       @keywords = meta[:keywords]
       @keywords = [@keywords] unless @keywords.is_a? Array
       @creator =  meta[:creator]
@@ -58,9 +57,10 @@ module ChampionDCAT
       FAIRChampion::Output.triplify(me, dcterms.title, title, g)
 
       # Description	dcterms:description	Literal
-      descriptions.each do |d|
-        FAIRChampion::Output.triplify(me, dcterms.description, d, g)
-      end
+      # descriptions.each do |d|
+      #   FAIRChampion::Output.triplify(me, dcterms.description, d, g)
+      # end
+      FAIRChampion::Output.triplify(me, dcterms.description, description, g)
 
       # Keywords	dcat:keyword	Literal
       keywords.each do |kw|
