@@ -1,4 +1,33 @@
 class OpenAPI
+  # curl -v http://localhost:8282/tests/fc_metadata_authorization
+  # npm install -g swagger2openapi
+  # npm install node
+  # sudo apt-get update
+  # sudo apt-get install npm
+  # sudo apt-get install node
+  # npm install node
+  # sudo apt autoremove
+  # npm install -g swagger2openapi
+  # # installs nvm (Node Version Manager)
+  # curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.0/install.sh | bash
+  # # download and install Node.js (you may need to restart the terminal)
+  # nvm install 22
+  # # verifies the right Node.js version is in the environment
+  # node -v # should print `v22.11.0`
+  # # verifies the right npm version is in the environment
+  # npm -v # should print `10.9.0`
+  # exit
+  # npm -v # should print `10.9.0`
+  # npm --version
+  # nvm install 22
+  # node -v
+  # npm -v
+  # npm install -g swagger2openapi
+  # curl  http://localhost:8282/tests/fc_metadata_authorization | swagger2openapi
+  # swagger2openapi  http://localhost:8282/tests/fc_metadata_authorization
+  # cat .bash_history
+  # exit
+
   attr_accessor :title, :tests_metric, :description, :indicator,
                 :organization, :org_url, :version, :creator,
                 :responsible_developer, :email, :developer_ORCiD, :protocol,
