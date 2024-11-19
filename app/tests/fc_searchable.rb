@@ -7,10 +7,26 @@ class FAIRTest
              testname: "FAIR Champion: Searchable in major search engine",
              testid: "fc_searchable",
              description: "Tests whether a machine is able to discover the resource by search, using Microsoft Bing.",
-             metric: "https://purl.org/fair-metrics/Gen2_FM_F4",
-             principle: "F4",
+             metric: 'https://doi.org/10.25504/FAIRsharing.Lcws1N',
+             indicators: 'https://w3id.org/fair/principles/latest/F4',
+             type: 'http://edamontology.org/operation_2428',
+             license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+             keywords: ['FAIR Assessment', 'FAIR Principles'],
+             themes: ['http://edamontology.org/topic_4012'],
+             organization: 'OSTrails Project',
+             org_url: 'https://ostrails.eu/',
+             responsible_developer: 'Mark D Wilkinson',
+             email: 'mark.wilkinson@upm.es',
+             response_description: 'The response is "pass", "fail" or "indeterminate"',
+             schemas: { 'subject' => ['string', 'the GUID being tested'] },
+             organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
+             individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
+             creator: 'https://orcid.org/0000-0001-6960-357X',
+             protocol: ENV.fetch('TEST_PROTOCOL', 'https'),
+             host: ENV.fetch('TEST_HOST', 'localhost'),
+             basePath: ENV.fetch('TEST_PATH', '/tests')
            }
-  end
+         end
 
   def self.fc_searchable(guid:)
     FAIRChampion::Output.clear_comments
@@ -296,25 +312,15 @@ class FAIRTest
     return response.body
   end
 
-  def self.fc_searchable_api
-    schemas = { "subject" => ["string", "the GUID being tested"] }
 
-    api = OpenAPI.new(title: self.fc_searchable_meta[:testname],
-                      description: self.fc_searchable_meta[:description],
-                      tests_metric: self.fc_searchable_meta[:metric],
-                      version: self.fc_searchable_meta[:testversion],
-                      applies_to_principle: self.fc_searchable_meta[:principle],
-                      path: self.fc_searchable_meta[:testid],
-                      organization: "OSTrails Project",
-                      org_url: "https://ostrails.eu/",
-                      responsible_developer: "Mark D Wilkinson",
-                      email: "mark.wilkinson@upm.es",
-                      developer_ORCiD: "0000-0001-6960-357X",
-                      protocol: ENV.fetch("TEST_PROTOCOL", nil),
-                      host: ENV.fetch("TEST_HOST", nil),
-                      basePath: ENV.fetch("TEST_PATH", nil),
-                      response_description: 'The response is "pass", "fail" or "indeterminate"',
-                      schemas: schemas)
+
+  def self.fc_searchable_api
+    api = OpenAPI.new(meta: fc_searchable_meta)
     api.get_api
+  end
+
+  def self.fc_searchable_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_searchable_meta)
+    dcat.get_dcat
   end
 end

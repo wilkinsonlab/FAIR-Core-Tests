@@ -6,7 +6,7 @@
 <% testname = t.to_s[0..-4] %>
     <form action="./tests/<%= testname %>" method = "post">
     <input type = "text" name="subject"/>
-    <a href="./tests/<%= t.to_s[0..-4] %>"><%= t.to_s[0..-4] %></a><br/>
+    <%= t.to_s[0..-4] %> <a href="./tests/<%= t.to_s[0..-4] %>">Interface</a>&nbsp;&nbsp;<a href="./tests/<%= t.to_s[0..-4]%>/about">DCAT Metadata</a><br/>
     <input type="submit" value="Test it"></form><br/><br/>
 <% end %>
 

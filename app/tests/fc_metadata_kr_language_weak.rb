@@ -7,10 +7,26 @@ class FAIRTest
              testname: "FAIR Champion: Metadata Knowledge Representation Language (weak)",
              testid: "fc_metadata_kr_language_weak",
              description: "Maturity Indicator to test if the metadata uses a formal language broadly applicable for knowledge representation.  This particular test takes a broad view of what defines a 'knowledge representation language'; in this evaluation, anything that can be represented as structured data will be accepted.",
-             metric: "https://purl.org/fair-metrics/Gen2_FM_I1A",
-             principle: "I1",
+             metric: 'https://doi.org/10.25504/FAIRsharing.jLpL6i',
+             indicators: 'https://w3id.org/fair/principles/latest/I1',
+             type: 'http://edamontology.org/operation_2428',
+             license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+             keywords: ['FAIR Assessment', 'FAIR Principles'],
+             themes: ['http://edamontology.org/topic_4012'],
+             organization: 'OSTrails Project',
+             org_url: 'https://ostrails.eu/',
+             responsible_developer: 'Mark D Wilkinson',
+             email: 'mark.wilkinson@upm.es',
+             response_description: 'The response is "pass", "fail" or "indeterminate"',
+             schemas: { 'subject' => ['string', 'the GUID being tested'] },
+             organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
+             individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
+             creator: 'https://orcid.org/0000-0001-6960-357X',
+             protocol: ENV.fetch('TEST_PROTOCOL', 'https'),
+             host: ENV.fetch('TEST_HOST', 'localhost'),
+             basePath: ENV.fetch('TEST_PATH', '/tests')
            }
-  end
+         end
 
   def self.fc_metadata_kr_language_weak(guid:)
     FAIRChampion::Output.clear_comments
@@ -60,25 +76,14 @@ class FAIRTest
     return output.createEvaluationResponse
   end
 
-  def self.fc_metadata_kr_language_weak_api
-    schemas = { "subject" => ["string", "the GUID being tested"] }
 
-    api = OpenAPI.new(title: self.fc_metadata_kr_language_weak_meta[:testname],
-                      description: self.fc_metadata_kr_language_weak_meta[:description],
-                      tests_metric: self.fc_metadata_kr_language_weak_meta[:metric],
-                      version: self.fc_metadata_kr_language_weak_meta[:testversion],
-                      applies_to_principle: self.fc_metadata_kr_language_weak_meta[:principle],
-                      path: self.fc_metadata_kr_language_weak_meta[:testid],
-                      organization: "OSTrails Project",
-                      org_url: "https://ostrails.eu/",
-                      responsible_developer: "Mark D Wilkinson",
-                      email: "mark.wilkinson@upm.es",
-                      developer_ORCiD: "0000-0001-6960-357X",
-                      protocol: ENV.fetch("TEST_PROTOCOL", nil),
-                      host: ENV.fetch("TEST_HOST", nil),
-                      basePath: ENV.fetch("TEST_PATH", nil),
-                      response_description: 'The response is "pass", "fail" or "indeterminate"',
-                      schemas: schemas)
+  def self.fc_metadata_kr_language_weak_api
+    api = OpenAPI.new(meta: fc_metadata_kr_language_weak_meta)
     api.get_api
+  end
+
+  def self.fc_metadata_kr_language_weak_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_kr_language_weak_meta)
+    dcat.get_dcat
   end
 end

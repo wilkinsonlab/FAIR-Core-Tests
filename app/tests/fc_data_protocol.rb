@@ -9,10 +9,26 @@ class FAIRTest
     testname: "FAIR Champion: Data Protocol",
     testid: "fc_data_protocol",
     description: "Data may be retrieved by an open and free protocol.  Tests data GUID for its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.",
-    metric: 'https://purl.org/fair-metrics/Gen2_FM_A1.1',
-    principle: "A1.1"
-    }
-  end
+    metric: 'https://doi.org/10.25504/FAIRsharing.yDJci5',
+    indicators: 'https://w3id.org/fair/principles/latest/A1.2',
+    type: 'http://edamontology.org/operation_2428',
+    license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+    keywords: ['FAIR Assessment', 'FAIR Principles'],
+    themes: ['http://edamontology.org/topic_4012'],
+    organization: 'OSTrails Project',
+    org_url: 'https://ostrails.eu/',
+    responsible_developer: 'Mark D Wilkinson',
+    email: 'mark.wilkinson@upm.es',
+    response_description: 'The response is "pass", "fail" or "indeterminate"',
+    schemas: { 'subject' => ['string', 'the GUID being tested'] },
+    organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
+    individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
+    creator: 'https://orcid.org/0000-0001-6960-357X',
+    protocol: ENV.fetch('TEST_PROTOCOL', 'https'),
+    host: ENV.fetch('TEST_HOST', 'localhost'),
+    basePath: ENV.fetch('TEST_PATH', '/tests')
+  }
+end
 
 
   def self.fc_data_protocol(guid:)
@@ -94,28 +110,13 @@ class FAIRTest
 
   end
 
-  
   def self.fc_data_protocol_api
-    schemas = { 'subject' => ['string', 'the GUID being tested'] }
-
-    api = OpenAPI.new(      title: self.fc_data_protocol_meta[:testname],
-                            description: self.fc_data_protocol_meta[:description],
-                            tests_metric: self.fc_data_protocol_meta[:metric],
-                            version: self.fc_data_protocol_meta[:testversion],
-                            applies_to_principle: self.fc_data_protocol_meta[:principle],
-                            organization: 'OSTrails Project',
-                            org_url: 'https://ostrails.eu/',
-                            responsible_developer: 'Mark D Wilkinson',
-                            email: 'mark.wilkinson@upm.es',
-                            developer_ORCiD: '0000-0001-6960-357X',
-                            protocol: ENV.fetch('TEST_PROTOCOL', nil),
-                            host: ENV.fetch('TEST_HOST', nil),
-                            basePath: ENV.fetch('TEST_PATH', nil),
-                            path: self.fc_data_protocol_meta[:testid],
-                            response_description: 'The response is "pass", "fail" or "indeterminate"',
-                            schemas: schemas,
-                          )
-
+    api = OpenAPI.new(meta: fc_data_protocol_meta)
     api.get_api
+  end
+
+  def self.fc_data_protocol_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_data_protocol_meta)
+    dcat.get_dcat
   end
 end

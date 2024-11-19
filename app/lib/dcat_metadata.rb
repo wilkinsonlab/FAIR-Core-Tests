@@ -20,7 +20,7 @@ module ChampionDCAT
       @indicators = indics
       @end_desc = meta[:end_desc]
       @end_url = meta[:end_url]
-      @dctype = meta[:dctype]
+      @dctype = meta[:dctype] || "http://edamontology.org/operation_2428"
       @license = meta[:license]
       @themes = meta[:themes]
       @themes = [@themes] unless @themes.is_a? Array
@@ -30,8 +30,10 @@ module ChampionDCAT
       @protocol =  meta[:protocol]
       @host = meta[:host]
       @basePath = meta[:basePath]
-      @end_url = "#{protocol}://#{host}/#{basePath}/#{testid}"
-      @end_desc = "#{protocol}://#{host}/#{basePath}/#{testid}"
+      cleanhost = @host.gsub(/\//, "")
+      cleanpath = @basePath.gsub(/\//, "")
+      @end_url = "#{protocol}://#{cleanhost}/#{cleanpath}/#{testid}"
+      @end_desc = "#{protocol}://#{cleanhost}/#{cleanpath}/#{testid}"
       @identifier = @end_url
       @implementations = [@end_url]
     end
