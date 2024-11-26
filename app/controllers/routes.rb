@@ -49,7 +49,8 @@ def set_routes(classes: allclasses)
   end
 
   get '/tests/:id/about' do
-    content_type 'application/ld+json'
+#    content_type 'application/ld+json'
+    content_type 'text/turtle'
     id = params[:id]
     id += '_about'
     # begin
@@ -57,7 +58,8 @@ def set_routes(classes: allclasses)
     # rescue StandardError
     #   graph = ''
     # end
-    graph.dump(:jsonld)
+#    graph.dump(:jsonld)
+    graph.dump(:ttl)
   end
 
   before do
