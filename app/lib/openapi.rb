@@ -7,8 +7,8 @@ class OpenAPI
   def initialize(meta:)
     indics = [meta[:indicators]] unless meta[:indicators].is_a? Array
     @testid = meta[:testid]
-    @title = meta[:title]
-    @version = meta[:version]
+    @title = meta[:testname]
+    @version = meta[:testversion]
     @metric = meta[:metric]
     @description = meta[:description]
     @indicator = indics.first

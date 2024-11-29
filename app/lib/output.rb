@@ -11,24 +11,24 @@ module FAIRChampion
 
     def_delegators FAIRChampion::Output, :triplify
 
-    attr_accessor :score, :testedGUID, :testid, :uniqueid, :name, :description, :license, :dt, :metric, :version,
-                  :summary, :completeness
+    attr_accessor :score, :testedGUID, :testid, :uniqueid, :name, :description, :license, :dt, :metric, 
+                  :version, :summary, :completeness
 
     @@comments = []
 
-    def initialize(testedGUID:, metadata:)
+    def initialize(testedGUID:, meta:)
       @score = 'indeterminate'
       @testedGUID = testedGUID
       @uniqueid = 'urn:fairtestoutput:' + SecureRandom.uuid
-      @name = metadata[:testname]
-      @description = metadata[:description]
-      @license = metadata[:license] || 'https://creativecommons.org/licenses/by/4.0/'
+      @name = meta[:testname]
+      @description = meta[:description]
+      @license = meta[:license] || 'https://creativecommons.org/licenses/by/4.0/'
       @dt = Time.now.iso8601
-      @metric = metadata[:metric]
-      @version = metadata[:testversion]
-      @summary = metadata[:summary] || 'Summary:'
+      @metric = meta[:metric]
+      @version = meta[:testversion]
+      @summary = meta[:summary] || 'Summary:'
       @completeness = '100'
-      @testid = metadata[:testid]
+      @testid = meta[:testid]
     end
 
     def createEvaluationResponse

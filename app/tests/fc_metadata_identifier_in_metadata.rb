@@ -33,11 +33,7 @@ class FAIRTest
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      testid: fc_metadata_identifier_in_metadata_meta[:testid], 
-      name: fc_metadata_identifier_in_metadata_meta[:testname],
-      version: fc_metadata_identifier_in_metadata_meta[:testversion],
-      description: fc_metadata_identifier_in_metadata_meta[:description],
-      metric: fc_metadata_identifier_in_metadata_meta[:metric]
+      meta: fc_metadata_identifier_in_metadata_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{fc_metadata_identifier_in_metadata_meta[:testversion]}'\n"

@@ -35,11 +35,7 @@ end
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      testid: fc_metadata_protocol_meta[:testid], 
-      name: self.fc_metadata_protocol_meta[:testname], 
-      version: self.fc_metadata_protocol_meta[:testversion],
-      description: self.fc_metadata_protocol_meta[:description], 
-      metric:self.fc_metadata_protocol_meta[:metric]
+      meta: fc_metadata_protocol_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{self.fc_metadata_protocol_meta[:testversion]}'\n"
