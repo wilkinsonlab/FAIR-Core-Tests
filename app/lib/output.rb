@@ -34,7 +34,11 @@ module FAIRChampion
     def createEvaluationResponse
       g = RDF::Graph.new
       schema = RDF::Vocab::SCHEMA
-      ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
+      dct = RDF::Vocab::DC 
+      prov = RDF::Vocab::PROV
+      dcat = RDF::Vocab::DCAT
+      ftr = RDF::Vocabulary.new('https://www.w3id.org/ftr#')
+      sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
       add_newline_to_comments
 
       if summary =~ /^Summary$/
@@ -42,35 +46,49 @@ module FAIRChampion
         summary ||= "Summary of test results: #{@@comments[-2]}"
       end
 
+
+
+      executionid = 'urn:ostrails:testexecutionactivity:' + SecureRandom.uuid
+      softwareid = 'urn:ostrails:fairtestsoftware:' + SecureRandom.uuid
+      tid = 'urn:ostrails:fairtestentity:' + SecureRandom.uuid
+
+      triplify(executionid, RDF.type, ftr.TestExecutionActivity, g)
+      triplify(executionid, prov.wasAssociatedWith, softwareid, g)
+      triplify(executionid, prov.generated, uniqueid, g)
+
       triplify(uniqueid, RDF.type, ftr.TestResult, g)
-      triplify(uniqueid, schema.identifier, uniqueid, g)
-      triplify(uniqueid, schema.name, name, g)
-      triplify(uniqueid, schema.description, description, g)
-      triplify(uniqueid, schema.license, license, g)
+      triplify(uniqueid, dct.identifier, uniqueid, g)
+      triplify(uniqueid, dct.title, "#{name} OUTPUT", g)
+      triplify(uniqueid, dct.description, "OUTPUT OF #{description}", g)
+      triplify(uniqueid, dct.license, license, g)
       triplify(uniqueid, ftr.status, score, g)
       triplify(uniqueid, ftr.summary, summary, g)
       triplify(uniqueid, RDF::Vocab::PROV.generatedAtTime, dt, g)
       triplify(uniqueid, ftr.log, @@comments.join, g)
       triplify(uniqueid, ftr.completion, completeness, g)
-      triplify(uniqueid, ftr.definedBy, metric, g)
-      triplify(metric, RDF.type, ftr.TestSpecification, g)
 
-      tid = 'urn:ostrails:fairtestentity:' + SecureRandom.uuid
-      triplify(uniqueid, RDF::Vocab::PROV.wasDerivedFrom, tid, g)
-      triplify(tid, RDF.type, RDF::Vocab::PROV.Entity, g)
-      triplify(tid, schema.identifier, testedGUID, g)
-      triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
-
-      softwareid = 'urn:ostrails:fairtestsoftware:' + SecureRandom.uuid
-      triplify(uniqueid, RDF::Vocab::PROV.wasAttributedTo, softwareid, g)
-      triplify(softwareid, RDF.type, RDF::Vocab::PROV.SoftwareAgent, g)
+      triplify(uniqueid, ftr.outputFromTest, softwareid, g)      
+      triplify(softwareid, RDF.type, ftr.Test, g)
       triplify(softwareid, RDF.type, schema.SoftwareApplication, g)
-      triplify(softwareid, schema.softwareVersion, version, g)
-      triplify(softwareid, schema.url, 'https://github.com/wilkinsonlab/FAIR-Core-Tests', g)
-      triplify(softwareid, schema.license, 'https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE', g)
-      triplify(softwareid, schema.identifier,
-               "https://github.com/wilkinsonlab/FAIR-Core-Tests/tree/main/app/tests/#{testid}.rb", g)
+      triplify(softwareid, dct.identifier,
+               "https://tests.ostrails.eu/tests/#{testid}", g, "xsd:string")
+      triplify(softwareid, dct.title, "#{name}", g)
+      triplify(softwareid, dct.description, description, g)
+      triplify(softwareid, dcat.endpointDescription,
+               "https://tests.ostrails.eu/tests/#{testid}", g) # returns yaml
+      triplify(softwareid, dcat.endpointURL,
+               "https://tests.ostrails.eu/tests/#{testid}", g) # POST to execute
+      triplify(softwareid, dcat.version, version, g)
+      triplify(softwareid, dct.license, 'https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE', g)
+      triplify(softwareid, sio["SIO_000233"], "https://tests.ostrails.eu/tests/#{testid}/about", g)
 
+
+      triplify(uniqueid, prov.used, tid, g)
+      triplify(executionid, prov.used, tid, g)
+      triplify(tid, RDF.type, prov.Entity, g)
+      triplify(tid, schema.identifier, testedGUID, g, "xsd:string")
+      triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
+         
       g.dump(:jsonld)
     end
 
