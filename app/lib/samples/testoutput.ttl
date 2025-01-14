@@ -1,38 +1,45 @@
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix ftr: <https://w3id.org/ftr#> .
+@prefix sio: <http://semanticscience.org/resource/> .
+@prefix schema: <http://schema.org/> .
 
-<urn:fairtestoutput:873a8370-77e0-40ad-a6e5-0d8349fdaea4>
-    <http://purl.org/dc/terms/description> "OUTPUT OF Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community."@en ;
-    <http://purl.org/dc/terms/identifier> <urn:fairtestoutput:873a8370-77e0-40ad-a6e5-0d8349fdaea4> ;
-    <http://purl.org/dc/terms/license> <https://creativecommons.org/publicdomain/zero/1.0/> ;
-    <http://purl.org/dc/terms/title> "FAIR Champion: Metadata Authorization OUTPUT"@en ;
-    a <https://w3id.org/ftr#TestResult> ;
-    <http://www.w3.org/ns/prov#generatedAtTime> "2025-01-14T10:12:13+01:00"^^<http://www.w3.org/2001/XMLSchema#date> ;
-    <http://www.w3.org/ns/prov#wasDerivedFrom> <urn:ostrails:fairtestentity:4b5d47c3-e7f6-4a70-81c7-fec61731891c> ;
-    <https://w3id.org/ftr#completion> "100"^^<http://www.w3.org/2001/XMLSchema#int> ;
-    <https://w3id.org/ftr#log> """INFO: TEST VERSION 'Hvst-1.4.2:Tst-2.0.0'
+<urn:fairtestoutput:b7a4ffd8-0049-4833-90db-62aded0d5ff6>
+    dct:description "OUTPUT OF Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community."@en ;
+    dct:identifier <urn:fairtestoutput:b7a4ffd8-0049-4833-90db-62aded0d5ff6> ;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    dct:title "FAIR Champion: Metadata Authorization OUTPUT"@en ;
+    a ftr:TestResult ;
+    prov:generatedAtTime "2025-01-14T10:55:16+01:00"^^xsd:date ;
+    prov:wasDerivedFrom <urn:ostrails:fairtestentity:87bea794-5f6b-47c6-a507-d7619348a105> ;
+    ftr:completion "100"^^xsd:int ;
+    ftr:log """INFO: TEST VERSION 'Hvst-1.4.2:Tst-2.0.0'
 PASS:  The GUID of the metadata is a uri, which is known to be allow authentication/authorization."""@en ;
-    <https://w3id.org/ftr#outputFromTest> <urn:ostrails:fairtestsoftware:e5e67c2a-769a-4efd-aa1c-c9cc96148e22> ;
-    <https://w3id.org/ftr#status> "pass"@en ;
-    <https://w3id.org/ftr#summary> ""@en .
+    ftr:outputFromTest <urn:ostrails:fairtestsoftware:adebdd40-3054-45fe-a6a0-f191c42dadf0> ;
+    ftr:status "pass"@en ;
+    ftr:summary ""@en .
 
-<urn:ostrails:fairtestentity:4b5d47c3-e7f6-4a70-81c7-fec61731891c>
-    <http://schema.org/identifier> "https://go-fair.org" ;
-    <http://schema.org/url> <https://go-fair.org> ;
-    a <http://www.w3.org/ns/prov#Entity> .
+<urn:ostrails:fairtestentity:87bea794-5f6b-47c6-a507-d7619348a105>
+    schema:identifier "https://go-fair.org" ;
+    schema:url <https://go-fair.org> ;
+    a prov:Entity .
 
-<urn:ostrails:fairtestsoftware:e5e67c2a-769a-4efd-aa1c-c9cc96148e22>
-    <http://purl.org/dc/terms/description> "Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community."@en ;
-    <http://purl.org/dc/terms/identifier> "https://tests.ostrails.eu/tests/fc_metadata_authorization" ;
-    <http://purl.org/dc/terms/license> <https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE> ;
-    <http://purl.org/dc/terms/title> "FAIR Champion: Metadata Authorization"@en ;
-    <http://semanticscience.org/resource/SIO_000233> <https://tests.ostrails.eu/tests/fc_metadata_authorization/about> ;
-    a <http://schema.org/SoftwareApplication>, <http://www.w3.org/ns/dcat#DataService>, <https://w3id.org/ftr#Test> ;
-    <http://www.w3.org/ns/dcat#endpointDescription> <https://tests.ostrails.eu/tests/fc_metadata_authorization> ;
-    <http://www.w3.org/ns/dcat#endpointURL> <https://tests.ostrails.eu/tests/fc_metadata_authorization> ;
-    <http://www.w3.org/ns/dcat#version> "Hvst-1.4.2:Tst-2.0.0"@en .
+<urn:ostrails:fairtestsoftware:adebdd40-3054-45fe-a6a0-f191c42dadf0>
+    dct:description "Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community."@en ;
+    dct:identifier "https://tests.ostrails.eu/tests/fc_metadata_authorization" ;
+    dct:license <https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE> ;
+    dct:title "FAIR Champion: Metadata Authorization"@en ;
+    sio:SIO_000233 <https://tests.ostrails.eu/tests/fc_metadata_authorization/about> ;
+    a schema:SoftwareApplication, dcat:DataService, ftr:Test ;
+    dcat:endpointDescription <https://tests.ostrails.eu/tests/fc_metadata_authorization> ;
+    dcat:endpointURL <https://tests.ostrails.eu/tests/fc_metadata_authorization> ;
+    dcat:version "Hvst-1.4.2:Tst-2.0.0"@en .
 
-<urn:ostrails:testexecutionactivity:9c0a5639-4aaf-480e-8bd4-066c7626c725>
-    a <https://w3id.org/ftr#TestExecutionActivity> ;
-    <http://www.w3.org/ns/prov#generated> <urn:fairtestoutput:873a8370-77e0-40ad-a6e5-0d8349fdaea4> ;
-    <http://www.w3.org/ns/prov#used> <urn:ostrails:fairtestentity:4b5d47c3-e7f6-4a70-81c7-fec61731891c> ;
-    <http://www.w3.org/ns/prov#wasAssociatedWith> <urn:ostrails:fairtestsoftware:e5e67c2a-769a-4efd-aa1c-c9cc96148e22> .
+<urn:ostrails:testexecutionactivity:e55372b2-55ec-4400-bef0-6ad813256a21>
+    a ftr:TestExecutionActivity ;
+    prov:generated <urn:fairtestoutput:b7a4ffd8-0049-4833-90db-62aded0d5ff6> ;
+    prov:used <urn:ostrails:fairtestentity:87bea794-5f6b-47c6-a507-d7619348a105> ;
+    prov:wasAssociatedWith <urn:ostrails:fairtestsoftware:adebdd40-3054-45fe-a6a0-f191c42dadf0> .

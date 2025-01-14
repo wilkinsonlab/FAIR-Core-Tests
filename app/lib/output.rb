@@ -40,6 +40,7 @@ module FAIRChampion
       dcat = RDF::Vocab::DCAT
       ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
       sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
+      schema = RDF::Vocab::SCHEMA
       add_newline_to_comments
 
       if summary =~ /^Summary$/
@@ -80,7 +81,8 @@ module FAIRChampion
                "https://tests.ostrails.eu/tests/#{testid}", g) # returns yaml
       triplify(softwareid, dcat.endpointURL,
                "https://tests.ostrails.eu/tests/#{testid}", g) # POST to execute
-      triplify(softwareid, dcat.version, version, g)
+      # triplify(softwareid, dcat.version, version, g)
+      triplify(softwareid, "http://www.w3.org/ns/dcat#version", version, g)  # dcat namespace in library has no version - dcat 2 not 3
       triplify(softwareid, dct.license, 'https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE', g)
       triplify(softwareid, sio["SIO_000233"], "https://tests.ostrails.eu/tests/#{testid}/about", g)
 
@@ -92,7 +94,16 @@ module FAIRChampion
       triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
          
 #      g.dump(:jsonld)
-      g.dump(:ttl)
+      w = RDF::Writer.for(:jsonld)
+      w.dump(g, nil, prefixes: {
+        xsd: RDF::Vocab::XSD, 
+        prov: RDF::Vocab::PROV,
+        dct: RDF::Vocab::DC,
+        dcat: RDF::Vocab::DCAT,
+        ftr: ftr,
+        sio: sio,
+        schema: schema
+      })
     end
 
     # can be called as FAIRChampion::Output.comments << "newcomment"
@@ -142,6 +153,7 @@ module FAIRChampion
 
       unless o.respond_to?('uri')
         o = if datatype
+          warn "DATATYPE #{datatype}"
               RDF::Literal.new(o.to_s, datatype: datatype)
             elsif o.to_s =~ %r{\A\w+:/?/?\w[^\s]+}
               RDF::URI.new(o.to_s)
