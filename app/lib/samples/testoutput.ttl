@@ -1,0 +1,38 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+
+<urn:fairtestoutput:c00797bf-d04c-45a7-8bd3-45d17ca8d860>
+    <http://purl.org/dc/terms/description> "OUTPUT OF Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community."@en ;
+    <http://purl.org/dc/terms/identifier> <urn:fairtestoutput:c00797bf-d04c-45a7-8bd3-45d17ca8d860> ;
+    <http://purl.org/dc/terms/license> <https://creativecommons.org/publicdomain/zero/1.0/> ;
+    <http://purl.org/dc/terms/title> "FAIR Champion: Metadata Authorization OUTPUT"@en ;
+    a <https://w3id.org/ftr#TestResult> ;
+    <http://www.w3.org/ns/prov#generatedAtTime> "2025-01-14T09:42:29+01:00"^^<http://www.w3.org/2001/XMLSchema#date> ;
+    <http://www.w3.org/ns/prov#wasDerivedFrom> <urn:ostrails:fairtestentity:b9063dc4-136d-4872-b858-213afacf476b> ;
+    <https://w3id.org/ftr#completion> "100"^^<http://www.w3.org/2001/XMLSchema#int> ;
+    <https://w3id.org/ftr#log> """INFO: TEST VERSION 'Hvst-1.4.2:Tst-2.0.0'
+PASS:  The GUID of the metadata is a uri, which is known to be allow authentication/authorization."""@en ;
+    <https://w3id.org/ftr#outputFromTest> <urn:ostrails:fairtestsoftware:6e7b5456-99f1-4076-802b-9012b90c3e36> ;
+    <https://w3id.org/ftr#status> "pass"@en ;
+    <https://w3id.org/ftr#summary> ""@en .
+
+<urn:ostrails:fairtestentity:b9063dc4-136d-4872-b858-213afacf476b>
+    <http://schema.org/identifier> "https://go-fair.org"^^<xsd:string> ;
+    <http://schema.org/url> <https://go-fair.org> ;
+    a <http://www.w3.org/ns/prov#Entity> .
+
+<urn:ostrails:fairtestsoftware:6e7b5456-99f1-4076-802b-9012b90c3e36>
+    <http://purl.org/dc/terms/description> "Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community."@en ;
+    <http://purl.org/dc/terms/identifier> "https://tests.ostrails.eu/tests/fc_metadata_authorization"^^<xsd:string> ;
+    <http://purl.org/dc/terms/license> <https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE> ;
+    <http://purl.org/dc/terms/title> "FAIR Champion: Metadata Authorization"@en ;
+    <http://semanticscience.org/resource/SIO_000233> <https://tests.ostrails.eu/tests/fc_metadata_authorization/about> ;
+    a <http://schema.org/SoftwareApplication>, <https://w3id.org/ftr#Test> ;
+    <http://www.w3.org/ns/dcat#endpointDescription> <https://tests.ostrails.eu/tests/fc_metadata_authorization> ;
+    <http://www.w3.org/ns/dcat#endpointURL> <https://tests.ostrails.eu/tests/fc_metadata_authorization> ;
+    <http://www.w3.org/ns/dcat#version> "Hvst-1.4.2:Tst-2.0.0"@en .
+
+<urn:ostrails:testexecutionactivity:bde933a3-2cdc-4d57-9cc7-f873ffd9af03>
+    a <https://w3id.org/ftr#TestExecutionActivity> ;
+    <http://www.w3.org/ns/prov#generated> <urn:fairtestoutput:c00797bf-d04c-45a7-8bd3-45d17ca8d860> ;
+    <http://www.w3.org/ns/prov#used> <urn:ostrails:fairtestentity:b9063dc4-136d-4872-b858-213afacf476b> ;
+    <http://www.w3.org/ns/prov#wasAssociatedWith> <urn:ostrails:fairtestsoftware:6e7b5456-99f1-4076-802b-9012b90c3e36> .

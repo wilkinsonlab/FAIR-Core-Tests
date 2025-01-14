@@ -37,7 +37,7 @@ module FAIRChampion
       dct = RDF::Vocab::DC 
       prov = RDF::Vocab::PROV
       dcat = RDF::Vocab::DCAT
-      ftr = RDF::Vocabulary.new('https://www.w3id.org/ftr#')
+      ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
       sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
       add_newline_to_comments
 
@@ -83,13 +83,14 @@ module FAIRChampion
       triplify(softwareid, sio["SIO_000233"], "https://tests.ostrails.eu/tests/#{testid}/about", g)
 
 
-      triplify(uniqueid, prov.used, tid, g)
+      triplify(uniqueid, prov.wasDerivedFrom, tid, g)
       triplify(executionid, prov.used, tid, g)
       triplify(tid, RDF.type, prov.Entity, g)
       triplify(tid, schema.identifier, testedGUID, g, "xsd:string")
       triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
          
-      g.dump(:jsonld)
+#      g.dump(:jsonld)
+      g.dump(:ttl)
     end
 
     # can be called as FAIRChampion::Output.comments << "newcomment"
