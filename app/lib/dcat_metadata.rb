@@ -12,7 +12,7 @@ module ChampionDCAT
     def initialize(meta:)
       indics = [meta[:indicators]] unless meta[:indicators].is_a? Array
       @testid = meta[:testid]
-      @title =  meta[:testname]
+      @testname =  meta[:testname]
       @description = meta[:description]
       @keywords = meta[:keywords]
       @keywords = [@keywords] unless @keywords.is_a? Array
@@ -24,7 +24,7 @@ module ChampionDCAT
       @license = meta[:license]
       @themes = meta[:themes]
       @themes = [@themes] unless @themes.is_a? Array
-      @version = meta[:testversion]
+      @testversion = meta[:testversion]
       @organizations = meta[:organizations]
       @individuals = meta[:individuals]
       @protocol =  meta[:protocol]
@@ -46,17 +46,19 @@ module ChampionDCAT
       sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
       ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
       vcard = RDF::Vocabulary.new('http://www.w3.org/2006/vcard/ns#')
+      dqv = RDF::Vocabulary.new('https://www.w3.org/TR/vocab-dqv/')
       g = RDF::Graph.new
       me = "#{identifier}/about"
 
       FAIRChampion::Output.triplify(me, RDF.type, dcat.DataService, g)
+      FAIRChampion::Output.triplify(me, RDF.type, ftr.Test, g)
 
       # triplify tests and rejects anything that is empty or nil  --> SAFE
       # Test Unique Identifier	dcterms:identifier	Literal
       FAIRChampion::Output.triplify(me, dcterms.identifier, identifier, g)
 
       # Title/Name of the test	dcterms:title	Literal
-      FAIRChampion::Output.triplify(me, dcterms.title, title, g)
+      FAIRChampion::Output.triplify(me, dcterms.title, testname, g)
 
       # Description	dcterms:description	Literal
       # descriptions.each do |d|
@@ -99,13 +101,13 @@ module ChampionDCAT
       end
 
       # Version	dcat:version	rdfs:Literal
-      FAIRChampion::Output.triplify(me, RDF::Vocab::DCAT.to_s + 'version', version, g)
+      FAIRChampion::Output.triplify(me, RDF::Vocab::DCAT.to_s + 'version', testversion, g)
 
       # # Version notes	adms:versionNotes	rdfs:Literal
       # FAIRChampion::Output.FAIRChampion::Output.triplify(me, dcat.version, version, g)
 
       implementations.each do |i|
-        FAIRChampion::Output.triplify(me, sio['SIO_000233'], i, g) # is implementation of
+        FAIRChampion::Output.triplify(i, sio['SIO_000233'], me, g) # is implementation of
       end
 
       # Responsible	dcat:contactPoint	dcat:Kind (includes Individual/Organization)

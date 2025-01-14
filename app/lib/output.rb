@@ -41,7 +41,6 @@ module FAIRChampion
       dqv = RDF::Vocabulary.new('https://www.w3.org/TR/vocab-dqv/')
       ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
       sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
-      schema = RDF::Vocab::SCHEMA
       add_newline_to_comments
 
       if summary =~ /^Summary$/
@@ -152,7 +151,7 @@ module FAIRChampion
         end
       end
 
-      unless o.respond_to?('uri')
+      unless o.respond_to?('uri?')
         o = if datatype
           warn "DATATYPE #{datatype}"
               RDF::Literal.new(o.to_s, datatype: datatype)
