@@ -34,6 +34,7 @@ module FAIRChampion
     def createEvaluationResponse
       g = RDF::Graph.new
       schema = RDF::Vocab::SCHEMA
+      xsd = RDF::Vocab::XSD
       dct = RDF::Vocab::DC 
       prov = RDF::Vocab::PROV
       dcat = RDF::Vocab::DCAT
@@ -70,8 +71,9 @@ module FAIRChampion
       triplify(uniqueid, ftr.outputFromTest, softwareid, g)      
       triplify(softwareid, RDF.type, ftr.Test, g)
       triplify(softwareid, RDF.type, schema.SoftwareApplication, g)
+      triplify(softwareid, RDF.type, dcat.DataService, g)
       triplify(softwareid, dct.identifier,
-               "https://tests.ostrails.eu/tests/#{testid}", g, "xsd:string")
+               "https://tests.ostrails.eu/tests/#{testid}", g, xsd.string)
       triplify(softwareid, dct.title, "#{name}", g)
       triplify(softwareid, dct.description, description, g)
       triplify(softwareid, dcat.endpointDescription,
@@ -86,7 +88,7 @@ module FAIRChampion
       triplify(uniqueid, prov.wasDerivedFrom, tid, g)
       triplify(executionid, prov.used, tid, g)
       triplify(tid, RDF.type, prov.Entity, g)
-      triplify(tid, schema.identifier, testedGUID, g, "xsd:string")
+      triplify(tid, schema.identifier, testedGUID, g, xsd.string)
       triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
          
 #      g.dump(:jsonld)
