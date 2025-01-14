@@ -1,8 +1,8 @@
 module ChampionDCAT
   class DCAT_Record
-    attr_accessor :identifier, :title, :description, :keywords, :creator,
+    attr_accessor :identifier, :testname, :description, :keywords, :creator,
                   :indicators, :end_desc, :end_url, :dctype, :testid,
-                  :license, :themes, :version, :implementations,
+                  :license, :themes, :testversion, :implementations,
                   :organizations, :individuals, :protocol, :host, :basePath
 
     include RDF
@@ -12,7 +12,7 @@ module ChampionDCAT
     def initialize(meta:)
       indics = [meta[:indicators]] unless meta[:indicators].is_a? Array
       @testid = meta[:testid]
-      @title =  meta[:title]
+      @title =  meta[:testname]
       @description = meta[:description]
       @keywords = meta[:keywords]
       @keywords = [@keywords] unless @keywords.is_a? Array
@@ -24,7 +24,7 @@ module ChampionDCAT
       @license = meta[:license]
       @themes = meta[:themes]
       @themes = [@themes] unless @themes.is_a? Array
-      @version = meta[:version]
+      @version = meta[:testversion]
       @organizations = meta[:organizations]
       @individuals = meta[:individuals]
       @protocol =  meta[:protocol]
@@ -43,7 +43,7 @@ module ChampionDCAT
       dcterms = RDF::Vocab::DC
       vcard = RDF::Vocab::VCARD
       dcat = RDF::Vocab::DCAT
-      sio = RDF::Vocabulary.new('http://semanticscience.org/ontology/')
+      sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
       ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
       vcard = RDF::Vocabulary.new('http://www.w3.org/2006/vcard/ns#')
       g = RDF::Graph.new
@@ -74,7 +74,7 @@ module ChampionDCAT
 
       # Dimension	ftr:indicator
       indicators.each do |ind|
-        FAIRChampion::Output.triplify(me, ftr.indicator, ind, g)
+        FAIRChampion::Output.triplify(me, dqv.inDimension, ind, g)
       end
 
       # API description	dcat:endpointDescription	rdfs:Resource
@@ -105,7 +105,7 @@ module ChampionDCAT
       # FAIRChampion::Output.FAIRChampion::Output.triplify(me, dcat.version, version, g)
 
       implementations.each do |i|
-        FAIRChampion::Output.triplify(me, sio['SIO_000223'], i, g) # is implementation of
+        FAIRChampion::Output.triplify(me, sio['SIO_000233'], i, g) # is implementation of
       end
 
       # Responsible	dcat:contactPoint	dcat:Kind (includes Individual/Organization)
@@ -116,7 +116,7 @@ module ChampionDCAT
         FAIRChampion::Output.triplify(me, dcat.contactPoint, cp, g)
         FAIRChampion::Output.triplify(cp, RDF.type, vcard.Individual, g)
         FAIRChampion::Output.triplify(cp, vcard.fn, i['name'], g)
-        FAIRChampion::Output.triplify(cp, vcard.email, RDF::URI.new(i['email'].to_s), g)
+        FAIRChampion::Output.triplify(cp, vcard.hasEmail, RDF::URI.new(i['email'].to_s), g)
       end
 
       organizations.each do |o|
