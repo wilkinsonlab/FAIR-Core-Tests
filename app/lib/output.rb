@@ -51,7 +51,9 @@ module FAIRChampion
 
 
       executionid = 'urn:ostrails:testexecutionactivity:' + SecureRandom.uuid
-      softwareid = 'urn:ostrails:fairtestsoftware:' + SecureRandom.uuid
+
+      # softwareid = 'urn:ostrails:fairtestsoftware:' + SecureRandom.uuid
+      softwareid = "https://tests.ostrails.eu/tests/#{testid}/about"
       tid = 'urn:ostrails:fairtestentity:' + SecureRandom.uuid
 
       triplify(executionid, RDF.type, ftr.TestExecutionActivity, g)
@@ -63,7 +65,7 @@ module FAIRChampion
       triplify(uniqueid, dct.title, "#{name} OUTPUT", g)
       triplify(uniqueid, dct.description, "OUTPUT OF #{description}", g)
       triplify(uniqueid, dct.license, license, g)
-      triplify(uniqueid, ftr.status, score, g)
+      triplify(uniqueid, prov:value, score, g)
       triplify(uniqueid, ftr.summary, summary, g)
       triplify(uniqueid, RDF::Vocab::PROV.generatedAtTime, dt, g)
       triplify(uniqueid, ftr.log, @@comments.join, g)
@@ -84,8 +86,7 @@ module FAIRChampion
       # triplify(softwareid, dcat.version, version, g)
       triplify(softwareid, "http://www.w3.org/ns/dcat#version", version, g)  # dcat namespace in library has no version - dcat 2 not 3
       triplify(softwareid, dct.license, 'https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE', g)
-      triplify(softwareid, sio["SIO_000233"], "https://tests.ostrails.eu/tests/#{testid}/about", g)
-
+      triplify(softwareid, sio["SIO_000233"], @metric, g)  # implementation of 
 
       triplify(uniqueid, prov.wasDerivedFrom, tid, g)
       triplify(executionid, prov.used, tid, g)
