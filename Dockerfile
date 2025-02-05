@@ -1,4 +1,4 @@
-FROM ruby:3.1.0
+FROM ruby:3.3.0
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US:UTF-8" LC_ALL="C.UTF-8"
 RUN apt-get update -q
