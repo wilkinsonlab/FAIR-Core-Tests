@@ -15,6 +15,7 @@ module FAIRChampion
                   :version, :summary, :completeness
 
     @@comments = []
+    OPUTPUT_VERSION = "1.1.0"
 
     def initialize(testedGUID:, meta:)
       @score = 'indeterminate'
@@ -54,7 +55,8 @@ module FAIRChampion
 
       # softwareid = 'urn:ostrails:fairtestsoftware:' + SecureRandom.uuid
       softwareid = "https://tests.ostrails.eu/tests/#{testid}/about"
-      tid = 'urn:ostrails:fairtestentity:' + SecureRandom.uuid
+      # tid = 'urn:ostrails:fairtestentity:' + SecureRandom.uuid
+      # The entity is no longer an anonymous node, it is the GUID Of the tested input
 
       triplify(executionid, RDF.type, ftr.TestExecutionActivity, g)
       triplify(executionid, prov.wasAssociatedWith, softwareid, g)
@@ -65,7 +67,7 @@ module FAIRChampion
       triplify(uniqueid, dct.title, "#{name} OUTPUT", g)
       triplify(uniqueid, dct.description, "OUTPUT OF #{description}", g)
       triplify(uniqueid, dct.license, license, g)
-      triplify(uniqueid, prov:value, score, g)
+      triplify(uniqueid, prov.value, score, g)
       triplify(uniqueid, ftr.summary, summary, g)
       triplify(uniqueid, RDF::Vocab::PROV.generatedAtTime, dt, g)
       triplify(uniqueid, ftr.log, @@comments.join, g)
@@ -83,17 +85,22 @@ module FAIRChampion
                "https://tests.ostrails.eu/tests/#{testid}", g) # returns yaml
       triplify(softwareid, dcat.endpointURL,
                "https://tests.ostrails.eu/tests/#{testid}", g) # POST to execute
-      # triplify(softwareid, dcat.version, version, g)
-      triplify(softwareid, "http://www.w3.org/ns/dcat#version", version, g)  # dcat namespace in library has no version - dcat 2 not 3
+      triplify(softwareid, "http://www.w3.org/ns/dcat#version", "#{version} OutputVersion:#{OPUTPUT_VERSION}" , g)  # dcat namespace in library has no version - dcat 2 not 3
       triplify(softwareid, dct.license, 'https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE', g)
       triplify(softwareid, sio["SIO_000233"], @metric, g)  # implementation of 
 
-      triplify(uniqueid, prov.wasDerivedFrom, tid, g)
-      triplify(executionid, prov.used, tid, g)
-      triplify(tid, RDF.type, prov.Entity, g)
-      triplify(tid, schema.identifier, testedGUID, g, xsd.string)
-      triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
-         
+      # deprecated after release 1.0
+      # triplify(uniqueid, prov.wasDerivedFrom, tid, g)
+      # triplify(executionid, prov.used, tid, g)
+      # triplify(tid, RDF.type, prov.Entity, g)
+      # triplify(tid, schema.identifier, testedGUID, g, xsd.string)
+      # triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
+
+      triplify(uniqueid, prov.wasDerivedFrom, testedGUID, g)
+      triplify(executionid, prov.used, testedGUID, g)
+      triplify(testedGUID, RDF.type, prov.Entity, g)
+
+      
 #      g.dump(:jsonld)
       w = RDF::Writer.for(:jsonld)
       w.dump(g, nil, prefixes: {

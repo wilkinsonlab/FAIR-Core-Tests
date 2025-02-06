@@ -3,7 +3,7 @@
 source "https://rubygems.org"
 
 gemspec
-rub "~>3.3.0"
+ruby "~>3.3.0"
 gem "bcrypt"
 gem "debase", git: "https://github.com/ruby-debug/debase.git", tag: "v0.2.5.beta2"
 gem "linkeddata", "~> 3.2.0"
