@@ -137,6 +137,12 @@ module FAIRChampion
     end
 
     def self.triplify(s, p, o, repo, datatype = nil)
+      begin
+        warn "S-P-O #{s.to_s} #{p.to_s} #{o.to_s}"
+      rescue
+        warn "input to #triplify seems totally invalid!"
+        return false
+      end
       s = s.strip if s.instance_of?(String)
       p = p.strip if p.instance_of?(String)
       o = o.strip if o.instance_of?(String)
