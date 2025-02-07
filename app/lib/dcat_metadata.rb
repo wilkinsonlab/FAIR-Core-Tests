@@ -126,7 +126,6 @@ module ChampionDCAT
             email = "mailto:#{email}"
           end
           FAIRChampion::Output.triplify(cp, vcard.hasEmail, RDF::URI.new(email), g)
-          end
         end
       end
 
