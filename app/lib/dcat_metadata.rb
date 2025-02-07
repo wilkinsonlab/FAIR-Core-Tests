@@ -117,8 +117,17 @@ module ChampionDCAT
         cp = "urn:fairchampion:testmetadata:individual#{guid}"
         FAIRChampion::Output.triplify(me, dcat.contactPoint, cp, g)
         FAIRChampion::Output.triplify(cp, RDF.type, vcard.Individual, g)
-        FAIRChampion::Output.triplify(cp, vcard.fn, i['name'], g)
-        FAIRChampion::Output.triplify(cp, vcard.hasEmail, RDF::URI.new(i['email'].to_s), g)
+        if i['name']
+          FAIRChampion::Output.triplify(cp, vcard.fn, i['name'], g)
+        end
+        if i['email']
+          email = i['email'].to_s
+          unless email =~ /mailto:/
+            email = "mailto:#{email}"
+          end
+          FAIRChampion::Output.triplify(cp, vcard.hasEmail, RDF::URI.new(email), g)
+          end
+        end
       end
 
       organizations.each do |o|
