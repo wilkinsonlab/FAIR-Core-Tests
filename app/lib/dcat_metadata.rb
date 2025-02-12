@@ -3,21 +3,19 @@ module ChampionDCAT
     attr_accessor :identifier, :testname, :description, :keywords, :creator,
                   :indicators, :end_desc, :end_url, :dctype, :testid,
                   :license, :themes, :testversion, :implementations,
-                  :organizations, :individuals, :protocol, :host, :basePath
-
-    include RDF
-    extend Forwardable
+                  :organizations, :individuals, :protocol, :host, :basePath, :metric
     require_rel './output.rb'
 
     def initialize(meta:)
       indics = [meta[:indicators]] unless meta[:indicators].is_a? Array
+      @indicators = indics
       @testid = meta[:testid]
       @testname =  meta[:testname]
+      @metric =  meta[:metric]
       @description = meta[:description]
       @keywords = meta[:keywords]
       @keywords = [@keywords] unless @keywords.is_a? Array
       @creator =  meta[:creator]
-      @indicators = indics
       @end_desc = meta[:end_desc]
       @end_url = meta[:end_url]
       @dctype = meta[:dctype] || "http://edamontology.org/operation_2428"
@@ -106,9 +104,9 @@ module ChampionDCAT
       # # Version notes	adms:versionNotes	rdfs:Literal
       # FAIRChampion::Output.FAIRChampion::Output.triplify(me, dcat.version, version, g)
 
-      implementations.each do |i|
-        FAIRChampion::Output.triplify(i, sio['SIO_000233'], me, g) # is implementation of
-      end
+#      implementations.each do |i|
+      FAIRChampion::Output.triplify(me, sio['SIO_000233'], metric, g) # is implementation of
+#      end
 
       # Responsible	dcat:contactPoint	dcat:Kind (includes Individual/Organization)
       individuals.each do |i|
