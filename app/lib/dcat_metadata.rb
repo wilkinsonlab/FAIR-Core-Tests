@@ -43,8 +43,8 @@ module ChampionDCAT
       dcat = RDF::Vocab::DCAT
       sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
       ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
+      dqv = RDF::Vocabulary.new('http://www.w3.org/ns/dqv#')
       vcard = RDF::Vocabulary.new('http://www.w3.org/2006/vcard/ns#')
-      dqv = RDF::Vocabulary.new('https://www.w3.org/TR/vocab-dqv/')
       g = RDF::Graph.new
       me = "#{identifier}/about"
 
@@ -104,9 +104,9 @@ module ChampionDCAT
       # # Version notes	adms:versionNotes	rdfs:Literal
       # FAIRChampion::Output.FAIRChampion::Output.triplify(me, dcat.version, version, g)
 
-#      implementations.each do |i|
       FAIRChampion::Output.triplify(me, sio['SIO_000233'], metric, g) # is implementation of
-#      end
+      FAIRChampion::Output.triplify(metric, RDF.type, dqv.Metric, g) # is implementation of
+
 
       # Responsible	dcat:contactPoint	dcat:Kind (includes Individual/Organization)
       individuals.each do |i|
