@@ -30,8 +30,9 @@ module ChampionDCAT
       @basePath = meta[:basePath]
       cleanhost = @host.gsub(/\//, "")
       cleanpath = @basePath.gsub(/\//, "")
-      @end_url = "#{protocol}://#{cleanhost}/#{cleanpath}/#{testid}"
-      @end_desc = "#{protocol}://#{cleanhost}/#{cleanpath}/#{testid}"
+      endpointpath = "assess/test"
+      @end_url = "#{protocol}://#{cleanhost}/#{endpointpath}/#{testid}"
+      @end_desc = "#{protocol}://#{cleanhost}/#{cleanpath}/#{testid}/api"
       @identifier = @end_url
       @implementations = [@end_url]
     end
@@ -46,7 +47,9 @@ module ChampionDCAT
       dqv = RDF::Vocabulary.new('http://www.w3.org/ns/dqv#')
       vcard = RDF::Vocabulary.new('http://www.w3.org/2006/vcard/ns#')
       g = RDF::Graph.new
-      me = "#{identifier}/about"
+#      me = "#{identifier}/about"   # at the hackathon we decided that the test id would return the metadata
+                                    # so now there is no need for /about
+      me = "#{identifier}"
 
       FAIRChampion::Output.triplify(me, RDF.type, dcat.DataService, g)
       FAIRChampion::Output.triplify(me, RDF.type, ftr.Test, g)

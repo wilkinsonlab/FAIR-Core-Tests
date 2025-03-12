@@ -62,9 +62,9 @@ components:
   schemas:
     schemas:
       required:
-        - subject
+        - resource_identifier
       properties:
-        subject:
+      - resource_identifier:
           type: string
           description: the GUID being tested
 
