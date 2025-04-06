@@ -11,9 +11,20 @@ def set_routes(classes: allclasses)
   end
 
   get '/tests' do
+    redirect "/tests/"
+  end
+  get '/tests/' do
     ts = Dir[File.dirname(__FILE__) + '/../tests/*.rb']
     @tests = ts.map { |t| t.match(%r{.*/(\S+\.rb)$})[1] }
     erb :listtests
+  end
+
+  post '/tests/assess/test/:id' do
+    fullpath = "#{request.fullpath}"
+    fullpath.gsub!(/^\/tests/, "")  # due to new API calls that must befin with "assess" instead of "tests"
+    status 307
+    headers['Location'] = fullpath
+    ''  
   end
 
   post '/assess/test/:id' do
@@ -28,12 +39,30 @@ def set_routes(classes: allclasses)
     end
     warn "now testing #{guid}"
     # begin
-    @result = FAIRTest.send(id, guid: guid)
+    @result = FAIRTest.send(id, guid: guid)  # @result is a json STRING!
     # rescue StandardError
     #  @result = '{}'
     # end
-    warn @result.class
-    @result
+    # warn @result.class
+    request.accept.each do |type|
+      case type.to_s
+      when 'text/html', 'application/xhtml+xml'
+        content_type :html
+        data = JSON.parse(@result)
+        @test_execution = data['@graph'].find { |g| g['@type'] == 'ftr:TestExecutionActivity' }
+        @test = data['@graph'].find { |g| g['@id'] == @test_execution['prov:wasAssociatedWith']['@id'] }
+        @metric_implementation = @test['sio:SIO_000233'] # Extract SIO_000233
+        @test_result = data['@graph'].find { |g| g['@id'] == @test_execution['prov:generated']['@id'] }
+        @result_value = @test_result['prov:value']['@value'] # Extract pass/fail
+        halt erb :testresult
+      when 'text/json', 'application/json', 'application/ld+json'
+        content_type :json
+        halt @result
+      else 
+        warn "type is #{type}"
+      end
+    end
+    error 406
   end
 
 
