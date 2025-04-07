@@ -18,8 +18,10 @@ class OpenAPI
     @email = meta[:email]
     @creator = meta[:creator]
     @host =  meta[:host]
+    @host = @host.gsub(/\/$/, "")  # remove trailing slash if present
     @protocol =  meta[:protocol]
     @basePath =  meta[:basePath]
+    @basePath = "/#{basePath}" unless basePath[0]== "/"  # must start with a slash
     @path = meta[:path]
     @response_description = meta[:response_description]
     @schemas = meta[:schemas]

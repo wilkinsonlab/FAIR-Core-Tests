@@ -4,11 +4,11 @@
 
 <% @tests.each do |t| %>
 <% testname = t.to_s[0..-4] %>
-    <form action="./assess/test/<%= testname %>" method = "post">
+    <form action="/assess/test/<%= testname %>" method = "post">
     <input type = "text" name="resource_identifier"/>
-    <%= t.to_s[0..-4] %> 
-    <a href="./tests/<%= t.to_s[0..-4] %>/api">
-        Interface</a>&nbsp;&nbsp;<a href="./tests/<%= t.to_s[0..-4]%>">DCAT Metadata</a><br/>
+    <%= testname %> 
+    <a href="/tests/<%= testname %>/api">
+        Interface</a>&nbsp;&nbsp;<a href="/tests/<%= testname %>">DCAT Metadata</a><br/>
     <input type="submit" value="Test it"></form><br/><br/>
 <% end %>
 
