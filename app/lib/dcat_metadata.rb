@@ -33,7 +33,7 @@ module ChampionDCAT
       endpointpath = "assess/test"
       @end_url = "#{protocol}://#{cleanhost}/#{endpointpath}/#{testid}"
       @end_desc = "#{protocol}://#{cleanhost}/#{cleanpath}/#{testid}/api"
-      @identifier = @end_url
+      @identifier = "#{protocol}://#{cleanhost}/#{cleanpath}/#{testid}"
       @implementations = [@end_url]
     end
 

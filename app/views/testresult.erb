@@ -60,21 +60,21 @@
         </button>
         <div class="collapse mt-2" id="logCollapse">
           <div class="card card-body">
-            <pre>
+            <div style="font-family: 'Courier New', monospace; font-size: 50%">
               <% @test_result['ftr:log']['@value'].split("\n").each do |line| %>
                 <% if line.start_with?('WARN') %>
-                  <span style="color: #ffcc00;"><%= line %></span>
+                  <span style="color: #ffcc00;"><%= line %></span><br/>
                 <% elsif line.start_with?('CRITICAL') %>
-                  <span style="color: #ff7700;"><%= line %></span>
+                  <span style="color: #ff7700;"><%= line %></span><br/>
                 <% elsif line.start_with?('FAILURE') %>
-                  <span style="color: #ff0000;"><%= line %></span>
+                  <span style="color: #ff0000;"><%= line %></span><br/>
                 <% elsif line.start_with?('SUCCESS') %>
-                  <span style="color: #00cc00;"><%= line %></span>
+                  <span style="color: #00cc00;"><%= line %></span><br/>
                 <% else %>
-                  <%= line %>
+                  <%= line %><br/>
                 <% end %>
               <% end %>
-            </pre>
+            </div>
           </div>
         </div>
       </div>

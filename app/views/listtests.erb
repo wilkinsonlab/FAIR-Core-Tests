@@ -1,15 +1,23 @@
 <html><body>
 <h2>FAIR Tests on this server</h2>
 
+Generic CURL command:
+
+<pre>
+curl -H "Content-type: application/json" -H "Accept: application/json" 
+   -d '{"resource_identifier": "https://exampledataset.org"}' 
+    https://tests.ostrails.eu/tests/fc_some_test_name
+</pre>
+<br/><br/>
 
 <% @tests.each do |t| %>
-<% testname = t.to_s[0..-4] %>
-    <form action="/assess/test/<%= testname %>" method = "post">
-    <input type = "text" name="resource_identifier"/>
-    <%= testname %> 
-    <a href="/tests/<%= testname %>/api">
-        Interface</a>&nbsp;&nbsp;<a href="/tests/<%= testname %>">DCAT Metadata</a><br/>
-    <input type="submit" value="Test it"></form><br/><br/>
+    <% testname = t.to_s[0..-4] %>
+        <form action="/assess/test/<%= testname %>" method = "post">
+        <input type = "text" name="resource_identifier"/>
+        <%= testname %> 
+        <a href="/tests/<%= testname %>/api">
+            Interface</a>&nbsp;&nbsp;<a href="/tests/<%= testname %>">DCAT Metadata</a><br/>
+        <input type="submit" value="Test it"></form><br/><br/>
 <% end %>
 
 </body></html>
