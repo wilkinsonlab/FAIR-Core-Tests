@@ -36,3 +36,5 @@ gem "rdf-vocab"
 gem "metainspector", "~> 5-11-2"
 
 #gem "zlib", "= 3.1.0"
+
+gem "jsonpath", "~> 1.1"

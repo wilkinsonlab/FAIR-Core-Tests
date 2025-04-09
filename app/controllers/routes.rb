@@ -1,4 +1,4 @@
-# frozen_string_literal: false
+ # frozen_string_literal: false
 
 def set_routes(classes: allclasses)
   set :server_settings, timeout: 180
@@ -15,7 +15,8 @@ def set_routes(classes: allclasses)
   end
   get '/tests/' do
     ts = Dir[File.dirname(__FILE__) + '/../tests/*.rb']
-    @tests = ts.map { |t| t.match(%r{.*/(\S+\.rb)$})[1] }
+    @tests = ts.map { |t| t.match(%r{.*/(\S+)\.rb$})[1] }
+    @labels = FAIRChampion::Harvester.get_tests_metrics(tests: @tests)
     erb :listtests
   end
 

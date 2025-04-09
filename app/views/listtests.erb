@@ -11,11 +11,11 @@ curl -H "Content-type: application/json" -H "Accept: application/json"
 <br/><br/>
 
 <% @tests.each do |t| %>
-    <% testname = t.to_s[0..-4] %>
+    <% testname = t.to_s %>
         <form action="/assess/test/<%= testname %>" method = "post">
         <input type = "text" name="resource_identifier"/>
         <%= testname %> 
-        <a href="/tests/<%= testname %>/api">
+        <a href="/tests/<%= testname %>/api"> (<%= @labels[testname] %>)
             Interface</a>&nbsp;&nbsp;<a href="/tests/<%= testname %>">DCAT Metadata</a><br/>
         <input type="submit" value="Test it"></form><br/><br/>
 <% end %>

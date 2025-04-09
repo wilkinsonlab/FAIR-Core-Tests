@@ -461,6 +461,35 @@ module FAIRChampion
       # you can capture the Exception and do something useful with it!\n",
     end
 
+      # there is a need to map between a test and its registered Metric in FS.  This will return the label for the test
+      # in principle, we cojuld return a more complex object, but all I need now is the label
+    def self.get_tests_metrics(tests: )
+      labels = {}
+      tests.each do |testid|
+        warn "getting dcat for #{testid}"
+
+        dcat = RestClient::Request.execute({
+                                                method: :get,
+                                                url: "https://tests.ostrails.eu/tests/#{testid}",
+                                              }).body
+        parseddcat = JSON.parse(dcat)
+        
+        jpath = JsonPath.new('[0]["http://semanticscience.org/resource/SIO_000233"][0]["@id"]')
+        fsdoi = jpath.on(parseddcat).first
+        fsdoi = fsdoi.gsub(%r{https?://doi.org/}, "")  # just the doi
+        fs = RestClient::Request.execute({
+                                                method: :post,
+                                                url: "https://api.fairsharing.org/graphql",
+                                                headers: {'Content-type' => 'application/json', 'X-GraphQL-Key' => ENV['FAIRSHARING_KEY']},
+                                                payload: '{"query": "{fairsharingRecord(id: \"' + fsdoi + '\") { id name }}"}',
+                                              }).body
+        parsedfs = JSON.parse(fs)
+        label = parsedfs['data']['fairsharingRecord']['name']
+        labels[testid] = label
+      end
+      labels
+    end
+
 
   end # END OF Harvester CLASS
 

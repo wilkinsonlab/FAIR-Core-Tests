@@ -79,6 +79,8 @@ GEM
     json-ld-preloaded (3.3.0)
       json-ld (~> 3.3)
       rdf (~> 3.3)
+    jsonpath (1.1.5)
+      multi_json
     language_server-protocol (3.17.0.3)
     ld-patch (3.3.0)
       ebnf (~> 2.4)
@@ -141,16 +143,6 @@ GEM
     net-http-persistent (4.0.2)
       connection_pool (~> 2.2)
     netrc (0.11.0)
-    nokogiri (1.16.3-aarch64-linux)
-      racc (~> 1.4)
-    nokogiri (1.16.3-arm-linux)
-      racc (~> 1.4)
-    nokogiri (1.16.3-arm64-darwin)
-      racc (~> 1.4)
-    nokogiri (1.16.3-x86-linux)
-      racc (~> 1.4)
-    nokogiri (1.16.3-x86_64-darwin)
-      racc (~> 1.4)
     nokogiri (1.16.3-x86_64-linux)
       racc (~> 1.4)
     openapi3_parser (0.9.2)
@@ -351,11 +343,6 @@ GEM
     zlib (2.1.1)
 
 PLATFORMS
-  aarch64-linux
-  arm-linux
-  arm64-darwin
-  x86-linux
-  x86_64-darwin
   x86_64-linux
 
 DEPENDENCIES
@@ -366,6 +353,7 @@ DEPENDENCIES
   fileutils (~> 1.5.0)
   json (~> 2.7.1)
   json-canonicalization (~> 1.0.0)
+  jsonpath (~> 1.1)
   linkeddata (~> 3.2.0)
   metainspector (~> 5.pre.11.pre.2)
   openapi3_parser (~> 0.9.2)
@@ -390,7 +378,7 @@ DEPENDENCIES
   xml-simple (~> 1.1.8)
 
 RUBY VERSION
-   ruby 3.0.0p0
+   ruby 3.3.0p0
 
 BUNDLED WITH
    2.5.5

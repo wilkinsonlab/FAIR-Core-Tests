@@ -6,6 +6,8 @@ require "sinatra/base"
 require "json"
 require "erb"
 require "require_all"
+require "jsonpath"
+
 # DO NOT change the order of loading below.  The files contain executable code that builds the overall configuration before this module starts
 require_rel "./routes.rb"
 require_rel "../models"
