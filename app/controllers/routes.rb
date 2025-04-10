@@ -2,7 +2,7 @@
 
 def set_routes(classes: allclasses)
   set :server_settings, timeout: 180
-  set :public_folder, 'public'
+  set :public_folder, File.join(__dir__, '../public')
   set :port, 8282
 
   get '/' do

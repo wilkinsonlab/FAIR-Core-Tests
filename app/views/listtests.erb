@@ -1,23 +1,42 @@
-<html><body>
-<h2>FAIR Tests on this server</h2>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/tests/css/styles.css">
+  <title>Test Runner</title>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>List FAIR Tests</h2>
+    </div>
 
 Generic CURL command:
+    <div class="code-block">
 
-<pre>
-curl -H "Content-type: application/json" -H "Accept: application/json" 
-   -d '{"resource_identifier": "https://exampledataset.org"}' 
-    https://tests.ostrails.eu/tests/fc_some_test_name
-</pre>
-<br/><br/>
+        <pre>
+        curl -H "Content-type: application/json" -H "Accept: application/json" 
+        -d '{"resource_identifier": "https://exampledataset.org"}' 
+        https://tests.ostrails.eu/tests/fc_some_test_name
+        </pre>
+        <br/><br/>
+    </div>
 
 <% @tests.each do |t| %>
-    <% testname = t.to_s %>
-        <form action="/assess/test/<%= testname %>" method = "post">
-        <input type = "text" name="resource_identifier"/>
-        <%= testname %> 
-        <a href="/tests/<%= testname %>/api"> (<%= @labels[testname] %>)
-            Interface</a>&nbsp;&nbsp;<a href="/tests/<%= testname %>">DCAT Metadata</a><br/>
-        <input type="submit" value="Test it"></form><br/><br/>
-<% end %>
-
-</body></html>
+      <% testname = t.to_s %>
+      <div class="form-card">
+        <form action="/assess/test/<%= testname %>" method="post">
+          <label for="resource_identifier_<%= testname %>"><%= testname %></label>
+          <input type="text" name="resource_identifier" id="resource_identifier_<%= testname %>" placeholder="e.g., https://example.org/dataset">
+          <div>
+            <a href="/tests/<%= testname %>/api">(<%= @labels[testname] %> Interface)</a>  
+            <a href="/tests/<%= testname %>">DCAT Metadata</a>
+          </div>
+          <input type="submit" value="Test it">
+        </form>
+      </div>
+      <br><br>
+    <% end %>
+  </div>
+</body>
+</html>
