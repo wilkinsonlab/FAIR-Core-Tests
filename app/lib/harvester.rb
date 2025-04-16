@@ -471,6 +471,7 @@ module FAIRChampion
         dcat = RestClient::Request.execute({
                                                 method: :get,
                                                 url: "https://tests.ostrails.eu/tests/#{testid}",
+                                                headers: {"Accept" => "application/json"}
                                               }).body
         parseddcat = JSON.parse(dcat)
         
