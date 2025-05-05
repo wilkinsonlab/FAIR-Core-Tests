@@ -76,17 +76,28 @@ def set_routes(classes: allclasses)
 
 
   get '/tests/:id' do  # returns DCAT
-    content_type 'text/turtle'
-    content_type 'application/ld+json'
     id = params[:id]
     id += '_about'
     # begin
     graph = FAIRTest.send(id)
-    # rescue StandardError
-    #   graph = ''
-    # end
-    graph.dump(:jsonld)
-#    graph.dump(:ttl)
+
+    request.accept.each do |type|
+      case type.to_s
+      when "text/turtle"
+        content_type "text/turtle"
+        halt graph.dump(:turtle)
+      when "application/json"
+        content_type :json
+        halt graph.dump(:jsonld)
+      when "application/ld+json"
+        content_type :json
+        halt graph.dump(:jsonld)
+      else  # for the FDP index send turtle by default
+        content_type "text/turtle"
+        halt graph.dump(:turtle)
+      end
+    end
+
   end
 
 
