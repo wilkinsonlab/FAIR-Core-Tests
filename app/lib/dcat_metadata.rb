@@ -1,7 +1,7 @@
 module ChampionDCAT
   class DCAT_Record
     attr_accessor :identifier, :testname, :description, :keywords, :creator,
-                  :indicators, :end_desc, :end_url, :dctype, :testid,
+                  :indicators, :end_desc, :end_url, :dctype, :testid, :supportedby,
                   :license, :themes, :testversion, :implementations,
                   :organizations, :individuals, :protocol, :host, :basePath, :metric
     require_rel './output.rb'
@@ -19,6 +19,8 @@ module ChampionDCAT
       @end_desc = meta[:end_desc]
       @end_url = meta[:end_url]
       @dctype = meta[:dctype] || "http://edamontology.org/operation_2428"
+      @supportedby = meta[:supportedby] || ["https://tools.ostrails.eu/champion"]
+      isapplicablefor = meta[;isapplicablefor] || ["https://example.org/some-special-domain"]
       @license = meta[:license]
       @themes = meta[:themes]
       @themes = [@themes] unless @themes.is_a? Array
@@ -46,6 +48,8 @@ module ChampionDCAT
       ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
       dqv = RDF::Vocabulary.new('http://www.w3.org/ns/dqv#')
       vcard = RDF::Vocabulary.new('http://www.w3.org/2006/vcard/ns#')
+      dpv = RDF::Vocabulary.new('https://w3id.org/dpv#')
+
       g = RDF::Graph.new
 #      me = "#{identifier}/about"   # at the hackathon we decided that the test id would return the metadata
                                     # so now there is no need for /about
@@ -139,6 +143,18 @@ module ChampionDCAT
         FAIRChampion::Output.triplify(cp, vcard['organization-name'], o['name'], g)
         FAIRChampion::Output.triplify(cp, vcard.url, RDF::URI.new(o['url'].to_s), g)
       end
+
+      supportedby.each do |tool|
+        FAIRChampion::Output.triplify(me, ftr.supportedBy, tool,  g)
+        FAIRChampion::Output.triplify(tool, RDF.type, schema.SoftwareApplication,  g)
+      end
+
+      isapplicablefor.each do |domain|
+        FAIRChampion::Output.triplify(me, dpv.isApplicableFor, domain,  g)
+        # FAIRChampion::Output.triplify(tool, RDF.type, schema.SoftwareApplication,  g)
+      end
+
+
       g
     end
   end
