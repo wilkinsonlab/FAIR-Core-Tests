@@ -2,7 +2,7 @@ module ChampionDCAT
   class DCAT_Record
     attr_accessor :identifier, :testname, :description, :keywords, :creator,
                   :indicators, :end_desc, :end_url, :dctype, :testid, :supportedby,
-                  :license, :themes, :testversion, :implementations,
+                  :license, :themes, :testversion, :implementations, :isapplicablefor,
                   :organizations, :individuals, :protocol, :host, :basePath, :metric
     require_rel './output.rb'
 
@@ -20,7 +20,7 @@ module ChampionDCAT
       @end_url = meta[:end_url]
       @dctype = meta[:dctype] || "http://edamontology.org/operation_2428"
       @supportedby = meta[:supportedby] || ["https://tools.ostrails.eu/champion"]
-      isapplicablefor = meta[;isapplicablefor] || ["https://example.org/some-special-domain"]
+      @isapplicablefor = meta[:isapplicablefor] || ["https://example.org/some-special-domain"]
       @license = meta[:license]
       @themes = meta[:themes]
       @themes = [@themes] unless @themes.is_a? Array

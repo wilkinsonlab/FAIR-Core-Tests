@@ -54,7 +54,7 @@ module FAIRChampion
       executionid = 'urn:ostrails:testexecutionactivity:' + SecureRandom.uuid
 
       # softwareid = 'urn:ostrails:fairtestsoftware:' + SecureRandom.uuid
-      softwareid = "https://tests.ostrails.eu/tests/#{testid}/about"
+      softwareid = "https://tests.ostrails.eu/tests/#{testid}"
       # tid = 'urn:ostrails:fairtestentity:' + SecureRandom.uuid
       # The entity is no longer an anonymous node, it is the GUID Of the tested input
 
