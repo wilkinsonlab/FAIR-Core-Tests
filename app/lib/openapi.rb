@@ -25,6 +25,8 @@ class OpenAPI
     @path = meta[:path]
     @response_description = meta[:response_description]
     @schemas = meta[:schemas]
+    endpointpath = "assess/test"
+    @end_url = "#{protocol}://#{host}/#{endpointpath}/#{testid}"
   end
 
   def get_api
