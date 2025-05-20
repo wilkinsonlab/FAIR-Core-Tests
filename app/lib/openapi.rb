@@ -2,7 +2,7 @@ class OpenAPI
   attr_accessor :title, :metric, :description, :indicator, :testid,
                 :organization, :org_url, :version, :creator,
                 :responsible_developer, :email, :developer_ORCiD, :protocol,
-                :host, :basePath, :path, :response_description, :schemas
+                :host, :basePath, :path, :response_description, :schemas, :endpointpath
 
   def initialize(meta:)
     indics = [meta[:indicators]] unless meta[:indicators].is_a? Array
@@ -25,7 +25,7 @@ class OpenAPI
     @path = meta[:path]
     @response_description = meta[:response_description]
     @schemas = meta[:schemas]
-    endpointpath = "assess/test"
+    @endpointpath = "assess/test"
     @end_url = "#{protocol}://#{host}/#{endpointpath}/#{testid}"
   end
 
@@ -61,7 +61,7 @@ paths:
           description:  >-
             #{response_description}
 servers:
-  - url: "#{protocol}://#{host}#{basePath}"
+  - url: "#{protocol}://#{host}/#{endpointpath}"
 components:
   schemas:
     schemas:
