@@ -3,7 +3,7 @@ module ChampionDCAT
     attr_accessor :identifier, :testname, :description, :keywords, :creator,
                   :indicators, :end_desc, :end_url, :dctype, :testid, :supportedby,
                   :license, :themes, :testversion, :implementations, :isapplicablefor,
-                  :organizations, :individuals, :protocol, :host, :basePath, :metric
+                  :organizations, :individuals, :protocol, :host, :basePath, :metric, :dotype
     require_rel './output.rb'
 
     def initialize(meta:)
