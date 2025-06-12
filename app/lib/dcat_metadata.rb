@@ -20,7 +20,8 @@ module ChampionDCAT
       @end_url = meta[:end_url]
       @dctype = meta[:dctype] || "http://edamontology.org/operation_2428"
       @supportedby = meta[:supportedby] || ["https://tools.ostrails.eu/champion"]
-      @isapplicablefor = meta[:isapplicablefor] || ["https://example.org/some-special-domain"]
+      @isapplicablefor = meta[:isapplicablefor] || ["http://www.fairsharing.org/ontology/subject/SRAO_0000401"]
+      @dotype = meta[:isapplicablefor] || ["https://schema.org/Dataset"]
       @license = meta[:license]
       @themes = meta[:themes]
       @themes = [@themes] unless @themes.is_a? Array
@@ -150,8 +151,10 @@ module ChampionDCAT
       end
 
       isapplicablefor.each do |domain|
-        FAIRChampion::Output.triplify(me, dpv.isApplicableFor, domain,  g)
-        # FAIRChampion::Output.triplify(tool, RDF.type, schema.SoftwareApplication,  g)
+        FAIRChampion::Output.triplify(me, dpv.isApplicableFor, domain, g)
+      end
+      dotype.each do |digitalo|
+        FAIRChampion::Output.triplify(me, ftr.applicationArea, digitalo, g)
       end
 
 

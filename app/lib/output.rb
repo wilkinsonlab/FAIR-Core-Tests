@@ -49,8 +49,6 @@ module FAIRChampion
         summary ||= "Summary of test results: #{@@comments[-2]}"
       end
 
-
-
       executionid = 'urn:ostrails:testexecutionactivity:' + SecureRandom.uuid
 
       # softwareid = 'urn:ostrails:fairtestsoftware:' + SecureRandom.uuid
@@ -96,7 +94,7 @@ module FAIRChampion
       # triplify(tid, schema.identifier, testedGUID, g, xsd.string)
       # triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
 
-      triplify(uniqueid, prov.wasDerivedFrom, testedGUID, g)
+      triplify(uniqueid, ftr.assessmentTarget, testedGUID, g)
       triplify(executionid, prov.used, testedGUID, g)
       triplify(testedGUID, RDF.type, prov.Entity, g)
 
