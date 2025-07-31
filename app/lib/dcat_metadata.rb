@@ -2,7 +2,7 @@ module ChampionDCAT
   class DCAT_Record
     attr_accessor :identifier, :testname, :description, :keywords, :creator,
                   :indicators, :end_desc, :end_url, :dctype, :testid, :supportedby,
-                  :license, :themes, :testversion, :implementations, :isapplicablefor, :applicationarea
+                  :license, :themes, :testversion, :implementations, :isapplicablefor, :applicationarea,
                   :organizations, :individuals, :protocol, :host, :basePath, :metric, :dotype
     require_rel './output.rb'
 
