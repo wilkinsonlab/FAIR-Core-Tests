@@ -136,7 +136,7 @@ module FAIRChampion
 
     def self.triplify(s, p, o, repo, datatype = nil)
       begin
-        warn "S-P-O #{s.to_s} #{p.to_s} #{o.to_s}"
+        # warn "S-P-O #{s.to_s} #{p.to_s} #{o.to_s}"
       rescue
         warn "input to #triplify seems totally invalid!"
         return false

@@ -7,14 +7,13 @@ require "json"
 require "erb"
 require "require_all"
 require "jsonpath"
+require "dotenv/load" unless ENV['RACK_ENV'] == 'production'
 
-# DO NOT change the order of loading below.  The files contain executable code that builds the overall configuration before this module starts
 require_rel "./routes.rb"
 require_rel "../models"
 require_rel "../views"
 require_rel "../tests"
 require_rel "../lib"
-
 
 class ApplicationController < Sinatra::Application
   include Swagger::Blocks
@@ -51,25 +50,14 @@ class ApplicationController < Sinatra::Application
         key :name, "MIT"
       end
     end
-    # tag do
-    #   key :name, $th.keys.first
-    #   key :description, 'All Tests'
-    #   externalDocs do
-    #     key :description, 'Find more info here'
-    #     key :url, 'https://fairdata.services/Champion/about'
-    #   end
-    # end
     key :schemes, ["http"]
     key :host, ENV.fetch("HARVESTER", nil)
     key :basePath, "/tests/"
-    #    key :consumes, ['application/json']
-    #    key :produces, ['application/json']
   end
 
-  # A list of all classes that have swagger_* declarations.
   SWAGGERED_CLASSES = [ErrorModel, self].freeze
 
   set_routes(classes: SWAGGERED_CLASSES)
 
-  run! # if app_file == $PROGRAM_NAME
+  run! if app_file == $PROGRAM_NAME && ENV['RACK_ENV'] != 'test'
 end

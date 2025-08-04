@@ -6,7 +6,7 @@ gem "debase", git: "https://github.com/ruby-debug/debase.git", tag: "v0.2.5.beta
 gem "linkeddata", "~> 3.2.0"
 gem "parseconfig", "~> 1.1.2"
 gem "rake", "~> 13.0"
-gem "rdf-raptor", "~> 3.1.0"
+gem "rdf-raptor", "~> 3.2.0"
 gem "rest-client", "~> 2.1.0"
 gem "rubocop"
 gem "ruby-debug-ide"
@@ -24,9 +24,16 @@ gem "json-canonicalization", "~> 1.0.0"
 gem "metainspector", "~> 5.11.2"
 gem "jsonpath", "~> 1.1"
 gem "rdf-vocab"
+
+group :development, :test do
+  gem "dotenv", "~> 2.8" # Add dotenv for local environment variables
+end
+
+
 group :test do
-gem "rspec", "~> 3.11.0"
+gem "rspec", "~> 3.13.1"
 gem "rack-test", "~> 2.1.0"
 gem "webmock", "~> 3.18"
 gem "simplecov", "~> 0.22.0", require: false
 end
+gem "base64", "~> 0.3.0"

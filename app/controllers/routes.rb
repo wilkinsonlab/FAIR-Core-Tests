@@ -1,6 +1,8 @@
- # frozen_string_literal: false
+require 'json'
+require 'yaml'
+require 'erb'
 
-def set_routes(classes: allclasses)
+def set_routes(classes: [])
   set :server_settings, timeout: 180
   set :public_folder, File.join(__dir__, '../public')
   set :port, 8282
@@ -77,9 +79,14 @@ def set_routes(classes: allclasses)
 
   get '/tests/:id' do  # returns DCAT
     id = params[:id]
-    id += '_about'
-    # begin
-    graph = FAIRTest.send(id)
+    idabout = "#{id}_about"
+    begin
+      graph = FAIRTest.send(idabout)
+    rescue StandardError
+      halt 404, { "error" => "Invalid test ID: #{params[:id]}" }.to_json    
+    end
+    
+
 
     request.accept.each do |type|
       case type.to_s
@@ -90,7 +97,7 @@ def set_routes(classes: allclasses)
         content_type :json
         halt graph.dump(:jsonld)
       when "application/ld+json"
-        content_type :json
+        content_type "application/ld+json"
         halt graph.dump(:jsonld)
       else  # for the FDP index send turtle by default
         content_type "text/turtle"
@@ -104,41 +111,13 @@ def set_routes(classes: allclasses)
   get '/tests/:id/api' do  # return swagger
     content_type 'application/openapi+yaml'
     id = params[:id]
-    id += '_api'
-    # begin
-    @result = FAIRTest.send(id)
-    # rescue StandardError
-    #  @result = ''
-    # end
+    idapi = id + "_api"
+    begin
+      @result = FAIRTest.send(idapi)
+    rescue StandardError
+      halt 404, { "error" => "Invalid test ID: #{params[:id]}" }.to_json    
+    end
     @result
   end
 
-      # get '/tests/:id' do
-  #   content_type 'application/openapi+yaml'
-  #   id = params[:id]
-  #   id += '_api'
-  #   # begin
-  #   @result = FAIRTest.send(id)
-  #   # rescue StandardError
-  #   #  @result = ''
-  #   # end
-  #   @result
-  # end
-
-#   get '/tests/:id/about' do
-# #    content_type 'application/ld+json'
-#     content_type 'text/turtle'
-#     id = params[:id]
-#     id += '_about'
-#     # begin
-#     graph = FAIRTest.send(id)
-#     # rescue StandardError
-#     #   graph = ''
-#     # end
-# #    graph.dump(:jsonld)
-#     graph.dump(:ttl)
-#   end
-
-  before do
-  end
 end

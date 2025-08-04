@@ -25,7 +25,7 @@ require 'sparql'
 require 'require_all'
 # require 'pry'
 
-require_rel "../lib"
+require_rel '../lib'
 
 HARVESTER_VERSION = 'Hvst-1.4.2'.freeze
 # better output,
@@ -36,14 +36,13 @@ HARVESTER_VERSION = 'Hvst-1.4.2'.freeze
 def URI.escape(g)  # monkey patch to bring back functionality for metainspector
   URI::Parser.new.escape(g)
 end
+
 def URI.encode(g)  # monkey patch to bring back functionality for metainspector
   URI::Parser.new.escape(g)
 end
-  
 
 module FAIRChampion
   class Harvester
-
     @@distillerknown = {} # global, hash of sha256 keys of message bodies - have they been seen before t/f
 
     def self.resolveit(guid)
@@ -103,15 +102,6 @@ module FAIRChampion
       false
     end
 
-
-
-
-
-
-
-
-
-
     # ==================================================================
     # ==================================================================
     # ==================================================================
@@ -145,8 +135,6 @@ module FAIRChampion
         return meta
       end
 
-
-
       warn "\n\n\nSANITY CHECK \n\n#{body[0..300]}\n\n"
       # sanitycheck = RDF::Format.for({ sample: body[0..5000] })
       # unless sanitycheck
@@ -161,7 +149,7 @@ module FAIRChampion
         meta.merge_rdf(graph.to_a)
         return meta
       end
-        
+
       formattype = nil
       warn "\n\n\ndeclared format #{format}\n\n"
       if format.nil?
@@ -213,7 +201,6 @@ module FAIRChampion
         warn "\n\nCRITICAL: #{e.inspect} An unknown error occurred while parsing the (apparent) Linked Data (full body:  #{body}).  Moving on...\n\n"
         nil
       end
-
     end
 
     def self.parse_xml(meta, body)
@@ -222,7 +209,6 @@ module FAIRChampion
       meta.hash.merge hash
       meta.hash
     end
-
 
     def self.parse_link_http_headers(headers)
       # we can be sure that a Link header is a URL
@@ -262,8 +248,8 @@ module FAIRChampion
       ls = m.head_links.select do |l|
         l[:rel] == 'alternate' and
           [FAIRChampion::Utils::RDF_FORMATS.values,
-          FAIRChampion::Utils::XML_FORMATS.values,
-          FAIRChampion::Utils::JSON_FORMATS.values].flatten
+           FAIRChampion::Utils::XML_FORMATS.values,
+           FAIRChampion::Utils::JSON_FORMATS.values].flatten
             .include?(l[:type])
       end
       # ls is an array of elements that look like this: [{:rel=>"alternate", :type=>"application/ld+json", :href=>"http://scidata.vitk.lv/dataset/303.jsonld"}]
@@ -290,10 +276,10 @@ module FAIRChampion
 
       myHash.each_pair do |k, v|
         props << if property and property == k
-                  [k, v]
-                else
-                  [k, v]
-                end
+                   [k, v]
+                 else
+                   [k, v]
+                 end
         if v.is_a?(Hash)
           # $stderr.puts "key: #{k} recursing..."
           deep_dive_properties(v, property, props)
@@ -334,11 +320,7 @@ module FAIRChampion
       head, body, finalURI = Harvester.checkCache(guid, headers)
       return false if head and head == 'ERROR'
 
-      if meta
-        if finalURI
-          meta.finalURI |= [finalURI]
-        end
-      end
+      meta.finalURI |= [finalURI] if meta && finalURI
 
       warn meta.finalURI.inspect
       if head and body
@@ -349,12 +331,12 @@ module FAIRChampion
       begin
         warn "executing call over the Web to #{guid}"
         response = RestClient::Request.execute(
-                                                method: :get,
-                                                url: guid.to_s,
-                                                # user: user,
-                                                # password: pass,
-                                                headers: headers
-                                              )
+          method: :get,
+          url: guid.to_s,
+          # user: user,
+          # password: pass,
+          headers: headers
+        )
         meta.finalURI |= [response.request.url] if meta
         warn "There was a response to the call #{guid}"
         Harvester.writeToCache(guid, headers, response.headers, response.body, response.request.url)
@@ -389,12 +371,12 @@ module FAIRChampion
       # end
 
       response = RestClient::Request.execute({
-                                              method: :get,
-                                              url: url.to_s,
-                                              # user: user,
-                                              # password: pass,
-                                              headers: headers
-                                            })
+                                               method: :get,
+                                               url: url.to_s,
+                                               # user: user,
+                                               # password: pass,
+                                               headers: headers
+                                             })
       [response.headers, response.body]
     rescue RestClient::ExceptionWithResponse => e
       warn e.response
@@ -414,12 +396,12 @@ module FAIRChampion
     # this returns the URI that results from all redirects, etc.
     def self.head(url, headers = FAIRChampion::Utils::AcceptHeader)
       response = RestClient::Request.execute({
-                                              method: :head,
-                                              url: url.to_s,
-                                              # user: user,
-                                              # password: pass,
-                                              headers: headers
-                                            })
+                                               method: :head,
+                                               url: url.to_s,
+                                               # user: user,
+                                               # password: pass,
+                                               headers: headers
+                                             })
       response.headers
     rescue RestClient::ExceptionWithResponse => e
       warn e.response
@@ -439,12 +421,12 @@ module FAIRChampion
     # this returns the URI that results from all redirects, etc.
     def self.resolve(url, headers = FAIRChampion::Utils::AcceptHeader)
       response = RestClient::Request.execute({
-                                              method: :head,
-                                              url: url.to_s,
-                                              # user: user,
-                                              # password: pass,
-                                              headers: headers
-                                            })
+                                               method: :head,
+                                               url: url.to_s,
+                                               # user: user,
+                                               # password: pass,
+                                               headers: headers
+                                             })
       response.request.url
     rescue RestClient::ExceptionWithResponse => e
       warn e.response
@@ -461,37 +443,35 @@ module FAIRChampion
       # you can capture the Exception and do something useful with it!\n",
     end
 
-      # there is a need to map between a test and its registered Metric in FS.  This will return the label for the test
-      # in principle, we cojuld return a more complex object, but all I need now is the label
-    def self.get_tests_metrics(tests: )
+    # there is a need to map between a test and its registered Metric in FS.  This will return the label for the test
+    # in principle, we cojuld return a more complex object, but all I need now is the label
+    def self.get_tests_metrics(tests:)
+      base_url = ENV['TEST_BASE_URL'] || 'http://localhost:8282' # Default to local server
       labels = {}
       tests.each do |testid|
         warn "getting dcat for #{testid}"
-
         dcat = RestClient::Request.execute({
-                                                method: :get,
-                                                url: "https://tests.ostrails.eu/tests/#{testid}",
-                                                headers: {"Accept" => "application/json"}
-                                              }).body
+                                             method: :get,
+                                             url: "#{base_url}/tests/#{testid}",
+                                             headers: { 'Accept' => 'application/json' }
+                                           }).body
         parseddcat = JSON.parse(dcat)
-        
         jpath = JsonPath.new('[0]["http://semanticscience.org/resource/SIO_000233"][0]["@id"]')
         fsdoi = jpath.on(parseddcat).first
-        fsdoi = fsdoi.gsub(%r{https?://doi.org/}, "")  # just the doi
+        fsdoi = fsdoi.gsub(%r{https?://doi.org/}, '') # just the doi
+        warn "final FAIRsharing DOI is #{fsdoi}"
         fs = RestClient::Request.execute({
-                                                method: :post,
-                                                url: "https://api.fairsharing.org/graphql",
-                                                headers: {'Content-type' => 'application/json', 'X-GraphQL-Key' => ENV['FAIRSHARING_KEY']},
-                                                payload: '{"query": "{fairsharingRecord(id: \"' + fsdoi + '\") { id name }}"}',
-                                              }).body
+                                           method: :post,
+                                           url: 'https://api.fairsharing.org/graphql',
+                                           headers: { 'Content-type' => 'application/json',
+                                                      'X-GraphQL-Key' => ENV.fetch('FAIRSHARING_KEY', nil) },
+                                           payload: '{"query": "{fairsharingRecord(id: \"' + fsdoi + '\") { id name }}"}'
+                                         }).body
         parsedfs = JSON.parse(fs)
         label = parsedfs['data']['fairsharingRecord']['name']
         labels[testid] = label
       end
       labels
     end
-
-
   end # END OF Harvester CLASS
-
 end

@@ -6,7 +6,7 @@ class FAIRTest
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
       testname: 'FAIR Champion: Metadata Knowledge Representation Language (strong)',
-      testid: 'fc_metadata_includes_license_weak',
+      testid: 'fc_metadata_kr_language_strong',
       description: "Maturity Indicator to test if the metadata uses a formal language broadly applicable for knowledge representation.  This particular test takes a broad view of what defines a 'knowledge representation language'; in this evaluation, a knowledge representation language is interpreted as one in which terms are semantically-grounded in ontologies.  Any form of RDF will pass this test (including RDF that is automatically extracted by third-party parsers such as Apache Tika).",
       metric: 'https://doi.org/10.25504/FAIRsharing.jLpL6i',
       indicators: 'https://w3id.org/fair/principles/latest/I1',
@@ -53,7 +53,7 @@ class FAIRTest
 
     hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    # properties = FAIRChampion::Harvester.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
