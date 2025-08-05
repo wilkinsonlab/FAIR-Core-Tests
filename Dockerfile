@@ -4,7 +4,7 @@ FROM ruby:3.3.0
 
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US:UTF-8" LC_ALL="C.UTF-8"
 RUN apt-get update -q
-RUN apt-get system-upgrade -q
+RUN apt-get dist-upgrade -q
 RUN apt-get update -q && apt-get install build-essential -y
 RUN apt-get install -y --no-install-recommends lighttpd && \
   apt-get install -y --no-install-recommends libxml++2.6-dev  libraptor2-0 && \
