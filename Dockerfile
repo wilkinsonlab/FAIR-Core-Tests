@@ -1,10 +1,9 @@
 FROM ruby:3.3.0
 
-FROM ruby:3.3.0
-
 ENV LANG="en_US.UTF-8" LANGUAGE="en_US:UTF-8" LC_ALL="C.UTF-8"
-RUN apt-get update -q
-RUN apt-get dist-upgrade -q
+ENV RACK_ENV=production
+# RUN apt-get update -q
+# RUN apt-get -y dist-upgrade --fix-missing -q
 RUN apt-get update -q && apt-get install build-essential -y
 RUN apt-get install -y --no-install-recommends lighttpd && \
   apt-get install -y --no-install-recommends libxml++2.6-dev  libraptor2-0 && \
@@ -14,9 +13,10 @@ RUN mkdir /server
 WORKDIR /server
 RUN gem update --system
 RUN gem install bundler:2.3.12
-COPY . /server
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile Gemfile.lock fair-core-tests.gemspec ./
 RUN bundle install
+COPY . .
 
-ENTRYPOINT ["sh", "/server/entrypoint.sh"]
+EXPOSE 8282
 
+CMD ["bundle", "exec", "ruby", "/server/app/controllers/application_controller.rb", "-o", "0.0.0.0", "-p", "8282"]
