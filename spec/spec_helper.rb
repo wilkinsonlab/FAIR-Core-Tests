@@ -3,6 +3,9 @@ require 'rack/test'
 require 'webmock/rspec'
 require 'simplecov'
 
+# Suppress warnings during tests
+$VERBOSE = nil
+
 begin
   require_relative 'support/rack_test_helper'
 rescue LoadError => e
@@ -20,12 +23,10 @@ ENV['BING_API'] = 'test_bing_api_key'
 
 require File.expand_path('../app/controllers/application_controller', __dir__)
 
-# Dynamically generate TEST_IDS from app/tests/*.rb, excluding non-Ruby files
 TEST_IDS = Dir.glob(File.join(File.dirname(__FILE__), '../../app/tests/*.rb'))
               .map { |f| File.basename(f, '.rb') }
               .reject { |f| f == 'env' }
 
-# Stub ErrorModel for Swagger
 class ErrorModel
   include Swagger::Blocks
   swagger_schema :ErrorModel do
@@ -40,23 +41,20 @@ class ErrorModel
   end
 end
 
-# Stub FAIRTest methods
 module FAIRTestStub
   def self.send(method_name, **args)
     base_id = method_name.to_s.sub(/_(about|api)$/, '')
     if TEST_IDS.include?(base_id)
       case method_name.to_s
       when /_about$/
-        # Simulate RDF::Graph for DCAT
         graph = RDF::Graph.new
         graph << [RDF::URI.new("http://localhost:8282/tests/#{base_id}"), RDF::URI.new("http://semanticscience.org/resource/SIO_000233"), RDF::URI.new("https://doi.org/10.25504/FAIRsharing.EwnE1n")]
         graph << [RDF::URI.new("http://localhost:8282/tests/#{base_id}"), RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), RDF::URI.new("http://www.w3.org/ns/dcat#DataService")]
         graph << [RDF::URI.new("http://localhost:8282/tests/#{base_id}"), RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), RDF::URI.new("https://w3id.org/ftr#Test")]
         graph
       when /_api$/
-        { swagger: '2.0', info: { title: "Test API #{base_id}" } }.to_json  # Stub Swagger JSON
+        { swagger: '2.0', info: { title: "Test API #{base_id}" } }.to_json
       else
-        # Stub JSON result for other calls
         {
           '@graph' => [
             { '@type' => 'ftr:TestExecutionActivity', '@id' => 'exec1', 'prov:wasAssociatedWith' => { '@id' => base_id }, 'prov:generated' => { '@id' => 'result1' } },
@@ -66,7 +64,7 @@ module FAIRTestStub
         }.to_json
       end
     else
-      raise StandardError, "Invalid test ID: #{base_id}"
+      raise StandardError, "invalid test ID: #{base_id}"
     end
   end
 end
@@ -100,30 +98,55 @@ module Swagger
   end
 end
 
-# Stub Tika HTTP requests
 WebMock.stub_request(:any, %r{http://(evaluator-tika|localhost):9998/.*}).to_return(
   status: 200,
   body: { extracted: 'mocked Tika response' }.to_json,
   headers: { 'Content-Type' => 'application/json' }
 )
 
-# Stub FAIRsharing API requests
 WebMock.stub_request(:post, 'https://api.fairsharing.org/graphql').to_return(
   status: 200,
   body: { data: { fairsharingRecord: { id: '10.25504/FAIRsharing.EwnE1n', name: 'Mock FAIRsharing Record' } } }.to_json,
   headers: { 'Content-Type' => 'application/json' }
 )
 
-# Stub internal GET /tests/:id calls in Harvester
-WebMock.stub_request(:get, %r{http://localhost:8282/tests/.*}).to_return(
-  status: 200,
-  body: [
-    { '@id' => 'http://localhost:8282/tests/fc_data_authorization',
-      'http://semanticscience.org/resource/SIO_000233' => [{ '@id' => 'https://doi.org/10.25504/FAIRsharing.EwnE1n' }],
-      '@type' => ['http://www.w3.org/ns/dcat#DataService', 'https://w3id.org/ftr#Test'] }
-  ].to_json,
-  headers: { 'Content-Type' => 'application/json' }
-)
+WebMock.stub_request(:get, %r{http://localhost:8282/tests/.*}).to_return do |request|
+  test_id = request.uri.path.split('/').last
+  if TEST_IDS.include?(test_id)
+    {
+      status: 200,
+      body: [
+        { '@id' => "http://localhost:8282/tests/#{test_id}",
+          'http://semanticscience.org/resource/SIO_000233' => [{ '@id' => 'https://doi.org/10.25504/FAIRsharing.EwnE1n' }],
+          '@type' => ['http://www.w3.org/ns/dcat#DataService', 'https://w3id.org/ftr#Test'] }
+      ].to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    }
+  else
+    {
+      status: 404,
+      body: { error: "invalid test ID: #{test_id}" }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    }
+  end
+end
+
+WebMock.stub_request(:get, %r{http://localhost:8282/tests/.*/api}).to_return do |request|
+  test_id = request.uri.path.split('/')[-2]
+  if TEST_IDS.include?(test_id)
+    {
+      status: 200,
+      body: { swagger: '2.0', info: { title: "Test API #{test_id}" } }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    }
+  else
+    {
+      status: 404,
+      body: { error: "invalid test ID: #{test_id}" }.to_json,
+      headers: { 'Content-Type' => 'application/json' }
+    }
+  end
+end
 
 RSpec.configure do |config|
   config.include Rack::Test::Methods
@@ -150,10 +173,10 @@ RSpec.configure do |config|
     allow(Dir).to receive(:[]).with(File.join(File.dirname(__FILE__), '../../app/tests/*.rb')).and_return(
       TEST_IDS.map { |id| File.join(File.dirname(__FILE__), "../../app/tests/#{id}.rb") }
     )
-    allow(Dir).to receive(:[]).with("/home/osboxes/CODE/FAIR-Core-Tests/app/controllers/../tests/*.rb").and_return(
-      TEST_IDS.map { |id| "/home/osboxes/CODE/FAIR-Core-Tests/app/tests/#{id}.rb" }
+    # Stub Dir.[] for Docker path
+    allow(Dir).to receive(:[]).with(%r{.*/app/controllers/\.\./tests/\*.rb}).and_return(
+      TEST_IDS.map { |id| "/server/app/tests/#{id}.rb" }
     )
-    # Mock FAIRTest.send
     allow(FAIRTest).to receive(:send).and_call_original
     TEST_IDS.each do |test_id|
       allow(FAIRTest).to receive(:send).with(test_id, anything).and_return(FAIRTestStub.send(test_id))
@@ -161,9 +184,8 @@ RSpec.configure do |config|
       allow(FAIRTest).to receive(:send).with("#{test_id}_api", anything).and_return(FAIRTestStub.send("#{test_id}_api"))
     end
     allow(FAIRTest).to receive(:send).with(anything, anything) do |method_name, *args|
-      raise StandardError, "Invalid test ID: #{method_name.to_s.sub(/_(about|api)$/, '')}"
+      FAIRTestStub.send(method_name)
     end
-    # Mock FAIRChampion::Harvester.get_tests_metrics
     allow(FAIRChampion::Harvester).to receive(:get_tests_metrics).and_return(FAIRChampion::HarvesterStub.get_tests_metrics(tests: TEST_IDS))
   end
 end

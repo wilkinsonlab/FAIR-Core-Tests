@@ -19,4 +19,4 @@ COPY . .
 
 EXPOSE 8282
 
-CMD ["bundle", "exec", "ruby", "/server/app/controllers/application_controller.rb", "-o", "0.0.0.0", "-p", "8282"]
+CMD ["ruby", "/server/app/controllers/application_controller.rb", "-o", "0.0.0.0", "-p", "8282"]
