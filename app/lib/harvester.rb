@@ -21,13 +21,12 @@ require 'digest'
 require 'open3'
 require 'metainspector'
 require 'rdf/xsd'
-require 'sparql'
 require 'require_all'
 # require 'pry'
 
 require_rel '../lib'
 
-HARVESTER_VERSION = 'Hvst-1.4.2'.freeze
+HARVESTER_VERSION = 'Hvst-1.4.3'.freeze
 # better output,
 # different dealing with DataCite (they have a unique type header)
 # handle large extruct output,

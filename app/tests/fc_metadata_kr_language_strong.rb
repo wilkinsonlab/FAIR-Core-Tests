@@ -51,7 +51,7 @@ class FAIRTest
       return output.createEvaluationResponse
     end
 
-    hash = metadata.hash
+    _hash = metadata.hash
     graph = metadata.graph
     # properties = FAIRChampion::Harvester.deep_dive_properties(hash)
     #############################################################################################################
