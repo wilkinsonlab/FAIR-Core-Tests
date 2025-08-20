@@ -12,9 +12,9 @@ module FAIRChampion
     def_delegators FAIRChampion::Output, :triplify
 
     attr_accessor :score, :testedGUID, :testid, :uniqueid, :name, :description, :license, :dt, :metric, 
-                  :version, :summary, :completeness
+                  :version, :summary, :completeness, :comments
 
-    @@comments = []
+    
     OPUTPUT_VERSION = "1.1.0"
 
     def initialize(testedGUID:, meta:)
@@ -30,6 +30,7 @@ module FAIRChampion
       @summary = meta[:summary] || 'Summary:'
       @completeness = '100'
       @testid = meta[:testid]
+      @comments = []
     end
 
     def createEvaluationResponse
@@ -45,8 +46,8 @@ module FAIRChampion
       add_newline_to_comments
 
       if summary =~ /^Summary$/
-        summary = "Summary of test results: #{@@comments[-1]}"
-        summary ||= "Summary of test results: #{@@comments[-2]}"
+        summary = "Summary of test results: #{comments[-1]}"
+        summary ||= "Summary of test results: #{comments[-2]}"
       end
 
       executionid = 'urn:ostrails:testexecutionactivity:' + SecureRandom.uuid
@@ -68,7 +69,7 @@ module FAIRChampion
       triplify(uniqueid, prov.value, score, g)
       triplify(uniqueid, ftr.summary, summary, g)
       triplify(uniqueid, RDF::Vocab::PROV.generatedAtTime, dt, g)
-      triplify(uniqueid, ftr.log, @@comments.join, g)
+      triplify(uniqueid, ftr.log, comments.join, g)
       triplify(uniqueid, ftr.completion, completeness, g)
 
       triplify(uniqueid, ftr.outputFromTest, softwareid, g)      
@@ -85,7 +86,7 @@ module FAIRChampion
                "https://tests.ostrails.eu/tests/#{testid}", g) # POST to execute
       triplify(softwareid, "http://www.w3.org/ns/dcat#version", "#{version} OutputVersion:#{OPUTPUT_VERSION}" , g)  # dcat namespace in library has no version - dcat 2 not 3
       triplify(softwareid, dct.license, 'https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE', g)
-      triplify(softwareid, sio["SIO_000233"], @metric, g)  # implementation of 
+      triplify(softwareid, sio["SIO_000233"], metric, g)  # implementation of 
 
       # deprecated after release 1.0
       # triplify(uniqueid, prov.wasDerivedFrom, tid, g)
@@ -114,24 +115,24 @@ module FAIRChampion
 
     # can be called as FAIRChampion::Output.comments << "newcomment"
     def self.comments
-      @@comments
+      @comments
     end
 
     def comments
-      @@comments
+      @comments
     end
 
     def self.clear_comments
-      @@comments = []
+      @comments = []
     end
 
     def add_newline_to_comments
       cleancomments = []
-      @@comments.each do |c|
+      @comments.each do |c|
         c += "\n" unless c =~ /\n$/
         cleancomments << c
       end
-      @@comments = cleancomments
+      @comments = cleancomments
     end
 
     def self.triplify(s, p, o, repo, datatype = nil)
