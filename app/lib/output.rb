@@ -98,6 +98,7 @@ module FAIRChampion
       triplify(uniqueid, ftr.assessmentTarget, testedGUID, g)
       triplify(executionid, prov.used, testedGUID, g)
       triplify(testedGUID, RDF.type, prov.Entity, g)
+      triplify(testedGUID, dct.identifier, testedGUID, g)
 
       
 #      g.dump(:jsonld)
