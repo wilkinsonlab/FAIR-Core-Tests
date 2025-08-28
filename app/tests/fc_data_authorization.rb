@@ -10,8 +10,8 @@ class FAIRTest
     testid: "fc_data_authorization",
     description: "Test a discovered data GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  It also searches the metadata for the Dublin Core 'accessRights' property, which may point to a document describing the data access process. Recognition of other identifiers will be added upon request by the community.",
     
-      metric: 'https://doi.org/10.25504/FAIRsharing.EwnE1n',
-      indicators: 'https://w3id.org/fair/principles/latest/A1.2',
+      metric: 'https://doi.org/10.25504/FAIRsharing.VrP6sm',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],

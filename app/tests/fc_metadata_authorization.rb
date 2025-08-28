@@ -10,7 +10,7 @@ class FAIRTest
     testid: 'fc_metadata_authorization',
     description: 'Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.',
     metric: 'https://doi.org/10.25504/FAIRsharing.VrP6sm',
-    indicators: 'https://w3id.org/fair/principles/latest/A1.2',
+    indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
     type: 'http://edamontology.org/operation_2428',
     license: 'https://creativecommons.org/publicdomain/zero/1.0/',
     keywords: ['FAIR Assessment', 'FAIR Principles'],

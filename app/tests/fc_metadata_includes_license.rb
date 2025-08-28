@@ -8,7 +8,7 @@ class FAIRTest
       testid: 'fc_metadata_includes_license',
       description: "Maturity Indicator to test if the linked data metadata contains an explicit pointer to the license.  Tests: xhtml, dvia, dcterms, cc, data.gov.au, and Schema license predicates in linked data, and validates the value of those properties.",
       metric: 'https://doi.org/10.25504/FAIRsharing.VrP6sm',
-      indicators: 'https://w3id.org/fair/principles/latest/R1.1',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],
