@@ -459,16 +459,25 @@ module FAIRChampion
         fsdoi = jpath.on(parseddcat).first
         fsdoi = fsdoi.gsub(%r{https?://doi.org/}, '') # just the doi
         warn "final FAIRsharing DOI is #{fsdoi}"
-        fs = RestClient::Request.execute({
-                                           method: :post,
-                                           url: 'https://api.fairsharing.org/graphql',
-                                           headers: { 'Content-type' => 'application/json',
-                                                      'X-GraphQL-Key' => ENV.fetch('FAIRSHARING_KEY', nil) },
-                                           payload: '{"query": "{fairsharingRecord(id: \"' + fsdoi + '\") { id name }}"}'
-                                         }).body
+        begin
+          fs = RestClient::Request.execute({
+                                            method: :post,
+                                            url: 'https://api.fairsharing.org/graphql',
+                                            headers: { 'Content-type' => 'application/json',
+                                                        'X-GraphQL-Key' => ENV.fetch('FAIRSHARING_KEY', nil) },
+                                            payload: '{"query": "{fairsharingRecord(id: \"' + fsdoi + '\") { id name }}"}'
+                                          }).body
+        rescue StandardError => e
+          warn "FAIRSharing connection failed #{e.inspect}"
+          fs = "{}"
+        end
         parsedfs = JSON.parse(fs)
-        label = parsedfs['data']['fairsharingRecord']['name']
-        labels[testid] = label
+        unless parsedfs['data']
+          labels[testid] = "FAIRSharing label not available"
+        else
+          label = parsedfs['data']['fairsharingRecord']['name']
+          labels[testid] = label
+        end
       end
       labels
     end
