@@ -19,7 +19,17 @@ def set_routes(classes: [])
     ts = Dir[File.dirname(__FILE__) + '/../tests/*.rb']
     @tests = ts.map { |t| t.match(%r{.*/(\S+)\.rb$})[1] }
     @labels = FAIRChampion::Harvester.get_tests_metrics(tests: @tests)
-    erb :listtests
+    halt erb :listtests, layout: :listtests_layout
+  end
+
+  get '/tests/new' do
+    halt erb :newtest, layout: :newtest_layout
+  end
+
+  post '/tests/new' do
+    test_uri = params["test_uri"]
+    @result = FAIRChampion::Tests.register_test(test_uri: test_uri)
+    halt erb :newtest_output, layout: :newtest_layout
   end
 
   post '/tests/assess/test/:id' do

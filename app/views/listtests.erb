@@ -1,26 +1,3 @@
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/tests/css/styles.css">
-  <title>Test Runner</title>
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h2>List FAIR Tests</h2>
-    </div>
-
-Generic CURL command:
-    <div class="code-block">
-
-        <pre>
-        curl -H "Content-type: application/json" -H "Accept: application/json" 
-        -d '{"resource_identifier": "https://exampledataset.org"}' 
-        https://tests.ostrails.eu/assess/test/fc_some_test_name
-        </pre>
-        <br/><br/>
-    </div>
 
 <% @tests.each do |t| %>
       <% testname = t.to_s %>
