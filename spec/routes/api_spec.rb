@@ -13,7 +13,7 @@ RSpec.describe 'API Routes' do
     it 'renders test list with metrics' do
       get '/tests/'
       expect(last_response).to be_ok
-      expect(last_response.body).to include('List FAIR Tests')
+      expect(last_response.body).to include('List and Execute Champion Tests')
       # $expect(last_response.body).to include('curl -H "Content-type: application/json" -H "Accept: application/json"')
     end
   end
