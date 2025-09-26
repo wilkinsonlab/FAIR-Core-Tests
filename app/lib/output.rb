@@ -12,10 +12,10 @@ module FAIRChampion
     def_delegators FAIRChampion::Output, :triplify
 
     attr_accessor :score, :testedGUID, :testid, :uniqueid, :name, :description, :license, :dt, :metric, 
-                  :version, :summary, :completeness, :comments
+                  :version, :summary, :completeness, :comments, :guidance
 
     
-    OPUTPUT_VERSION = "1.1.0"
+    OPUTPUT_VERSION = "1.1.1"
 
     def initialize(testedGUID:, meta:)
       @score = 'indeterminate'
@@ -31,6 +31,7 @@ module FAIRChampion
       @completeness = '100'
       @testid = meta[:testid]
       @comments = []
+      @guidance = meta.fetch(:guidance, [])
     end
 
     def createEvaluationResponse
@@ -43,6 +44,8 @@ module FAIRChampion
       dqv = RDF::Vocabulary.new('https://www.w3.org/TR/vocab-dqv/')
       ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
       sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
+      cwmo = RDF::Vocabulary.new('http://purl.org/cwmo/#')
+      
       add_newline_to_comments
 
       if summary =~ /^Summary$/
@@ -72,6 +75,7 @@ module FAIRChampion
       triplify(uniqueid, ftr.log, comments.join, g)
       triplify(uniqueid, ftr.completion, completeness, g)
 
+
       triplify(uniqueid, ftr.outputFromTest, softwareid, g)      
       triplify(softwareid, RDF.type, ftr.Test, g)
       triplify(softwareid, RDF.type, schema.SoftwareApplication, g)
@@ -94,11 +98,28 @@ module FAIRChampion
       # triplify(tid, RDF.type, prov.Entity, g)
       # triplify(tid, schema.identifier, testedGUID, g, xsd.string)
       # triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
+      begin
+        triplify(uniqueid, ftr.assessmentTarget, testedGUID, g)
+        triplify(executionid, prov.used, testedGUID, g)
+        triplify(testedGUID, RDF.type, prov.Entity, g)
+        triplify(testedGUID, dct.identifier, testedGUID, g)
+      rescue
+        triplify(uniqueid, ftr.assessmentTarget, "not a URI", g)
+        triplify(executionid, prov.used, "not a URI", g)
+        score = "fail"
+      end
 
-      triplify(uniqueid, ftr.assessmentTarget, testedGUID, g)
-      triplify(executionid, prov.used, testedGUID, g)
-      triplify(testedGUID, RDF.type, prov.Entity, g)
-      triplify(testedGUID, dct.identifier, testedGUID, g)
+      unless score == "pass"
+        guidance.each do |advice|
+          adviceid = 'urn:ostrails:testexecutionactivity:advice:' + SecureRandom.uuid
+          triplify(uniqueid, ftr.suggestion, adviceid, g)
+          triplify(adviceid, RDF.type, cwmo.Advice, g)
+          triplify(adviceid, RDFS.label, "You should be using a globally unique persistent identifier like a purl, ark, doi, or w3id", g)
+          triplify(adviceid, sio["SIO_000339"], RDF::URI.new(advice), g)
+        end       
+      end
+
+
 
       
 #      g.dump(:jsonld)
@@ -152,7 +173,8 @@ module FAIRChampion
         if s.to_s =~ %r{^\w+:/?/?[^\s]+}
           s = RDF::URI.new(s.to_s)
         else
-          abort "Subject #{s} must be a URI-compatible thingy"
+          raise "Subject #{s} must be a URI-compatible thingy"
+
         end
       end
 

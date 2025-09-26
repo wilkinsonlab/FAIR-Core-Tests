@@ -5,7 +5,7 @@ class FAIRTest
 
   def self.fc_data_authorization_meta
     {
-    testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
+    testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
     testname: "FAIR Champion: Data Authorization",
     testid: "fc_data_authorization",
     description: "Test a discovered data GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  It also searches the metadata for the Dublin Core 'accessRights' property, which may point to a document describing the data access process. Recognition of other identifiers will be added upon request by the community.",
@@ -67,7 +67,7 @@ class FAIRTest
       key = key.to_s
 
       output.comments << "INFO: Searching hash-style metadata for keys indicating a pointer to data.\n"
-      FAIRChampion::Harvester::DATA_PREDICATES.each do |prop|
+      FAIRChampion::Utils::DATA_PREDICATES.each do |prop|
         prop =~ %r{.*[#/]([^#/]+)$}
         prop = Regexp.last_match(1)
         output.comments << "INFO: Searching for key: #{prop}.\n"

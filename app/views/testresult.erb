@@ -25,7 +25,11 @@
         <li class="list-group-item"><strong>Type:</strong> <%= @test_execution['@type'] %></li>
         <li class="list-group-item"><strong>Associated Test:</strong> <a href="<%= @test['@id'] %>"><%= @test['dct:title']['@value'] %></a></li>
         <li class="list-group-item"><strong>Generated Result:</strong> <%= @test_result['dct:title']['@value'] %></li>
-        <li class="list-group-item"><strong>Data Used:</strong> <a href="<%= @test_execution['prov:used']['@id'] %>"><%= @test_execution['prov:used']['@id'] %></a></li>
+        <% begin %>
+          <li class="list-group-item"><strong>Data Used:</strong> <a href="<%= @test_execution['prov:used']['@id'] %>"><%= @test_execution['prov:used']['@id'] %></a></li>
+        <% rescue %>
+          <li class="list-group-item"><strong>Data Used:</strong> INVALID URI</li>
+        <% end %>
         <% if @metric_implementation %>
           <li class="list-group-item"><strong>Implementation of Metric:</strong> <a href="<%= @metric_implementation['@id'] %>"><%= @metric_implementation['@id'] %></a></li>
         <% end %>

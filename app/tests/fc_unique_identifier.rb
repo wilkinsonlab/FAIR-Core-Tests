@@ -27,9 +27,10 @@ class FAIRTest
     creator: 'https://orcid.org/0000-0001-6960-357X',
     protocol: ENV.fetch('TEST_PROTOCOL', 'https'),
     host: ENV.fetch('TEST_HOST', 'localhost'),
-    basePath: ENV.fetch('TEST_PATH', '/tests')
-  }
-end
+    basePath: ENV.fetch('TEST_PATH', '/tests'),
+    guidance: ["urn:cat_graph:gdn.49738A73"],
+    }
+  end
 
   def self.fc_unique_identifier(guid:)
     FAIRChampion::Output.clear_comments
