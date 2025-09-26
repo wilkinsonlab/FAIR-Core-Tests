@@ -115,7 +115,7 @@ module FAIRChampion
           triplify(uniqueid, ftr.suggestion, adviceid, g)
           triplify(adviceid, RDF.type, ftr.GuidanceContext, g)
           triplify(adviceid, RDFS.label, label, g)
-          triplify(adviceid, RDFS.description, label, g)
+          triplify(adviceid, dct.description, label, g)
           triplify(adviceid, sio["SIO_000339"], RDF::URI.new(advice), g)
         end       
       end
