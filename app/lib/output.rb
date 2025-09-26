@@ -110,11 +110,12 @@ module FAIRChampion
       end
 
       unless score == "pass"
-        guidance.each do |advice|
+        guidance.each do |advice, label|
           adviceid = 'urn:ostrails:testexecutionactivity:advice:' + SecureRandom.uuid
           triplify(uniqueid, ftr.suggestion, adviceid, g)
-          triplify(adviceid, RDF.type, cwmo.Advice, g)
-          triplify(adviceid, RDFS.label, "You should be using a globally unique persistent identifier like a purl, ark, doi, or w3id", g)
+          triplify(adviceid, RDF.type, ftr.GuidanceContext, g)
+          triplify(adviceid, RDFS.label, label, g)
+          triplify(adviceid, RDFS.description, label, g)
           triplify(adviceid, sio["SIO_000339"], RDF::URI.new(advice), g)
         end       
       end
