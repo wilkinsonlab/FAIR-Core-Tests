@@ -6,7 +6,7 @@ class FAIRTest
 
   def self.fc_unique_identifier_meta
     return {
-    testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
+    testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
     testname: "FAIR Champion: Unique Identifier",
     testid: "fc_unique_identifier",
     description: "Metric to test if the metadata resource has a unique identifier.  This is done by comparing the GUID to the patterns (by regexp) of known GUID schemas such as URLs and DOIs.  Known schema are registered in FAIRSharing (https://fairsharing.org/standards/?q=&selected_facets=type_exact:identifier%20schema)",
