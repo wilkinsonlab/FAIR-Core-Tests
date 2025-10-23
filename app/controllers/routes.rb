@@ -13,13 +13,19 @@ def set_routes(classes: [])
   end
 
   get '/tests' do
-    redirect "/tests/"
+    redirect '/tests/'
   end
   get '/tests/' do
-    ts = Dir[File.dirname(__FILE__) + '/../tests/*.rb']
-    @tests = ts.map { |t| t.match(%r{.*/(\S+)\.rb$})[1] }
-    @labels = FAIRChampion::Harvester.get_tests_metrics(tests: @tests)
+    ts = Dir["#{File.dirname(__FILE__)}/../tests/*.rb"]
+    @tests = ts.map { |t| t.match(%r{.*/(\S+)\.rb$})[1] } # This is just the final field in the URL
+    @labels = FAIRChampion::Harvester.get_tests_metrics(tests: @tests) # the local URL is built in this routine, and called
     halt erb :listtests, layout: :listtests_layout
+  end
+
+  get '/tests/fdpindex_tests/' do
+    @testobjects = FAIRChampion::Index.retrieve_tests_from_index
+    @labels = FAIRChampion::Index.get_metrics_labels_for_tests(tests: @testobjects)
+    halt erb :listalltests, layout: :listtests_layout
   end
 
   get '/tests/new' do
@@ -27,17 +33,17 @@ def set_routes(classes: [])
   end
 
   post '/tests/new' do
-    test_uri = params["test_uri"]
+    test_uri = params['test_uri']
     @result = FAIRChampion::Tests.register_test(test_uri: test_uri)
     halt erb :newtest_output, layout: :newtest_layout
   end
 
   post '/tests/assess/test/:id' do
-    fullpath = "#{request.fullpath}"
-    fullpath.gsub!(/^\/tests/, "")  # due to new API calls that must befin with "assess" instead of "tests"
+    fullpath = request.fullpath.to_s
+    fullpath.gsub!(%r{^/tests}, '') # due to new API calls that must befin with "assess" instead of "tests"
     status 307
     headers['Location'] = fullpath
-    ''  
+    ''
   end
 
   post '/assess/test/:id' do
@@ -52,7 +58,7 @@ def set_routes(classes: [])
     end
     warn "now testing #{guid}"
     # begin
-    @result = FAIRTest.send(id, guid: guid)  # @result is a json STRING!
+    @result = FAIRTest.send(id, guid: guid) # @result is a json STRING!
     # rescue StandardError
     #  @result = '{}'
     # end
@@ -71,63 +77,54 @@ def set_routes(classes: [])
       when 'text/json', 'application/json', 'application/ld+json'
         content_type :json
         halt @result
-      else 
+      else
         warn "type is #{type}"
       end
     end
     error 406
   end
 
-
-
-
   # ============================= GET ----
   # ============================= GET ----
   # ============================= GET ----
   # ============================= GET ----
 
-
-  get '/tests/:id' do  # returns DCAT
+  get '/tests/:id' do # returns DCAT
     id = params[:id]
     idabout = "#{id}_about"
     begin
       graph = FAIRTest.send(idabout)
     rescue StandardError
-      halt 404, { "error" => "Invalid test ID: #{params[:id]}" }.to_json    
+      halt 404, { 'error' => "Invalid test ID: #{params[:id]}" }.to_json
     end
-    
-
 
     request.accept.each do |type|
       case type.to_s
-      when "text/turtle"
-        content_type "text/turtle"
+      when 'text/turtle'
+        content_type 'text/turtle'
         halt graph.dump(:turtle)
-      when "application/json"
+      when 'application/json'
         content_type :json
         halt graph.dump(:jsonld)
-      when "application/ld+json"
-        content_type "application/ld+json"
+      when 'application/ld+json'
+        content_type 'application/ld+json'
         halt graph.dump(:jsonld)
-      else  # for the FDP index send turtle by default
-        content_type "text/turtle"
+      else # for the FDP index send turtle by default
+        content_type 'text/turtle'
         halt graph.dump(:turtle)
       end
     end
-
   end
 
-
-  get '/tests/:id/api' do  # return swagger
+  get '/tests/:id/api' do # return swagger
     content_type 'application/openapi+yaml'
     id = params[:id]
-    idapi = id + "_api"
+    idapi = id + '_api'
     begin
       @result = FAIRTest.send(idapi)
     rescue StandardError
-      halt 404, { "error" => "Invalid test ID: #{params[:id]}" }.to_json    
+      halt 404, { 'error' => "Invalid test ID: #{params[:id]}" }.to_json
     end
     @result
   end
-
 end

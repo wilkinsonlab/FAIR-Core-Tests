@@ -66,7 +66,7 @@ module FAIRChampion
         end
       end
 
-      if meta.comments.length < 1 # didn't match any of the types, so no comments were added
+      if meta.comments.empty? # didn't match any of the types, so no comments were added
         meta.guidtype = 'unknown'
         meta.comments << "CRITICAL: The guid '#{guid}' did not correspond to any known GUID format. Tested #{FAIRChampion::Utils::GUID_TYPES.keys}. Halting.\n"
       end
@@ -461,22 +461,22 @@ module FAIRChampion
         warn "final FAIRsharing DOI is #{fsdoi}"
         begin
           fs = RestClient::Request.execute({
-                                            method: :post,
-                                            url: 'https://api.fairsharing.org/graphql',
-                                            headers: { 'Content-type' => 'application/json',
+                                             method: :post,
+                                             url: 'https://api.fairsharing.org/graphql',
+                                             headers: { 'Content-type' => 'application/json',
                                                         'X-GraphQL-Key' => ENV.fetch('FAIRSHARING_KEY', nil) },
-                                            payload: '{"query": "{fairsharingRecord(id: \"' + fsdoi + '\") { id name }}"}'
-                                          }).body
+                                             payload: '{"query": "{fairsharingRecord(id: \"' + fsdoi + '\") { id name }}"}'
+                                           }).body
         rescue StandardError => e
           warn "FAIRSharing connection failed #{e.inspect}"
-          fs = "{}"
+          fs = '{}'
         end
         parsedfs = JSON.parse(fs)
-        unless parsedfs['data']
-          labels[testid] = "FAIRSharing label not available"
-        else
+        if parsedfs['data']
           label = parsedfs['data']['fairsharingRecord']['name']
           labels[testid] = label
+        else
+          labels[testid] = 'FAIRSharing label not available'
         end
       end
       labels
