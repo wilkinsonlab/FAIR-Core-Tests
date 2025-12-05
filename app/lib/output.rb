@@ -62,7 +62,7 @@ module FAIRChampion
 
       triplify(executionid, RDF.type, ftr.TestExecutionActivity, g)
       triplify(executionid, prov.wasAssociatedWith, softwareid, g)
-      triplify(executionid, prov.generated, uniqueid, g)
+      triplify(uniqueid, prov.wasGeneratedBy, executionid, g)
 
       triplify(uniqueid, RDF.type, ftr.TestResult, g)
       triplify(uniqueid, dct.identifier, uniqueid, g)
