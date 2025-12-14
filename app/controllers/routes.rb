@@ -71,7 +71,7 @@ def set_routes(classes: [])
         @test_execution = data['@graph'].find { |g| g['@type'] == 'ftr:TestExecutionActivity' }
         @test = data['@graph'].find { |g| g['@id'] == @test_execution['prov:wasAssociatedWith']['@id'] }
         @metric_implementation = @test['sio:SIO_000233'] # Extract SIO_000233
-        @test_result = data['@graph'].find { |g| g['@id'] == @test_execution['prov:generated']['@id'] }
+        @test_result = data['@graph'].find { |g| g['@type'] == 'ftr:TestResult' }
         @result_value = @test_result['prov:value']['@value'] # Extract pass/fail
         halt erb :testresult
       when 'text/json', 'application/json', 'application/ld+json'
