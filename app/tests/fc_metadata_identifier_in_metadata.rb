@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Metadata Identifier Explicitly In Metadata',
       testid: 'fc_metadata_identifier_in_metadata',
       description: "Metric to test if the metadata contains the unique identifier to the metadata itself.  This is done using a variety of 'scraping' tools, including DOI metadata resolution, the use of the 'extruct' Python tool, and others.  The test is executed by searching for the predicates 'http[s]://purl.org/dc/terms/identifier','http[s]://schema.org/identifier.",
-      metric: 'https://doi.org/10.25504/FAIRsharing.5Xy1dJ',
+      metric: 'https://w3id.org/fair-metrics/general/Gen2-MI-F3'.downcase,
       indicators: 'https://doi.org/10.25504/FAIRsharing.820324',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -96,7 +96,6 @@ class FAIRTest
 
     output.createEvaluationResponse
   end
-
 
   def self.fc_metadata_identifier_in_metadata_api
     api = OpenAPI.new(meta: fc_metadata_identifier_in_metadata_meta)

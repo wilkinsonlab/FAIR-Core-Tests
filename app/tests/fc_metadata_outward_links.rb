@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Metadata Contains Outward Links',
       testid: 'fc_metadata_outward_links',
       description: 'Maturity Indicator to test if the metadata links outward to third-party resources.  It only tests metadata that can be represented as Linked Data.',
-      metric: 'https://doi.org/10.25504/FAIRsharing.LLXjWx',
+      metric: 'https://w3id.org/fair-metrics/general/Gen2-MI-I3'.downcase,
       indicators: 'https://doi.org/10.25504/FAIRsharing.ae22b8',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

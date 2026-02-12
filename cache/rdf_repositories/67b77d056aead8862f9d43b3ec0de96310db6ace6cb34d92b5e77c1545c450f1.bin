@@ -1,0 +1,13 @@
+Iu:	TimeçÖÄ"B`ö
+:nano_numi±:nano_deni:submicro"C0:offseti:	zoneI"CET:EFe:$RDF::Repository::Implementationo:RDF::Repository
+:@options{:with_graph_nameT:with_validityT:	@uri0:@title0:
+@data{F{
+Iu:RDF::URI<https://w3id.org/everse/i/indicators/software_has_tests:ET{Iu;4http://www.w3.org/1999/02/22-rdf-syntax-ns#type;T{Iu;:https://w3id.org/everse/rsqi#SoftwareQualityIndicator;T{:quotedFIu;http://schema.org/name;T{o:RDF::Literal	:@objectI"Software provides tests.;T:@string@:@datatypeIu;,http://www.w3.org/2001/XMLSchema#string;T:
+@hashl+	(ß¥ñ2={;FIu;"http://schema.org/description;T{o;	;I"ùEvaluates the extent to which the software has been tested, including unit tests, integration tests, and system tests, to ensure reliability and correctness.;T;@;@;l-	°Ã¶ñ>{;FIu;http://schema.org/keywords;T{o;
+;I"	test;T;@;@;l+	RBæ∂l:@value_hashl-	EÌ Ãr¥<{;Fo;
+;I"functionality;T;@$;@;l-	Æà‘‹HˇM;l+	^∞aWX˚q4{;Fo;	;I"	fair;T;@);@;l+	)©áÛï§{;FIu;!http://schema.org/identifier;T{Iu;<https://w3id.org/everse/i/indicators/software_has_tests;T{;FIu;)http://schema.org/creativeWorkStatus;T{o;	;I"Active;T;@3;@;l+	¡ç‡Ö∏¨º{;FIu;http://schema.org/version;T{o;	;I"
+1.0.0;T;@9;@;l+	ÃâÜâxÄ^{;FIu;+http://www.w3.org/ns/dcat#contactPoint;T{o:RDF::Node:@idI"
+g9500;T{;Fo;;I"
+g9520;T{;FIu;http://schema.org/author;T{o;;I"
+g9540;T{;FIu;$http://purl.org/dc/terms/source;T{o;;I"
+g9560;T{;FIu;)http://www.w3.org/ns/dqv#inDimension;T{Iu;2https://w3id.org/everse/i/dimensions/fairness;T{;FIu;5https://w3id.org/everse/i/dimensions/reliability;T{;FIu;"http://schema.org/dateCreated;T{o;	;I"23-05-2025;T;@W;@;l-	iÜÄÆ¶ã*&{;F@>{@{Iu;http://schema.org/Person;T{;FIu;http://schema.org/name;T{o;	;I"Daniel Garijo;T;@a;@;l-	@*Æ†Læª{;F@A{@{Iu;http://schema.org/Person;T{;FIu;http://schema.org/name;T{o;	;I"Andres Montero;T;@k;@;l-	tóé»<´1{;F@F{@{Iu;#http://schema.org/Organization;T{;FIu;http://schema.org/name;T{o;	;I"FAIR-IMPACT;T;@u;@;l+	Cm:§ò®{;F@K{Iu;http://schema.org/name;T{o;	;I"TD5.2 - Metrics for automated FAIR software assessment in a disciplinary context;T;@|;@;l-	;E(ıá∞{;F:@tx_classc,RDF::Transaction::SerializedTransaction

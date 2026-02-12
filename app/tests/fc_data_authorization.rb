@@ -1,16 +1,14 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
-
 class FAIRTest
-
   def self.fc_data_authorization_meta
     {
-    testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
-    testname: "FAIR Champion: Data Authorization",
-    testid: "fc_data_authorization",
-    description: "Test a discovered data GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  It also searches the metadata for the Dublin Core 'accessRights' property, which may point to a document describing the data access process. Recognition of other identifiers will be added upon request by the community.",
-    
-      metric: 'https://doi.org/10.25504/FAIRsharing.VrP6sm',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
+      testname: 'FAIR Champion: Data Authorization',
+      testid: 'fc_data_authorization',
+      description: "Test a discovered data GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  It also searches the metadata for the Dublin Core 'accessRights' property, which may point to a document describing the data access process. Recognition of other identifiers will be added upon request by the community.",
+
+      metric: 'https://w3id.org/fair-metrics/general/Gen2-MI-A1.2'.downcase,
       indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -35,11 +33,11 @@ class FAIRTest
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
-      testedGUID: guid, 
+      testedGUID: guid,
       meta: fc_data_authorization_meta
-      )
+    )
 
-    output.comments << "INFO: TEST VERSION '#{self.fc_data_authorization_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{fc_data_authorization_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -48,7 +46,7 @@ class FAIRTest
     end
 
     if metadata.guidtype == 'unknown'
-      output.score = "indeterminate"
+      output.score = 'indeterminate'
       output.comments << "INDETERMINATE: The identifier #{guid} did not match any known identification system.\n"
       return output.createEvaluationResponse
     end
@@ -58,7 +56,7 @@ class FAIRTest
     properties = FAIRChampion::Harvester.deep_dive_properties(hash)
 
     output.comments << "INFO: Searching metadata for likely identifiers to the data record\n"
-    id_hash = id_graph = nil  # set to nil for now
+    id_hash = id_graph = nil # set to nil for now
 
     properties.each do |keyval|
       key = nil
@@ -91,12 +89,7 @@ class FAIRTest
       return output.createEvaluationResponse
     end
 
-
-    if id_hash
-      metadata2 = FAIRChampion::Harvester.typeit(id_hash)
-    else 
-      metadata2 = FAIRChampion::Harvester.typeit(id_graph)
-    end
+    metadata2 = FAIRChampion::Harvester.typeit(id_hash || id_graph)
 
     if metadata2
       output.comments << "SUCCESS: The identifier #{@identifier} is recognized as a #{metadata2}, which is resolvable by an protocol that allows authorization/authentication.\n"
@@ -119,4 +112,3 @@ class FAIRTest
     dcat.get_dcat
   end
 end
-

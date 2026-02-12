@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Metadata Includes License (weak)',
       testid: 'fc_metadata_includes_license_weak',
       description: "Maturity Indicator to test if the metadata contains an explicit pointer to the license.  This 'weak' test will use a case-insensitive regular expression, and scan both key/value style metadata, as well as linked data metadata.  Tests: xhtml, dvia, dcterms, cc, data.gov.au, and Schema license predicates in linked data, and validates the value of those properties.",
-      metric: 'https://doi.org/10.25504/FAIRsharing.YAdSwh',
+      metric: 'https://w3id.org/fair-metrics/general/Gen2-MI-R1.1'.downcase,
       indicators: 'https://doi.org/10.25504/FAIRsharing.aff99f',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -58,21 +58,21 @@ class FAIRTest
     #############################################################################################################
     #############################################################################################################
 
-        
-    output.score = "fail"
+    output.score = 'fail'
     if metadata.hash.size > 1
       output.comments << "INFO:  searching hash-style metadata for a match with /license/ in any case.\n"
-      properties = FAIRChampion::Harvester::deep_dive_properties(hash)
+      properties = FAIRChampion::Harvester.deep_dive_properties(hash)
 
       properties.each do |keyval|
-        key, value = nil, nil
-        (key, value) = keyval;
+        key = nil
+        value = nil
+        (key, value) = keyval
         key = key.to_s
-        if key =~ /license/i
-          output.comments << "SUCCESS: found #{key} in hashed metadata.\n"
-          output.score = "pass"
-          return output.createEvaluationResponse
-        end
+        next unless key =~ /license/i
+
+        output.comments << "SUCCESS: found #{key} in hashed metadata.\n"
+        output.score = 'pass'
+        return output.createEvaluationResponse
       end
     end
 
@@ -136,8 +136,6 @@ class FAIRTest
 
     output.createEvaluationResponse
   end
-
-
 
   def self.fc_metadata_includes_license_weak_api
     api = OpenAPI.new(meta: fc_metadata_includes_license_weak_meta)

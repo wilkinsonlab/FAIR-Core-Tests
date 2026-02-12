@@ -78,6 +78,7 @@ EOQUERY
       tests.each do |test|
         metric = test[:benchmark_or_metric] # Assume required
         warn "Processing metric: #{metric}"
+        next unless metric && !metric.empty?
 
         # Generate a safe filename for the metric URL
         cache_key = Digest::SHA256.hexdigest(metric)
