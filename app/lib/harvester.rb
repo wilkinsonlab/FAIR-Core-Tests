@@ -6,6 +6,7 @@ require 'json/ld'
 require 'json/ld/preloaded'
 require 'rdf/trig'
 require 'rdf/raptor'
+require 'rdf/vocab'
 require 'net/http'
 require 'net/https' # for openssl
 require 'uri'
@@ -249,7 +250,7 @@ module FAIRChampion
           [FAIRChampion::Utils::RDF_FORMATS.values,
            FAIRChampion::Utils::XML_FORMATS.values,
            FAIRChampion::Utils::JSON_FORMATS.values].flatten
-            .include?(l[:type])
+                                                    .include?(l[:type])
       end
       # ls is an array of elements that look like this: [{:rel=>"alternate", :type=>"application/ld+json", :href=>"http://scidata.vitk.lv/dataset/303.jsonld"}]
       urls = ls.map { |l| l[:href] }
@@ -293,7 +294,7 @@ module FAIRChampion
         warn "\n\nSTRANGE - headers had no content-type\n\n"
         return nil, nil
       end
-      type.match(%r{([\w\+\.]+/[\w\+\.]+):?;?}im)
+      type.match(%r{([\w+.]+/[\w+.]+):?;?}im)
       type = ::Regexp.last_match(1)
       # $stderr.puts "\n\nsearching for #{type}\n\n"
 
@@ -446,40 +447,40 @@ module FAIRChampion
     # in principle, we cojuld return a more complex object, but all I need now is the label
     def self.get_tests_metrics(tests:)
       base_url = ENV['TEST_BASE_URL'] || 'http://localhost:8282' # Default to local server
+      test_path = ENV['TEST_PATH'] || 'community-tests' # Default to local server
       labels = {}
       tests.each do |testid|
-        warn "getting dcat for #{testid}"
+        warn "getting dcat for #{testid}    #{base_url}/#{test_path}/#{testid}"
         dcat = RestClient::Request.execute({
                                              method: :get,
-                                             url: "#{base_url}/tests/#{testid}",
+                                             url: "#{base_url}/#{test_path}/#{testid}",
                                              headers: { 'Accept' => 'application/json' }
                                            }).body
         parseddcat = JSON.parse(dcat)
-        jpath = JsonPath.new('[0]["http://semanticscience.org/resource/SIO_000233"][0]["@id"]')
-        fsdoi = jpath.on(parseddcat).first
-        fsdoi = fsdoi.gsub(%r{https?://doi.org/}, '') # just the doi
-        warn "final FAIRsharing DOI is #{fsdoi}"
+        jpath = JsonPath.new('[0]["http://semanticscience.org/resource/SIO_000233"][0]["@id"]') # is implementation of
+        metricurl = jpath.on(parseddcat).first
+
         begin
-          fs = RestClient::Request.execute({
-                                             method: :post,
-                                             url: 'https://api.fairsharing.org/graphql',
-                                             headers: { 'Content-type' => 'application/json',
-                                                        'X-GraphQL-Key' => ENV.fetch('FAIRSHARING_KEY', nil) },
-                                             payload: '{"query": "{fairsharingRecord(id: \"' + fsdoi + '\") { id name }}"}'
-                                           }).body
+          g = RDF::Graph.load(metricurl, format: :turtle)
         rescue StandardError => e
-          warn "FAIRSharing connection failed #{e.inspect}"
-          fs = '{}'
+          warn "DCAT Metric loading failed #{e.inspect}"
+          g = RDF::Graph.new
         end
-        parsedfs = JSON.parse(fs)
-        if parsedfs['data']
-          label = parsedfs['data']['fairsharingRecord']['name']
-          labels[testid] = label
-        else
-          labels[testid] = 'FAIRSharing label not available'
-        end
+        title = g.query([nil, RDF::Vocab::DC.title, nil])&.first&.object&.to_s
+        lp = g.query([nil, RDF::Vocab::DCAT.landingPage, nil])&.first&.object&.to_s
+
+        labels[testid] = if title == ''
+                           'Metric label not available'
+                         else
+                           title
+                         end
+        landingpages[testid] = if lp == ''
+                                 ''
+                               else
+                                 lp
+                               end
       end
-      labels
+      [labels, landingpages]
     end
   end # END OF Harvester CLASS
 end

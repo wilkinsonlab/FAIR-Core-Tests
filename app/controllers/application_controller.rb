@@ -15,6 +15,14 @@ require_rel '../views'
 require_rel '../tests'
 require_rel '../lib'
 
+class JSON::Ext::Generator::State
+  # monkey patch due to incompatibilities between linkeddata gem and json-ld
+  def except(*keys)
+    # Convert to real Hash, drop keys, then reconstruct (safe since to_h exists)
+    to_h.except(*keys)
+  end
+end
+
 class ApplicationController < Sinatra::Application
   include Swagger::Blocks
 

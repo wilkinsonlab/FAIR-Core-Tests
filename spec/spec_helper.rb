@@ -27,10 +27,27 @@ TEST_IDS = Dir.glob(File.join(File.dirname(__FILE__), '../../app/tests/*.rb'))
               .map { |f| File.basename(f, '.rb') }
               .reject { |f| f == 'env' }
 
+# silence the cleanip error at the end of rspec run
+module RDF
+  module Raptor
+    module FFI
+      module V2
+        class World
+          def self.release(ptr)
+            # do nothing → prevents the call
+          rescue StandardError
+          end
+        end
+      end
+    end
+  end
+end
+
 class ErrorModel
   include Swagger::Blocks
+
   swagger_schema :ErrorModel do
-    key :required, [:code, :message]
+    key :required, %i[code message]
     property :code do
       key :type, :integer
       key :format, :int32
@@ -44,27 +61,29 @@ end
 module FAIRTestStub
   def self.send(method_name, **args)
     base_id = method_name.to_s.sub(/_(about|api)$/, '')
-    if TEST_IDS.include?(base_id)
-      case method_name.to_s
-      when /_about$/
-        graph = RDF::Graph.new
-        graph << [RDF::URI.new("http://localhost:8282/tests/#{base_id}"), RDF::URI.new("http://semanticscience.org/resource/SIO_000233"), RDF::URI.new("https://doi.org/10.25504/FAIRsharing.EwnE1n")]
-        graph << [RDF::URI.new("http://localhost:8282/tests/#{base_id}"), RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), RDF::URI.new("http://www.w3.org/ns/dcat#DataService")]
-        graph << [RDF::URI.new("http://localhost:8282/tests/#{base_id}"), RDF::URI.new("http://www.w3.org/1999/02/22-rdf-syntax-ns#type"), RDF::URI.new("https://w3id.org/ftr#Test")]
-        graph
-      when /_api$/
-        { swagger: '2.0', info: { title: "Test API #{base_id}" } }.to_json
-      else
-        {
-          '@graph' => [
-            { '@type' => 'ftr:TestExecutionActivity', '@id' => 'exec1', 'prov:wasAssociatedWith' => { '@id' => base_id }, 'prov:generated' => { '@id' => 'result1' } },
-            { '@id' => base_id, 'sio:SIO_000233' => 'metric1' },
-            { '@id' => 'result1', 'prov:value' => { '@value' => 'pass' } }
-          ]
-        }.to_json
-      end
+    raise StandardError, "invalid test ID: #{base_id}" unless TEST_IDS.include?(base_id)
+
+    case method_name.to_s
+    when /_about$/
+      graph = RDF::Graph.new
+      graph << [RDF::URI.new("http://localhost:8282/tests/#{base_id}"),
+                RDF::URI.new('http://semanticscience.org/resource/SIO_000233'), RDF::URI.new('https://doi.org/10.25504/FAIRsharing.EwnE1n')]
+      graph << [RDF::URI.new("http://localhost:8282/tests/#{base_id}"),
+                RDF::URI.new('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), RDF::URI.new('http://www.w3.org/ns/dcat#DataService')]
+      graph << [RDF::URI.new("http://localhost:8282/tests/#{base_id}"),
+                RDF::URI.new('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), RDF::URI.new('https://w3id.org/ftr#Test')]
+      graph
+    when /_api$/
+      { swagger: '2.0', info: { title: "Test API #{base_id}" } }.to_json
     else
-      raise StandardError, "invalid test ID: #{base_id}"
+      {
+        '@graph' => [
+          { '@type' => 'ftr:TestExecutionActivity', '@id' => 'exec1',
+            'prov:wasAssociatedWith' => { '@id' => base_id }, 'prov:generated' => { '@id' => 'result1' } },
+          { '@id' => base_id, 'sio:SIO_000233' => 'metric1' },
+          { '@id' => 'result1', 'prov:value' => { '@value' => 'pass' } }
+        ]
+      }.to_json
     end
   end
 end
@@ -180,7 +199,8 @@ RSpec.configure do |config|
     allow(FAIRTest).to receive(:send).and_call_original
     TEST_IDS.each do |test_id|
       allow(FAIRTest).to receive(:send).with(test_id, anything).and_return(FAIRTestStub.send(test_id))
-      allow(FAIRTest).to receive(:send).with("#{test_id}_about", anything).and_return(FAIRTestStub.send("#{test_id}_about"))
+      allow(FAIRTest).to receive(:send).with("#{test_id}_about",
+                                             anything).and_return(FAIRTestStub.send("#{test_id}_about"))
       allow(FAIRTest).to receive(:send).with("#{test_id}_api", anything).and_return(FAIRTestStub.send("#{test_id}_api"))
     end
     allow(FAIRTest).to receive(:send).with(anything, anything) do |method_name, *args|

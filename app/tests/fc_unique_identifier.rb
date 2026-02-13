@@ -26,7 +26,7 @@ class FAIRTest
       host: ENV.fetch('TEST_HOST', 'localhost'),
       basePath: ENV.fetch('TEST_PATH', '/tests'),
       guidance: [['urn:cat_graph:gdn.49738A73',
-                  'You should be using a globally unique persistent identifier like a purl, ark, doi, or w3id']]
+                  'You should be using a globally unique persistent identifier like a handle, purl, ark, doi, or w3id']]
     }
   end
 
