@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Data Identifier in Metadata',
       testid: 'fc_data_identifier_in_metadata',
       description: 'Test that the identifier of the data is an unambiguous element of the metadata. Tested options are schema:distribution, http://www.w3.org/ns/ldp#contains, iao:IAO_0000136, IAO:0000136,ldp:contains,foaf:primaryTopic,schema:distribution,schema:contentUrl,schema,mainEntity,schema:codeRepository,schema:distribution,schema:contentUrl, dcat:distribution, dcat:dataset,dcat:downloadURL,dcat:accessURL,sio:SIO_000332, sio:is-about, obo:IAO_0000136',
-      metric: 'https://w3id.org/fair-metrics/general/Gen2-MI-F3'.downcase,
+      metric: 'https://w3id.org/fair-metrics/general/gen2-mi-f3.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.820324',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

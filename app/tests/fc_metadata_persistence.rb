@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Metadata Persistence',
       testid: 'fc_metadata_persistence',
       description: 'Metric to test if the metadata contains a persistence policy, explicitly identified by a persistencePolicy key (in hashed data) or a http://www.w3.org/2000/10/swap/pim/doc#persistencePolicy predicate in Linked Data.  DOIs are assumed to have metadata persistence.',
-      metric: 'https://w3id.org/fair-metrics/general/Gen2-MI-A2'.downcase,
+      metric: 'https://w3id.org/fair-metrics/general/gen2-mi-a2.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.7c4d7f',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Metadata Authorization',
       testid: 'fc_metadata_authorization',
       description: 'Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.',
-      metric: 'https://w3id.org/fair-metrics/general/Gen2-MI-A1.2'.downcase,
+      metric: 'https://w3id.org/fair-metrics/general/gen2-mi-a1.2.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
