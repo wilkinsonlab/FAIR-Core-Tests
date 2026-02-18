@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Metadata Knowledge Representation Language (weak)',
       testid: 'fc_metadata_kr_language_weak',
       description: "Maturity Indicator to test if the metadata uses a formal language broadly applicable for knowledge representation.  This particular test takes a broad view of what defines a 'knowledge representation language'; in this evaluation, anything that can be represented as structured data will be accepted.",
-      metric: 'https://w3id.org/fair-metrics/general/gen2-mi-i1.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-i1.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.ec5648',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Metadata uses FAIR vocabularies (strong)',
       testid: 'fc_metadata_uses_fair_vocabularies',
       description: 'Maturity Indicator to test if the linked data metadata uses terms that resolve to linked (FAIR) data.',
-      metric: 'https://w3id.org/fair-metrics/general/gen2-mi-i2.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-i2.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.96d4af',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

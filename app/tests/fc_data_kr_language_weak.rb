@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Data Knowlege Representation Language (Weak Test)',
       testid: 'fc_data_kr_language_weak',
       description: "Test if the data uses a formal language broadly applicable for knowledge representation.  This particular test takes a broad view of what defines a 'knowledge representation language'; in this evaluation, a knowledge representation language is interpreted as one in which terms are semantically-grounded in ontologies.  Any form of structured data will pass this test",
-      metric: 'https://w3id.org/fair-metrics/general/gen2-mi-i1.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-i1.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.ec5648',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

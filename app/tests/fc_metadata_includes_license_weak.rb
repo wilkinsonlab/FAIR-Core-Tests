@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Metadata Includes License (weak)',
       testid: 'fc_metadata_includes_license_weak',
       description: "Maturity Indicator to test if the metadata contains an explicit pointer to the license.  This 'weak' test will use a case-insensitive regular expression, and scan both key/value style metadata, as well as linked data metadata.  Tests: xhtml, dvia, dcterms, cc, data.gov.au, and Schema license predicates in linked data, and validates the value of those properties.",
-      metric: 'https://w3id.org/fair-metrics/general/gen2-mi-r1.1.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-r1.1.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.aff99f',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
