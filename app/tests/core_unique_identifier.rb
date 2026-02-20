@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Unique Identifier',
       testid: 'core_unique_identifier',
       description: 'Metric to test if the metadata resource has a unique identifier.  This is done by comparing the GUID to the patterns (by regexp) of known GUID schemas such as URLs and DOIs.  Known schema are registered in FAIRSharing (https://fairsharing.org/standards/?q=&selected_facets=type_exact:identifier%20schema)',
-      metric: 'https://w3id.org/fair-metrics/general/champ-mi-f1.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/FM_F1_M_IdentUnique',
       indicators: 'https://doi.org/10.25504/FAIRsharing.b7f1ab',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

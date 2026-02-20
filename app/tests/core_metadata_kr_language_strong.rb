@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Metadata Knowledge Representation Language (strong)',
       testid: 'core_metadata_kr_language_strong',
       description: "Maturity Indicator to test if the metadata uses a formal language broadly applicable for knowledge representation.  This particular test takes a broad view of what defines a 'knowledge representation language'; in this evaluation, a knowledge representation language is interpreted as one in which terms are semantically-grounded in ontologies.  Any form of RDF will pass this test (including RDF that is automatically extracted by third-party parsers such as Apache Tika).",
-      metric: 'https://w3id.org/fair-metrics/general/champ-mi-i1.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/FM_I1_M_FormLang',
       indicators: 'https://doi.org/10.25504/FAIRsharing.ec5648',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

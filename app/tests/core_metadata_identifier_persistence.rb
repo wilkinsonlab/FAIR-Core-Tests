@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Identifier Persistence',
       testid: 'core_metadata_identifier_persistence',
       description: "Metric to test if the unique identifier of the metadata resource is likely to be persistent. Known schema are registered in FAIRSharing (https://fairsharing.org/standards/?q=&selected_facets=type_exact:identifier%20schema). For URLs that don't follow a schema in FAIRSharing we test known URL persistence schemas (purl, oclc, fdlp, purlz, w3id, ark).",
-      metric: 'https://w3id.org/fair-metrics/general/champ-mi-f1.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/FM_F1_M_IdentUnique',
       indicators: 'https://doi.org/10.25504/FAIRsharing.e226cb',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

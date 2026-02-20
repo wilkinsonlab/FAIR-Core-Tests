@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Searchable in major search engine',
       testid: 'core_searchable',
       description: 'Tests whether a machine is able to discover the resource by search, using Microsoft Bing.',
-      metric: 'https://w3id.org/fair-metrics/general/champ-mi-f4.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/FM_F4_M_MetaIndexed',
       indicators: 'https://doi.org/10.25504/FAIRsharing.0c0d21',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

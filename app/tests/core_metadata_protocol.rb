@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Uses open free protocol for metadata retrieval',
       testid: 'core_metadata_protocol',
       description: 'Metadata may be retrieved by an open and free protocol.  Tests metadata GUID for its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.',
-      metric: 'https://w3id.org/fair-metrics/general/champ-mi-a1.1.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/FM_A1-1_M_OpenProt',
       indicators: 'https://doi.org/10.25504/FAIRsharing.7612c1',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

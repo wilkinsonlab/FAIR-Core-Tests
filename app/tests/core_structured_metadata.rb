@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Structured Metadata',
       testid: 'core_structured_metadata',
       description: 'Tests whether a machine is able to find structured metadata.  This could be (for example) RDFa, embedded json, json-ld, or content-negotiated structured metadata such as RDF Turtle.',
-      metric: 'https://w3id.org/fair-metrics/general/champ-mi-f2.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/FM_F2_M_StructMeta',
       indicators: 'https://doi.org/10.25504/FAIRsharing.e05e98',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

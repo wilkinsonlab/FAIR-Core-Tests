@@ -7,7 +7,7 @@ class FAIRTest
       testname: 'FAIR Champion: Grounded Metadata',
       testid: 'core_grounded_metadata',
       description: "Tests whether a machine is able to find 'grounded' metadata.  i.e. metadata terms that are in a resolvable namespace, where resolution leads to a definition of the meaning of the term. Examples include JSON-LD, embedded schema, or any form of RDF. This test currently excludes XML, even when terms are namespaced.  Future versions of this test may be more flexible.",
-      metric: 'https://w3id.org/fair-metrics/general/champ-mi-f2.ttl',
+      metric: 'https://w3id.org/fair-metrics/general/FM_F2_M_StructMeta',
       indicators: 'https://doi.org/10.25504/FAIRsharing.e05e98',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
