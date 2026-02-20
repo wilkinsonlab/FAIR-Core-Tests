@@ -1,39 +1,40 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
+
 class FAIRTest
+
   def self.fc_metadata_authorization_meta
-    {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata Authorization',
-      testid: 'fc_metadata_authorization',
-      description: 'Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.',
-      metric: 'https://w3id.org/fair-metrics/general/champ-mi-a1.2.ttl',
-      indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
-      type: 'http://edamontology.org/operation_2428',
-      license: 'https://creativecommons.org/publicdomain/zero/1.0/',
-      keywords: ['FAIR Assessment', 'FAIR Principles'],
-      themes: ['http://edamontology.org/topic_4012'],
-      organization: 'OSTrails Project',
-      org_url: 'https://ostrails.eu/',
-      responsible_developer: 'Mark D Wilkinson',
-      email: 'mark.wilkinson@upm.es',
-      response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
-      organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
-      individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
-      creator: 'https://orcid.org/0000-0001-6960-357X',
-      protocol: ENV.fetch('TEST_PROTOCOL', 'https'),
-      host: ENV.fetch('TEST_HOST', 'localhost'),
-      basePath: ENV.fetch('TEST_PATH', '/tests')
+    return {
+    testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
+    testname: 'FAIR Champion: Metadata Authorization',
+    testid: 'fc_metadata_authorization',
+    description: 'Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.',
+    metric: 'https://doi.org/10.25504/FAIRsharing.VrP6sm',
+    indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
+    type: 'http://edamontology.org/operation_2428',
+    license: 'https://creativecommons.org/publicdomain/zero/1.0/',
+    keywords: ['FAIR Assessment', 'FAIR Principles'],
+    themes: ['http://edamontology.org/topic_4012'],
+    organization: 'OSTrails Project',
+    org_url: 'https://ostrails.eu/',
+    responsible_developer: 'Mark D Wilkinson',
+    email: 'mark.wilkinson@upm.es',
+    response_description: 'The response is "pass", "fail" or "indeterminate"',
+    schemas: { 'subject' => ['string', 'the GUID being tested'] },
+    organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
+    individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
+    creator: 'https://orcid.org/0000-0001-6960-357X',
+    protocol: ENV.fetch('TEST_PROTOCOL', 'https'),
+    host: ENV.fetch('TEST_HOST', 'localhost'),
+    basePath: ENV.fetch('TEST_PATH', '/tests')
     }
   end
 
   def self.fc_metadata_authorization(guid:)
     FAIRChampion::Output.clear_comments
     output = FAIRChampion::Output.new(
-      testedGUID: guid,
-      meta: fc_metadata_authorization_meta
-    )
+      testedGUID: guid, 
+      meta: fc_metadata_authorization_meta)
     output.comments << "INFO: TEST VERSION '#{fc_metadata_authorization_meta[:testversion]}'\n"
     type = FAIRChampion::Harvester.typeit(guid) # this is where the magic happens!
 

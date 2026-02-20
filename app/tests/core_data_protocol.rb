@@ -1,14 +1,14 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.fc_data_identifier_in_metadata_meta
+  def self.core_data_protocol_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
-      testname: 'FAIR Champion: Data Identifier in Metadata',
-      testid: 'fc_data_identifier_in_metadata',
-      description: 'Test that the identifier of the data is an unambiguous element of the metadata. Tested options are schema:distribution, http://www.w3.org/ns/ldp#contains, iao:IAO_0000136, IAO:0000136,ldp:contains,foaf:primaryTopic,schema:distribution,schema:contentUrl,schema,mainEntity,schema:codeRepository,schema:distribution,schema:contentUrl, dcat:distribution, dcat:dataset,dcat:downloadURL,dcat:accessURL,sio:SIO_000332, sio:is-about, obo:IAO_0000136',
-      metric: 'https://doi.org/10.25504/FAIRsharing.5Xy1dJ',
-      indicators: 'https://doi.org/10.25504/FAIRsharing.820324',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
+      testname: 'FAIR Champion: Data Protocol',
+      testid: 'core_data_protocol',
+      description: 'Data may be retrieved by an open and free protocol.  Tests data GUID for its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-a1.1.ttl',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.7612c1',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -28,14 +28,15 @@ class FAIRTest
     }
   end
 
-  def self.fc_data_identifier_in_metadata(guid:)
+  def self.core_data_protocol(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: fc_data_identifier_in_metadata_meta
+      meta: core_data_protocol_meta
     )
-    output.comments << "INFO: TEST VERSION '#{fc_data_identifier_in_metadata_meta[:testversion]}'\n"
+
+    output.comments << "INFO: TEST VERSION '#{core_data_protocol_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -61,7 +62,8 @@ class FAIRTest
     identifier = nil
 
     properties.each do |keyval|
-      _ = nil
+      key = nil
+      value = nil
       (key, value) = keyval
       key = key.to_s
 
@@ -83,47 +85,29 @@ class FAIRTest
     end
 
     if identifier =~ /\w+/
-      output.comments << "INFO: Now resolving #{identifier} to test its properties.\n"
-      testIdentifier(guid: identifier, output: output) # this will add more comments and a score to @swagger
+      metadata2 = FAIRChampion::Harvester.typeit(identifier)
+      if metadata2
+        output.comments << "SUCCESS: The identifier #{@identifier} is recognized as a #{metadata2}, which is resolvable by an open and free protocol.\n"
+        output.score = 'pass'
+      else
+        output.comments << "FAILURE: The identifier #{@identifier} did not match any known identification system.\n"
+        output.score = 'fail'
+      end
     else
-      output.score = 'fail'
+      output.score = 'indeterminate'
       output.comments <<  "INFO: Tested the following #{FAIRChampion::Utils::DATA_PREDICATES}(or their plain JSON hash-key equivalents)\n"
-      output.comments <<  'FAILURE: Was unable to locate the data identifier in the metadata using any (common) property/predicate reserved for this purpose.'
+      output.comments <<  'INDETERMINATE: Was unable to locate the data identifier in the metadata using any (common) property/predicate reserved for this purpose.'
     end
     output.createEvaluationResponse
   end
 
-  def self.testIdentifier(guid:, output:)
-    # This is verbatim from the gen2_metadata_identifier_persistence
-    type = FAIRChampion::Harvester.typeit(guid) # this is where the magic happens!
-
-    output.comments << "INFO: The data guid (#{guid}) is detected as a #{type}.\n"
-
-    if !type
-      output.comments << "FAILURE: The GUID identifier of the data #{guid} did not match any known identification system.\n"
-      output.score = 'fail'
-    elsif type == 'uri'
-      output.comments << "INFO: The data GUID appears to be a URL.  Testing known URL persistence schemas (purl, oclc, fdlp, purlz, w3id, ark, doi(as URL)).\n"
-      if (guid =~ /(purl)\./) or (guid =~ /(oclc)\./) or (guid =~ /(fdlp)\./) or (guid =~ /(purlz)\./) or (guid =~ /(w3id)\./) or (guid =~ /(ark):/) or (guid =~ /(doi.org)/)
-        output.comments << "SUCCESS: The GUID conforms with #{::Regexp.last_match(1)}, which is known to be persistent.\n"
-        output.score = 'pass'
-      else
-        output.comments << "FAILURE: The GUID does not conform with any known permanent-URL system.\n"
-        output.score = 'fail'
-      end
-    else
-      output.comments << "SUCCESS: The GUID of the data is a #{type}, which is known to be persistent.\n"
-      output.score = 'pass'
-    end
-  end
-
-  def self.fc_data_identifier_in_metadata_api
-    api = OpenAPI.new(meta: fc_data_identifier_in_metadata_meta)
+  def self.core_data_protocol_api
+    api = OpenAPI.new(meta: core_data_protocol_meta)
     api.get_api
   end
 
-  def self.fc_data_identifier_in_metadata_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_data_identifier_in_metadata_meta)
+  def self.core_data_protocol_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: core_data_protocol_meta)
     dcat.get_dcat
   end
 end

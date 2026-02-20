@@ -1,13 +1,13 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.fc_data_identifier_in_metadata_meta
+  def self.core_data_identifier_in_metadata_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
       testname: 'FAIR Champion: Data Identifier in Metadata',
-      testid: 'fc_data_identifier_in_metadata',
+      testid: 'core_data_identifier_in_metadata',
       description: 'Test that the identifier of the data is an unambiguous element of the metadata. Tested options are schema:distribution, http://www.w3.org/ns/ldp#contains, iao:IAO_0000136, IAO:0000136,ldp:contains,foaf:primaryTopic,schema:distribution,schema:contentUrl,schema,mainEntity,schema:codeRepository,schema:distribution,schema:contentUrl, dcat:distribution, dcat:dataset,dcat:downloadURL,dcat:accessURL,sio:SIO_000332, sio:is-about, obo:IAO_0000136',
-      metric: 'https://doi.org/10.25504/FAIRsharing.5Xy1dJ',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-f3.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.820324',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -28,14 +28,14 @@ class FAIRTest
     }
   end
 
-  def self.fc_data_identifier_in_metadata(guid:)
+  def self.core_data_identifier_in_metadata(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: fc_data_identifier_in_metadata_meta
+      meta: core_data_identifier_in_metadata_meta
     )
-    output.comments << "INFO: TEST VERSION '#{fc_data_identifier_in_metadata_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{core_data_identifier_in_metadata_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -117,13 +117,13 @@ class FAIRTest
     end
   end
 
-  def self.fc_data_identifier_in_metadata_api
-    api = OpenAPI.new(meta: fc_data_identifier_in_metadata_meta)
+  def self.core_data_identifier_in_metadata_api
+    api = OpenAPI.new(meta: core_data_identifier_in_metadata_meta)
     api.get_api
   end
 
-  def self.fc_data_identifier_in_metadata_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_data_identifier_in_metadata_meta)
+  def self.core_data_identifier_in_metadata_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: core_data_identifier_in_metadata_meta)
     dcat.get_dcat
   end
 end

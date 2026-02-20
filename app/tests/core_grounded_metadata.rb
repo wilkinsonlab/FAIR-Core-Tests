@@ -1,15 +1,14 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
-
 class FAIRTest
-  def self.fc_metadata_kr_language_strong_meta
+  def self.core_grounded_metadata_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata Knowledge Representation Language (strong)',
-      testid: 'fc_metadata_kr_language_strong',
-      description: "Maturity Indicator to test if the metadata uses a formal language broadly applicable for knowledge representation.  This particular test takes a broad view of what defines a 'knowledge representation language'; in this evaluation, a knowledge representation language is interpreted as one in which terms are semantically-grounded in ontologies.  Any form of RDF will pass this test (including RDF that is automatically extracted by third-party parsers such as Apache Tika).",
-      metric: 'https://doi.org/10.25504/FAIRsharing.l8fVBn',
-      indicators: 'https://doi.org/10.25504/FAIRsharing.ec5648',
+      testname: 'FAIR Champion: Grounded Metadata',
+      testid: 'core_grounded_metadata',
+      description: "Tests whether a machine is able to find 'grounded' metadata.  i.e. metadata terms that are in a resolvable namespace, where resolution leads to a definition of the meaning of the term. Examples include JSON-LD, embedded schema, or any form of RDF. This test currently excludes XML, even when terms are namespaced.  Future versions of this test may be more flexible.",
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-f2.ttl',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.e05e98',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -29,15 +28,15 @@ class FAIRTest
     }
   end
 
-  def self.fc_metadata_kr_language_strong(guid:)
+  def self.core_grounded_metadata(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: fc_metadata_kr_language_strong_meta
+      meta: core_grounded_metadata_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{fc_metadata_kr_language_strong_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{core_grounded_metadata_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -51,34 +50,31 @@ class FAIRTest
       return output.createEvaluationResponse
     end
 
-    _hash = metadata.hash
+    hash = metadata.hash
     graph = metadata.graph
-    # properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
 
-    if graph.size > 0  # have we found anything yet?
-      output.comments << "SUCCESS: Linked data was found.  "
-      output.score = "pass"
+    if graph.size > 0 # have we found anything yet?
+      output.score = 'pass'
+      output.comments << "SUCCESS: found linked-data style structured metadata.\n"
     else
-      output.comments << "FAILURE: No linked data was found.  "
-      output.score = "fail"
+      output.comments << "FAILURE: no linked-data style structured metadata found.\n"
+      output.score = 'fail'
     end
-  
     output.createEvaluationResponse
   end
 
-
-  def self.fc_metadata_kr_language_strong_api
-    api = OpenAPI.new(meta: fc_metadata_kr_language_strong_meta)
+  def self.core_grounded_metadata_api
+    api = OpenAPI.new(meta: core_grounded_metadata_meta)
     api.get_api
   end
 
-  def self.fc_metadata_kr_language_strong_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_kr_language_strong_meta)
+  def self.core_grounded_metadata_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: core_grounded_metadata_meta)
     dcat.get_dcat
   end
 end
-

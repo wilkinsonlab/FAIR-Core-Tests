@@ -1,13 +1,13 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.fc_metadata_persistence_meta
+  def self.core_metadata_persistence_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
       testname: 'FAIR Champion: Metadata Persistence',
-      testid: 'fc_metadata_persistence',
+      testid: 'core_metadata_persistence',
       description: 'Metric to test if the metadata contains a persistence policy, explicitly identified by a persistencePolicy key (in hashed data) or a http://www.w3.org/2000/10/swap/pim/doc#persistencePolicy predicate in Linked Data.  DOIs are assumed to have metadata persistence.',
-      metric: 'https://doi.org/10.25504/FAIRsharing.lEZbPK',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-a2.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.7c4d7f',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -28,15 +28,15 @@ class FAIRTest
     }
   end
 
-  def self.fc_metadata_persistence(guid:)
+  def self.core_metadata_persistence(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: fc_metadata_persistence_meta
+      meta: core_metadata_persistence_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{fc_metadata_persistence_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{core_metadata_persistence_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -98,13 +98,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.fc_metadata_persistence_api
-    api = OpenAPI.new(meta: fc_metadata_persistence_meta)
+  def self.core_metadata_persistence_api
+    api = OpenAPI.new(meta: core_metadata_persistence_meta)
     api.get_api
   end
 
-  def self.fc_metadata_persistence_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_persistence_meta)
+  def self.core_metadata_persistence_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_persistence_meta)
     dcat.get_dcat
   end
 end

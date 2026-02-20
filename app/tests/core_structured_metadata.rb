@@ -1,15 +1,14 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
-
 class FAIRTest
-  def self.fc_metadata_kr_language_strong_meta
+  def self.core_structured_metadata_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata Knowledge Representation Language (strong)',
-      testid: 'fc_metadata_kr_language_strong',
-      description: "Maturity Indicator to test if the metadata uses a formal language broadly applicable for knowledge representation.  This particular test takes a broad view of what defines a 'knowledge representation language'; in this evaluation, a knowledge representation language is interpreted as one in which terms are semantically-grounded in ontologies.  Any form of RDF will pass this test (including RDF that is automatically extracted by third-party parsers such as Apache Tika).",
-      metric: 'https://doi.org/10.25504/FAIRsharing.l8fVBn',
-      indicators: 'https://doi.org/10.25504/FAIRsharing.ec5648',
+      testname: 'FAIR Champion: Structured Metadata',
+      testid: 'core_structured_metadata',
+      description: 'Tests whether a machine is able to find structured metadata.  This could be (for example) RDFa, embedded json, json-ld, or content-negotiated structured metadata such as RDF Turtle.',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-f2.ttl',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.e05e98',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -29,15 +28,15 @@ class FAIRTest
     }
   end
 
-  def self.fc_metadata_kr_language_strong(guid:)
+  def self.core_structured_metadata(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: fc_metadata_kr_language_strong_meta
+      meta: core_structured_metadata_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{fc_metadata_kr_language_strong_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{core_structured_metadata_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -51,34 +50,35 @@ class FAIRTest
       return output.createEvaluationResponse
     end
 
-    _hash = metadata.hash
+    hash = metadata.hash
     graph = metadata.graph
-    # properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
 
-    if graph.size > 0  # have we found anything yet?
-      output.comments << "SUCCESS: Linked data was found.  "
-      output.score = "pass"
+    if hash.any?
+      output.score = 'pass'
+      output.comments << "SUCCESS: Found structured metadata.\n"
+    elsif graph.size > 0 # have we found anything yet?
+      output.score = 'pass'
+      output.comments << "SUCCESS: Found linked data (this may or may not have originated from the author).\n"
     else
-      output.comments << "FAILURE: No linked data was found.  "
-      output.score = "fail"
+      output.score = 'fail'
+      output.comments << "FAILURE: unable to find any kind of structured metadata.\n"
     end
-  
+
     output.createEvaluationResponse
   end
 
-
-  def self.fc_metadata_kr_language_strong_api
-    api = OpenAPI.new(meta: fc_metadata_kr_language_strong_meta)
+  def self.core_structured_metadata_api
+    api = OpenAPI.new(meta: core_structured_metadata_meta)
     api.get_api
   end
 
-  def self.fc_metadata_kr_language_strong_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_kr_language_strong_meta)
+  def self.core_structured_metadata_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: core_structured_metadata_meta)
     dcat.get_dcat
   end
 end
-

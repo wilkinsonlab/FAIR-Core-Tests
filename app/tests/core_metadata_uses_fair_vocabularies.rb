@@ -1,13 +1,13 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.fc_metadata_uses_fair_vocabularies_meta
+  def self.core_metadata_uses_fair_vocabularies_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
       testname: 'FAIR Champion: Metadata uses FAIR vocabularies (strong)',
-      testid: 'fc_metadata_uses_fair_vocabularies',
+      testid: 'core_metadata_uses_fair_vocabularies',
       description: 'Maturity Indicator to test if the linked data metadata uses terms that resolve to linked (FAIR) data.',
-      metric: 'https://doi.org/10.25504/FAIRsharing.RCUuvt',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-i2.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.96d4af',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -28,15 +28,15 @@ class FAIRTest
     }
   end
 
-  def self.fc_metadata_uses_fair_vocabularies(guid:)
+  def self.core_metadata_uses_fair_vocabularies(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: fc_metadata_uses_fair_vocabularies_meta
+      meta: core_metadata_uses_fair_vocabularies_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{fc_metadata_uses_fair_vocabularies_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{core_metadata_uses_fair_vocabularies_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -77,22 +77,22 @@ class FAIRTest
 
       case predicate.value
       when %r{purl.org/dc/} # these resolve very slowly, so just accept that they are ok!
-      output.comments << "INFO:  resolution of DC predicate #{predicate.value} accepted\n"
+        output.comments << "INFO:  resolution of DC predicate #{predicate.value} accepted\n"
         # $stderr.puts "adding #{hosthash[host].uniq.count} to successes"
         success += hosthash[host].uniq.count
         next
       when %r{/vcard/} # these resolve very slowly, so just accept that they are ok!
-      output.comments << "INFO:  resolution of VCARD predicate #{predicate.value} accepted\n"
+        output.comments << "INFO:  resolution of VCARD predicate #{predicate.value} accepted\n"
         # $stderr.puts "adding #{hosthash[host].uniq.count} to successes"
         success += hosthash[host].uniq.count
         next
       when %r{w3\.org/ns/dcat}
-      output.comments << "INFO:  resolution of DCAT predicate #{predicate.value} accepted\n"
+        output.comments << "INFO:  resolution of DCAT predicate #{predicate.value} accepted\n"
         # $stderr.puts "adding #{hosthash[host].uniq.count} to successes"
         success += hosthash[host].uniq.count
         next
       when %r{xmlns\.com/foaf/}
-      output.comments << "INFO:  resolution of FOAF predicate #{predicate.value} accepted\n"
+        output.comments << "INFO:  resolution of FOAF predicate #{predicate.value} accepted\n"
         # $stderr.puts "adding #{hosthash[host].uniq.count} to successes"
         success += hosthash[host].uniq.count
         next
@@ -102,12 +102,12 @@ class FAIRTest
       metadata2 = FAIRChampion::Harvester.resolveit(predicate.value) # this  sends the content-negotiation for linked data
       g2 = metadata2.graph
       output.comments << if g2.size > 0
-                          "INFO:  predicate #{predicate.value} resolved to linked data.\n"
-                        else
-                          "WARN:  predicate #{predicate.value} did not resolve to linked data.\n"
-                        end
+                           "INFO:  predicate #{predicate.value} resolved to linked data.\n"
+                         else
+                           "WARN:  predicate #{predicate.value} did not resolve to linked data.\n"
+                         end
 
-                        output.comments << "INFO: If linked data was found in the previous line, it will now be tested by the following SPARQL query: 'select * where {<#{predicate.value}> ?p ?o}' \n"
+      output.comments << "INFO: If linked data was found in the previous line, it will now be tested by the following SPARQL query: 'select * where {<#{predicate.value}> ?p ?o}' \n"
 
       query = SPARQL.parse("select * where {<#{predicate.value}> ?p ?o}")
       results = query.execute(g2)
@@ -133,15 +133,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-
-
-  def self.fc_metadata_uses_fair_vocabularies_api
-    api = OpenAPI.new(meta: fc_metadata_uses_fair_vocabularies_meta)
+  def self.core_metadata_uses_fair_vocabularies_api
+    api = OpenAPI.new(meta: core_metadata_uses_fair_vocabularies_meta)
     api.get_api
   end
 
-  def self.fc_metadata_uses_fair_vocabularies_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_uses_fair_vocabularies_meta)
+  def self.core_metadata_uses_fair_vocabularies_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_uses_fair_vocabularies_meta)
     dcat.get_dcat
   end
 end

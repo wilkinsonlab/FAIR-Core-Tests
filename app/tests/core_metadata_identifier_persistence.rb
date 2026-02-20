@@ -1,13 +1,13 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.fc_metadata_identifier_persistence_meta
+  def self.core_metadata_identifier_persistence_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
       testname: 'FAIR Champion: Identifier Persistence',
-      testid: 'fc_metadata_identifier_persistence',
+      testid: 'core_metadata_identifier_persistence',
       description: "Metric to test if the unique identifier of the metadata resource is likely to be persistent. Known schema are registered in FAIRSharing (https://fairsharing.org/standards/?q=&selected_facets=type_exact:identifier%20schema). For URLs that don't follow a schema in FAIRSharing we test known URL persistence schemas (purl, oclc, fdlp, purlz, w3id, ark).",
-      metric: 'https://doi.org/10.25504/FAIRsharing.VRo9Dl',
+      metric: 'https://w3id.org/fair-metrics/general/champ-mi-f1.ttl',
       indicators: 'https://doi.org/10.25504/FAIRsharing.e226cb',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -28,15 +28,15 @@ class FAIRTest
     }
   end
 
-  def self.fc_metadata_identifier_persistence(guid:)
+  def self.core_metadata_identifier_persistence(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: fc_metadata_identifier_persistence_meta
+      meta: core_metadata_identifier_persistence_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{fc_metadata_identifier_persistence_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{core_metadata_identifier_persistence_meta[:testversion]}'\n"
 
     type = FAIRChampion::Harvester.typeit(guid)
 
@@ -78,14 +78,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-
-  def self.fc_metadata_identifier_persistence_api
-    api = OpenAPI.new(meta: fc_metadata_identifier_persistence_meta)
+  def self.core_metadata_identifier_persistence_api
+    api = OpenAPI.new(meta: core_metadata_identifier_persistence_meta)
     api.get_api
   end
 
-  def self.fc_metadata_identifier_persistence_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_identifier_persistence_meta)
+  def self.core_metadata_identifier_persistence_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_identifier_persistence_meta)
     dcat.get_dcat
   end
 end
