@@ -4,7 +4,7 @@ class FAIRTest
   def self.fc_metadata_identifier_in_metadata_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata Identifier Explicitly In Metadata',
+      testname: 'OSTrails Core: Metadata Identifier Explicitly In Metadata',
       testid: 'fc_metadata_identifier_in_metadata',
       description: "Metric to test if the metadata contains the unique identifier to the metadata itself.  This is done using a variety of 'scraping' tools, including DOI metadata resolution, the use of the 'extruct' Python tool, and others.  The test is executed by searching for the predicates 'http[s]://purl.org/dc/terms/identifier','http[s]://schema.org/identifier.",
       metric: 'https://doi.org/10.25504/FAIRsharing.5Xy1dJ',
@@ -18,7 +18,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',

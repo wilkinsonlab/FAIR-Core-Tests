@@ -1,12 +1,13 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.core_metadata_outward_links_meta
+  def self.test_FM_I3_M_QualRef_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata Contains Outward Links',
-      testid: 'core_metadata_outward_links',
-      description: 'Maturity Indicator to test if the metadata links outward to third-party resources.  It only tests metadata that can be represented as Linked Data.',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testname: 'OSTrails Core: Metadata Contains Outward Links',
+      testid: 'test_FM_I3_M_QualRef',
+      description: 'Maturity Indicator to test if the metadata links outward to third-party resources.
+      It only tests metadata that can be represented as Linked Data.',
       metric: 'https://w3id.org/fair-metrics/general/FM_I3_M_QualRef',
       indicators: 'https://doi.org/10.25504/FAIRsharing.ae22b8',
       type: 'http://edamontology.org/operation_2428',
@@ -18,7 +19,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -28,15 +29,15 @@ class FAIRTest
     }
   end
 
-  def self.core_metadata_outward_links(guid:)
+  def self.test_FM_I3_M_QualRef(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: core_metadata_outward_links_meta
+      meta: test_FM_I3_M_QualRef_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{core_metadata_outward_links_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_I3_M_QualRef_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -107,13 +108,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.core_metadata_outward_links_api
-    api = OpenAPI.new(meta: core_metadata_outward_links_meta)
+  def self.test_FM_I3_M_QualRef_api
+    api = OpenAPI.new(meta: test_FM_I3_M_QualRef_meta)
     api.get_api
   end
 
-  def self.core_metadata_outward_links_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_outward_links_meta)
+  def self.test_FM_I3_M_QualRef_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_I3_M_QualRef_meta)
     dcat.get_dcat
   end
 end

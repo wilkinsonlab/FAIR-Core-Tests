@@ -1,13 +1,17 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.core_metadata_identifier_persistence_meta
+  def self.test_FM_F1_M_IdentPersistent_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Identifier Persistence',
-      testid: 'core_metadata_identifier_persistence',
-      description: "Metric to test if the unique identifier of the metadata resource is likely to be persistent. Known schema are registered in FAIRSharing (https://fairsharing.org/standards/?q=&selected_facets=type_exact:identifier%20schema). For URLs that don't follow a schema in FAIRSharing we test known URL persistence schemas (purl, oclc, fdlp, purlz, w3id, ark).",
-      metric: 'https://w3id.org/fair-metrics/general/FM_F1_M_IdentUnique',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testname: 'OSTrails Core: Identifier Persistence',
+      testid: 'test_FM_F1_M_IdentPersistent',
+      description: "Metric to test if the unique identifier of the metadata resource
+      is likely to be persistent. Known schema are registered in
+      FAIRSharing (https://fairsharing.org/standards/?q=&selected_facets=type_exact:identifier%20schema).
+      For URLs that don't follow a schema in FAIRSharing we test
+      known URL persistence schemas (purl, oclc, fdlp, purlz, w3id, ark).",
+      metric: 'https://w3id.org/fair-metrics/general/FM_F1_M_IdentPersistent',
       indicators: 'https://doi.org/10.25504/FAIRsharing.e226cb',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -18,7 +22,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -28,15 +32,15 @@ class FAIRTest
     }
   end
 
-  def self.core_metadata_identifier_persistence(guid:)
+  def self.test_FM_F1_M_IdentPersistent(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: core_metadata_identifier_persistence_meta
+      meta: test_FM_F1_M_IdentPersistent_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{core_metadata_identifier_persistence_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_F1_M_IdentPersistent_meta[:testversion]}'\n"
 
     type = FAIRChampion::Harvester.typeit(guid)
 
@@ -78,13 +82,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.core_metadata_identifier_persistence_api
-    api = OpenAPI.new(meta: core_metadata_identifier_persistence_meta)
+  def self.test_FM_F1_M_IdentPersistent_api
+    api = OpenAPI.new(meta: test_FM_F1_M_IdentPersistent_meta)
     api.get_api
   end
 
-  def self.core_metadata_identifier_persistence_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_identifier_persistence_meta)
+  def self.test_FM_F1_M_IdentPersistent_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_F1_M_IdentPersistent_meta)
     dcat.get_dcat
   end
 end

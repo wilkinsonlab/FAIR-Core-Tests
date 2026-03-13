@@ -1,24 +1,25 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.core_data_identifier_in_metadata_meta
+  def self.test_FM_F3_M_MetaIdent_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
-      testname: 'FAIR Champion: Data Identifier in Metadata',
-      testid: 'core_data_identifier_in_metadata',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testname: 'OSTrails Core: Data Identifier in Metadata',
+      testid: 'test_FM_F3_M_MetaIdent',
       description: 'Test that the identifier of the data is an unambiguous element of the metadata. Tested options are schema:distribution, http://www.w3.org/ns/ldp#contains, iao:IAO_0000136, IAO:0000136,ldp:contains,foaf:primaryTopic,schema:distribution,schema:contentUrl,schema,mainEntity,schema:codeRepository,schema:distribution,schema:contentUrl, dcat:distribution, dcat:dataset,dcat:downloadURL,dcat:accessURL,sio:SIO_000332, sio:is-about, obo:IAO_0000136',
       metric: 'https://w3id.org/fair-metrics/general/FM_F3_M_MetaIdent',
+
       indicators: 'https://doi.org/10.25504/FAIRsharing.820324',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
-      keywords: ['FAIR Assessment', 'FAIR Principles'],
+      keywords: ['FAIR Assessment', 'Identifiers', 'Findability', 'FAIR Principles'],
       themes: ['http://edamontology.org/topic_4012'],
       organization: 'OSTrails Project',
       org_url: 'https://ostrails.eu/',
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -28,14 +29,14 @@ class FAIRTest
     }
   end
 
-  def self.core_data_identifier_in_metadata(guid:)
+  def self.test_FM_F3_M_MetaIdent(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: core_data_identifier_in_metadata_meta
+      meta: test_FM_F3_M_MetaIdent_meta
     )
-    output.comments << "INFO: TEST VERSION '#{core_data_identifier_in_metadata_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_F3_M_MetaIdent_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -117,13 +118,13 @@ class FAIRTest
     end
   end
 
-  def self.core_data_identifier_in_metadata_api
-    api = OpenAPI.new(meta: core_data_identifier_in_metadata_meta)
+  def self.test_FM_F3_M_MetaIdent_api
+    api = OpenAPI.new(meta: test_FM_F3_M_MetaIdent_meta)
     api.get_api
   end
 
-  def self.core_data_identifier_in_metadata_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: core_data_identifier_in_metadata_meta)
+  def self.test_FM_F3_M_MetaIdent_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_F3_M_MetaIdent_meta)
     dcat.get_dcat
   end
 end

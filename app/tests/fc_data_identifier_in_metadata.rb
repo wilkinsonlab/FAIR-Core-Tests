@@ -4,7 +4,7 @@ class FAIRTest
   def self.fc_data_identifier_in_metadata_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
-      testname: 'FAIR Champion: Data Identifier in Metadata',
+      testname: 'OSTrails Core: Data Identifier in Metadata',
       testid: 'fc_data_identifier_in_metadata',
       description: 'Test that the identifier of the data is an unambiguous element of the metadata. Tested options are schema:distribution, http://www.w3.org/ns/ldp#contains, iao:IAO_0000136, IAO:0000136,ldp:contains,foaf:primaryTopic,schema:distribution,schema:contentUrl,schema,mainEntity,schema:codeRepository,schema:distribution,schema:contentUrl, dcat:distribution, dcat:dataset,dcat:downloadURL,dcat:accessURL,sio:SIO_000332, sio:is-about, obo:IAO_0000136',
       metric: 'https://doi.org/10.25504/FAIRsharing.5Xy1dJ',
@@ -18,7 +18,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',

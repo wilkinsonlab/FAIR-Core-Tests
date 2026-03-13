@@ -1,11 +1,11 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.core_metadata_identifier_in_metadata_meta
+  def self.test_FM_F3_M_MetaIdent_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata Identifier Explicitly In Metadata',
-      testid: 'core_metadata_identifier_in_metadata',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testname: 'OSTrails Core: Metadata Identifier Explicitly In Metadata',
+      testid: 'test_FM_F3_M_MetaIdent',
       description: "Metric to test if the metadata contains the unique identifier to the metadata itself.  This is done using a variety of 'scraping' tools, including DOI metadata resolution, the use of the 'extruct' Python tool, and others.  The test is executed by searching for the predicates 'http[s]://purl.org/dc/terms/identifier','http[s]://schema.org/identifier.",
       metric: 'https://w3id.org/fair-metrics/general/FM_F3_M_MetaIdent',
       indicators: 'https://doi.org/10.25504/FAIRsharing.820324',
@@ -18,7 +18,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -28,15 +28,15 @@ class FAIRTest
     }
   end
 
-  def self.core_metadata_identifier_in_metadata(guid:)
+  def self.test_FM_F3_M_MetaIdent(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: core_metadata_identifier_in_metadata_meta
+      meta: test_FM_F3_M_MetaIdent_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{core_metadata_identifier_in_metadata_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_F3_M_MetaIdent_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -52,7 +52,7 @@ class FAIRTest
 
     hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    _properties = FAIRChampion::Harvester.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -97,13 +97,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.core_metadata_identifier_in_metadata_api
-    api = OpenAPI.new(meta: core_metadata_identifier_in_metadata_meta)
+  def self.test_FM_F3_M_MetaIdent_api
+    api = OpenAPI.new(meta: test_FM_F3_M_MetaIdent_meta)
     api.get_api
   end
 
-  def self.core_metadata_identifier_in_metadata_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_identifier_in_metadata_meta)
+  def self.test_FM_F3_M_MetaIdent_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_F3_M_MetaIdent_meta)
     dcat.get_dcat
   end
 end

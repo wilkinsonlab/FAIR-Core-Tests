@@ -1,12 +1,13 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.core_searchable_meta
+  def self.test_FM_F4_M_MetaIndexed
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Searchable in major search engine',
-      testid: 'core_searchable',
-      description: 'Tests whether a machine is able to discover the resource by search, using Microsoft Bing.',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testname: 'OSTrails Core: Searchable in major search engine',
+      testid: 'test_FM_F4_M_MetaIndexed',
+      description: 'Tests whether a machine is able to discover the resource by search,
+      using Microsoft Bing.',
       metric: 'https://w3id.org/fair-metrics/general/FM_F4_M_MetaIndexed',
       indicators: 'https://doi.org/10.25504/FAIRsharing.0c0d21',
       type: 'http://edamontology.org/operation_2428',
@@ -18,7 +19,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -28,15 +29,15 @@ class FAIRTest
     }
   end
 
-  def self.core_searchable(guid:)
+  def self.test_FM_F4_M_MetaIndexed(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: core_searchable_meta
+      meta: test_FM_F4_M_MetaIndexed
     )
 
-    output.comments << "INFO: TEST VERSION '#{core_searchable_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_F4_M_MetaIndexed[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -51,9 +52,9 @@ class FAIRTest
     end
 
     hash = metadata.hash
-    graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
-    #############################################################################################################
+    # graph = metadata.graph
+    # properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    # #############################################################################################################
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -325,13 +326,13 @@ class FAIRTest
     response.body
   end
 
-  def self.core_searchable_api
-    api = OpenAPI.new(meta: core_searchable_meta)
+  def self.test_FM_F4_M_MetaIndexed_api
+    api = OpenAPI.new(meta: test_FM_F4_M_MetaIndexed)
     api.get_api
   end
 
-  def self.core_searchable_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: core_searchable_meta)
+  def self.test_FM_F4_M_MetaIndexed_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_F4_M_MetaIndexed)
     dcat.get_dcat
   end
 end

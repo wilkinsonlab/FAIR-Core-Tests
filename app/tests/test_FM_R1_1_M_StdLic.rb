@@ -1,14 +1,17 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.core_metadata_includes_license_meta
+  def self.test_FM_R1_1_M_StdLic_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata Includes License (strong)',
-      testid: 'core_metadata_includes_license',
-      description: 'Maturity Indicator to test if the linked data metadata contains an explicit pointer to the license.  Tests: xhtml, dvia, dcterms, cc, data.gov.au, and Schema license predicates in linked data, and validates the value of those properties.',
-      metric: 'https://w3id.org/fair-metrics/general/FM_A1-2_M_Auth',
-      indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.1',
+      testname: 'OSTrails Core: Metadata Includes License',
+      testid: 'test_FM_R1_1_M_StdLic',
+      description: "Maturity Indicator to test if the metadata contains an explicit pointer to the license.
+      This test will use a case-insensitive regular expression, and scan both key/value style metadata,
+      as well as linked data metadata.  Tests: xhtml, dvia, dcterms, cc, data.gov.au,
+      and Schema license predicates in linked data",
+      metric: 'https://w3id.org/fair-metrics/general/FM_R1-1_M_StdLic',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.aff99f',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -18,7 +21,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -28,15 +31,15 @@ class FAIRTest
     }
   end
 
-  def self.core_metadata_includes_license(guid:)
+  def self.test_FM_R1_1_M_StdLic(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: core_metadata_includes_license_meta
+      meta: test_FM_R1_1_M_StdLic_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{core_metadata_includes_license_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_R1_1_M_StdLic_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -57,6 +60,25 @@ class FAIRTest
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
+
+    output.score = 'fail'
+    if metadata.hash.size > 1
+      output.comments << "INFO:  searching hash-style metadata for a match with /license/ in any case.\n"
+      properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+
+      properties.each do |keyval|
+        key = nil
+        value = nil
+        (key, value) = keyval
+        key = key.to_s
+        next unless key =~ /license/i
+
+        output.comments << "SUCCESS: found #{key} in hashed metadata.\n"
+        output.score = 'pass'
+        return output.createEvaluationResponse
+      end
+    end
+
     g = graph
     output.score = 'fail'
     queries = %w[
@@ -118,13 +140,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.core_metadata_includes_license_api
-    api = OpenAPI.new(meta: core_metadata_includes_license_meta)
+  def self.test_FM_R1_1_M_StdLic_api
+    api = OpenAPI.new(meta: test_FM_R1_1_M_StdLic_meta)
     api.get_api
   end
 
-  def self.core_metadata_includes_license_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_includes_license_meta)
+  def self.test_FM_R1_1_M_StdLic_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_R1_1_M_StdLic_meta)
     dcat.get_dcat
   end
 end

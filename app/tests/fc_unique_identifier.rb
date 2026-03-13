@@ -7,7 +7,7 @@ class FAIRTest
   def self.fc_unique_identifier_meta
     return {
     testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
-    testname: "FAIR Champion: Unique Identifier",
+    testname: "OSTrails Core: Unique Identifier",
     testid: "fc_unique_identifier",
     description: "Metric to test if the metadata resource has a unique identifier.  This is done by comparing the GUID to the patterns (by regexp) of known GUID schemas such as URLs and DOIs.  Known schema are registered in FAIRSharing (https://fairsharing.org/standards/?q=&selected_facets=type_exact:identifier%20schema)",
     metric: 'https://doi.org/10.25504/FAIRsharing.NHCOKK',
@@ -21,7 +21,7 @@ class FAIRTest
     responsible_developer: 'Mark D Wilkinson',
     email: 'mark.wilkinson@upm.es',
     response_description: 'The response is "pass", "fail" or "indeterminate"',
-    schemas: { 'subject' => ['string', 'the GUID being tested'] },
+    schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
     organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
     individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
     creator: 'https://orcid.org/0000-0001-6960-357X',

@@ -52,9 +52,12 @@ def set_routes(classes: [])
     guid = ''
     if params['resource_identifier']
       guid = params['resource_identifier']
+    elsif params['subject']
+      guid = params['subject']
     else
       payload = JSON.parse(request.body.read)
       guid = payload['resource_identifier']
+      guid = payload['subject'] if guid.empty?
     end
     warn "now testing #{guid}"
     # begin

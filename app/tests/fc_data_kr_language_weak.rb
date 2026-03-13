@@ -7,7 +7,7 @@ class FAIRTest
   def self.fc_data_kr_language_weak_meta
     return {
     testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-    testname:  "FAIR Champion: Data Knowlege Representation Language (Weak Test)",
+    testname:  "OSTrails Core: Data Knowlege Representation Language (Weak Test)",
     testid: "fc_data_kr_language_weak",
     description: "Test if the data uses a formal language broadly applicable for knowledge representation.  This particular test takes a broad view of what defines a 'knowledge representation language'; in this evaluation, a knowledge representation language is interpreted as one in which terms are semantically-grounded in ontologies.  Any form of structured data will pass this test",
     metric: 'https://doi.org/10.25504/FAIRsharing.qUroF6',
@@ -21,7 +21,7 @@ class FAIRTest
     responsible_developer: 'Mark D Wilkinson',
     email: 'mark.wilkinson@upm.es',
     response_description: 'The response is "pass", "fail" or "indeterminate"',
-    schemas: { 'subject' => ['string', 'the GUID being tested'] },
+    schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
     organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
     individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
     creator: 'https://orcid.org/0000-0001-6960-357X',

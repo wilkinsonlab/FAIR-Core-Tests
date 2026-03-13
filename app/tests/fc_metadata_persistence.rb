@@ -4,7 +4,7 @@ class FAIRTest
   def self.fc_metadata_persistence_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
-      testname: 'FAIR Champion: Metadata Persistence',
+      testname: 'OSTrails Core: Metadata Persistence',
       testid: 'fc_metadata_persistence',
       description: 'Metric to test if the metadata contains a persistence policy, explicitly identified by a persistencePolicy key (in hashed data) or a http://www.w3.org/2000/10/swap/pim/doc#persistencePolicy predicate in Linked Data.  DOIs are assumed to have metadata persistence.',
       metric: 'https://doi.org/10.25504/FAIRsharing.lEZbPK',
@@ -18,7 +18,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',

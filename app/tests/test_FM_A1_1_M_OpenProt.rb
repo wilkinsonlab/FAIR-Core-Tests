@@ -1,14 +1,14 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.core_metadata_authorization_meta
+  def self.test_FM_A1_1_M_OpenProt_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata Authorization',
-      testid: 'core_metadata_authorization',
-      description: 'Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.',
-      metric: 'https://w3id.org/fair-metrics/general/FM_A1-2_M_Auth',
-      indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testname: 'OSTrails Core: Uses open free protocol for metadata retrieval',
+      testid: 'test_FM_A1_1_M_OpenProt',
+      description: 'Metadata may be retrieved by an open and free protocol.  Tests metadata GUID for its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.',
+      metric: 'https://w3id.org/fair-metrics/general/FM_A1-1_M_OpenProt',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.7612c1',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -18,7 +18,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -28,37 +28,43 @@ class FAIRTest
     }
   end
 
-  def self.core_metadata_authorization(guid:)
+  def self.test_FM_A1_1_M_OpenProt(guid:)
     FAIRChampion::Output.clear_comments
+
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: core_metadata_authorization_meta
+      meta: test_FM_A1_1_M_OpenProt_meta
     )
-    output.comments << "INFO: TEST VERSION '#{core_metadata_authorization_meta[:testversion]}'\n"
+
+    output.comments << "INFO: TEST VERSION '#{test_FM_A1_1_M_OpenProt_meta[:testversion]}'\n"
+
     type = FAIRChampion::Harvester.typeit(guid) # this is where the magic happens!
 
+    # hash = metadata.hash
+    # graph = metadata.graph
+    # properties = FAIRChampion::Harvester.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
-
     if type
-      output.comments << "PASS:  The GUID of the metadata is a #{type}, which is known to be allow authentication/authorization.\n"
       output.score = 'pass'
+      output.comments << "SUCCESS: The identifier #{guid} is of type #{type}, which is resolvable by an open protocol."
+      output.createEvaluationResponse
     else
       output.score = 'indeterminate'
-      output.comments << "INDETERMINATE: The GUID identifier of the metadata #{guid} did not match any known identification system.\n"
+      output.comments << "INDETERMINATE: The identifier #{guid} did not match any known identification system.\n"
+      output.createEvaluationResponse
     end
-    output.createEvaluationResponse
   end
 
-  def self.core_metadata_authorization_api
-    api = OpenAPI.new(meta: core_metadata_authorization_meta)
+  def self.test_FM_A1_1_M_OpenProt_api
+    api = OpenAPI.new(meta: test_FM_A1_1_M_OpenProt_meta)
     api.get_api
   end
 
-  def self.core_metadata_authorization_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_authorization_meta)
+  def self.test_FM_A1_1_M_OpenProt_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_A1_1_M_OpenProt_meta)
     dcat.get_dcat
   end
 end

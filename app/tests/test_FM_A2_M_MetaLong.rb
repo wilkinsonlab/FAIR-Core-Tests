@@ -1,13 +1,13 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.core_metadata_persistence_meta
+  def self.test_FM_A2_M_MetaLong_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
-      testname: 'FAIR Champion: Metadata Persistence',
-      testid: 'core_metadata_persistence',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.1',
+      testname: 'OSTrails Core: Metadata Persistence',
+      testid: 'test_FM_A2_M_MetaLong',
       description: 'Metric to test if the metadata contains a persistence policy, explicitly identified by a persistencePolicy key (in hashed data) or a http://www.w3.org/2000/10/swap/pim/doc#persistencePolicy predicate in Linked Data.  DOIs are assumed to have metadata persistence.',
-      metric: 'https://w3id.org/fair-metrics/general/FM_A1-1_M_OpenProt',
+      metric: 'https://w3id.org/fair-metrics/general/FM_A2_M_MetaLong',
       indicators: 'https://doi.org/10.25504/FAIRsharing.7c4d7f',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -18,7 +18,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -28,15 +28,15 @@ class FAIRTest
     }
   end
 
-  def self.core_metadata_persistence(guid:)
+  def self.test_FM_A2_M_MetaLong(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: core_metadata_persistence_meta
+      meta: test_FM_A2_M_MetaLong_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{core_metadata_persistence_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_A2_M_MetaLong_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -98,13 +98,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.core_metadata_persistence_api
-    api = OpenAPI.new(meta: core_metadata_persistence_meta)
+  def self.test_FM_A2_M_MetaLong_api
+    api = OpenAPI.new(meta: test_FM_A2_M_MetaLong_meta)
     api.get_api
   end
 
-  def self.core_metadata_persistence_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_persistence_meta)
+  def self.test_FM_A2_M_MetaLong_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_A2_M_MetaLong_meta)
     dcat.get_dcat
   end
 end

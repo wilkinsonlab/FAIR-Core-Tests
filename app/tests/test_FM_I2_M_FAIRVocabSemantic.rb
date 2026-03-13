@@ -1,13 +1,15 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.core_metadata_uses_fair_vocabularies_meta
+  def self.test_FM_I2_M_FAIRVocabSemantic_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata uses FAIR vocabularies (strong)',
-      testid: 'core_metadata_uses_fair_vocabularies',
-      description: 'Maturity Indicator to test if the linked data metadata uses terms that resolve to linked (FAIR) data.',
-      metric: 'https://w3id.org/fair-metrics/general/FM_I2_M_FAIRVocab',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testname: 'OSTrails Core: Metadata uses FAIR vocabularies that resolve to linked data',
+      testid: 'test_FM_I2_M_FAIRVocabSemantic',
+      description: 'Maturity Indicator to test if the linked data metadata uses terms that
+      resolve to linked (FAIR) data.  Vocabulary term URLs are resolved using content-negotiation
+      for common forms of linked data, and the response is parsed to determine if it is LD or not.',
+      metric: 'https://w3id.org/fair-metrics/general/FM_I2_M_FAIRVocabSemantic',
       indicators: 'https://doi.org/10.25504/FAIRsharing.96d4af',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
@@ -18,7 +20,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -28,15 +30,15 @@ class FAIRTest
     }
   end
 
-  def self.core_metadata_uses_fair_vocabularies(guid:)
+  def self.test_FM_I2_M_FAIRVocabSemantic(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: core_metadata_uses_fair_vocabularies_meta
+      meta: test_FM_I2_M_FAIRVocabSemantic_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{core_metadata_uses_fair_vocabularies_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_I2_M_FAIRVocabSemantic_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -133,13 +135,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.core_metadata_uses_fair_vocabularies_api
-    api = OpenAPI.new(meta: core_metadata_uses_fair_vocabularies_meta)
+  def self.test_FM_I2_M_FAIRVocabSemantic_api
+    api = OpenAPI.new(meta: test_FM_I2_M_FAIRVocabSemantic_meta)
     api.get_api
   end
 
-  def self.core_metadata_uses_fair_vocabularies_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: core_metadata_uses_fair_vocabularies_meta)
+  def self.test_FM_I2_M_FAIRVocabSemantic_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_I2_M_FAIRVocabSemantic_meta)
     dcat.get_dcat
   end
 end

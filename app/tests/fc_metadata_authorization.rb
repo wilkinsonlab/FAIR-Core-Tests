@@ -6,7 +6,7 @@ class FAIRTest
   def self.fc_metadata_authorization_meta
     return {
     testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-    testname: 'FAIR Champion: Metadata Authorization',
+    testname: 'OSTrails Core: Metadata Authorization',
     testid: 'fc_metadata_authorization',
     description: 'Tests metadata GUID for the ability to implement authentication and authorization in its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.',
     metric: 'https://doi.org/10.25504/FAIRsharing.VrP6sm',
@@ -20,7 +20,7 @@ class FAIRTest
     responsible_developer: 'Mark D Wilkinson',
     email: 'mark.wilkinson@upm.es',
     response_description: 'The response is "pass", "fail" or "indeterminate"',
-    schemas: { 'subject' => ['string', 'the GUID being tested'] },
+    schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
     organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
     individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
     creator: 'https://orcid.org/0000-0001-6960-357X',
