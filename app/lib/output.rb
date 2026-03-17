@@ -102,7 +102,7 @@ module FAIRChampion
         triplify(uniqueid, ftr.assessmentTarget, testedguidnode, g)
         triplify(executionid, prov.used, testedguidnode, g)
         triplify(testedguidnode, RDF.type, prov.Entity, g)
-        triplify(testedguidnode, dct.identifier, testedGUID, g)
+        triplify(testedguidnode, dct.identifier, testedGUID, g, 'xsd:string')
       rescue StandardError
         triplify(uniqueid, ftr.assessmentTarget, 'not a URI', g)
         triplify(executionid, prov.used, 'not a URI', g)
