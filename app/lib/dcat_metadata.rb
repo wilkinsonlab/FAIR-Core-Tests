@@ -46,6 +46,8 @@ module ChampionDCAT
       schema = RDF::Vocab::SCHEMA
       dcterms = RDF::Vocab::DC
       vcard = RDF::Vocab::VCARD
+      xsd = RDF::Vocab::XSD
+
       dcat = RDF::Vocab::DCAT
       sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
       ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
@@ -63,7 +65,7 @@ module ChampionDCAT
 
       # triplify tests and rejects anything that is empty or nil  --> SAFE
       # Test Unique Identifier	dcterms:identifier	Literal
-      FAIRChampion::Output.triplify(me, dcterms.identifier, identifier, g)
+      FAIRChampion::Output.triplify(me, dcterms.identifier, identifier.to_s, g, xsd.string)
 
       # Title/Name of the test	dcterms:title	Literal
       FAIRChampion::Output.triplify(me, dcterms.title, testname, g)
