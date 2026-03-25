@@ -1,8 +1,7 @@
 module FAIRChampion
   class MetadataObject
 
-    @@comments = []
-    attr_accessor :hash, :graph, :guidtype, :full_response, :finalURI
+    attr_accessor :hash, :graph, :guidtype, :full_response, :finalURI, :comments
 
     # a hash of metadata 
     # a RDF.rb graph of metadata  
@@ -14,17 +13,18 @@ module FAIRChampion
       @graph = RDF::Graph.new
       @full_response = []
       @finalURI = []
+      @comments = []
     end
 
     def comments
-      @@comments
+      @comments
     end 
     def self.comments
-      @@comments
+      @comments
     end 
 
     def self.clear_comments
-      @@comments = []
+      @comments = []
     end
     
     def merge_hash(hash)

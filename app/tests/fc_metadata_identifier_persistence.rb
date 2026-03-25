@@ -4,11 +4,11 @@ class FAIRTest
   def self.fc_metadata_identifier_persistence_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Identifier Persistence',
+      testname: 'OSTrails Core: Identifier Persistence',
       testid: 'fc_metadata_identifier_persistence',
       description: "Metric to test if the unique identifier of the metadata resource is likely to be persistent. Known schema are registered in FAIRSharing (https://fairsharing.org/standards/?q=&selected_facets=type_exact:identifier%20schema). For URLs that don't follow a schema in FAIRSharing we test known URL persistence schemas (purl, oclc, fdlp, purlz, w3id, ark).",
-      metric: 'https://doi.org/10.25504/FAIRsharing.TUq8Zj',
-      indicators: 'https://w3id.org/fair/principles/latest/F1',
+      metric: 'https://doi.org/10.25504/FAIRsharing.VRo9Dl',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.e226cb',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -18,7 +18,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',

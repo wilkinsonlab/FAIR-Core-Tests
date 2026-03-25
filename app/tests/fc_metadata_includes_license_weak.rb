@@ -3,12 +3,12 @@ require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 class FAIRTest
   def self.fc_metadata_includes_license_weak_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata Includes License (weak)',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
+      testname: 'OSTrails Core: Metadata Includes License (weak)',
       testid: 'fc_metadata_includes_license_weak',
       description: "Maturity Indicator to test if the metadata contains an explicit pointer to the license.  This 'weak' test will use a case-insensitive regular expression, and scan both key/value style metadata, as well as linked data metadata.  Tests: xhtml, dvia, dcterms, cc, data.gov.au, and Schema license predicates in linked data, and validates the value of those properties.",
-      metric: 'https://doi.org/10.25504/FAIRsharing.fsB7NK',
-      indicators: 'https://w3id.org/fair/principles/latest/R1.1',
+      metric: 'https://doi.org/10.25504/FAIRsharing.YAdSwh',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.aff99f',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -18,7 +18,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',
@@ -62,7 +62,7 @@ class FAIRTest
     output.score = "fail"
     if metadata.hash.size > 1
       output.comments << "INFO:  searching hash-style metadata for a match with /license/ in any case.\n"
-      properties = FAIRChampion::Utils::deep_dive_properties(hash)
+      properties = FAIRChampion::Harvester::deep_dive_properties(hash)
 
       properties.each do |keyval|
         key, value = nil, nil

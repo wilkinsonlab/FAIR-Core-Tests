@@ -6,11 +6,11 @@ class FAIRTest
   def self.fc_data_protocol_meta
     return {
     testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-    testname: "FAIR Champion: Data Protocol",
+    testname: "OSTrails Core: Data Protocol",
     testid: "fc_data_protocol",
     description: "Data may be retrieved by an open and free protocol.  Tests data GUID for its resolution protocol.  Currently passes InChI Keys, DOIs, Handles, and URLs.  Recognition of other identifiers will be added upon request by the community.",
-    metric: 'https://doi.org/10.25504/FAIRsharing.yDJci5',
-    indicators: 'https://w3id.org/fair/principles/latest/A1.2',
+    metric: 'https://doi.org/10.25504/FAIRsharing.DfMGZW',
+    indicators: 'https://doi.org/10.25504/FAIRsharing.7612c1',
     type: 'http://edamontology.org/operation_2428',
     license: 'https://creativecommons.org/publicdomain/zero/1.0/',
     keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -20,7 +20,7 @@ class FAIRTest
     responsible_developer: 'Mark D Wilkinson',
     email: 'mark.wilkinson@upm.es',
     response_description: 'The response is "pass", "fail" or "indeterminate"',
-    schemas: { 'subject' => ['string', 'the GUID being tested'] },
+    schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
     organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
     individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
     creator: 'https://orcid.org/0000-0001-6960-357X',

@@ -4,11 +4,11 @@ class FAIRTest
   def self.fc_structured_metadata_meta
     return {
              testversion: HARVESTER_VERSION + ":" + "Tst-2.0.0",
-             testname: 'FAIR Champion: Structured Metadata',
+             testname: 'OSTrails Core: Structured Metadata',
              testid: 'fc_structured_metadata',
              description: 'Tests whether a machine is able to find structured metadata.  This could be (for example) RDFa, embedded json, json-ld, or content-negotiated structured metadata such as RDF Turtle.',
-             metric: 'https://doi.org/10.25504/FAIRsharing.ztr3n9',
-             indicators: 'https://w3id.org/fair/principles/latest/F2',
+             metric: 'https://doi.org/10.25504/FAIRsharing.2dUpZs',
+             indicators: 'https://doi.org/10.25504/FAIRsharing.e05e98',
              type: 'http://edamontology.org/operation_2428',
              license: 'https://creativecommons.org/publicdomain/zero/1.0/',
              keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -18,7 +18,7 @@ class FAIRTest
              responsible_developer: 'Mark D Wilkinson',
              email: 'mark.wilkinson@upm.es',
              response_description: 'The response is "pass", "fail" or "indeterminate"',
-             schemas: { 'subject' => ['string', 'the GUID being tested'] },
+             schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
              organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
              individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
              creator: 'https://orcid.org/0000-0001-6960-357X',

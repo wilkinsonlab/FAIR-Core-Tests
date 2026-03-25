@@ -1,0 +1,11 @@
+Iu:	TimeçÖÄ»¬ö
+:nano_numiq:nano_deni:submicro"6ê:offseti:	zoneI"CET:EFe:$RDF::Repository::Implementationo:RDF::Repository
+:@options{:with_graph_nameT:with_validityT:	@uri0:@title0:
+@data{F{Iu:RDF::URI>https://w3id.org/everse/i/indicators/software_has_license:ET{Iu;4http://www.w3.org/1999/02/22-rdf-syntax-ns#type;T{Iu;:https://w3id.org/everse/rsqi#SoftwareQualityIndicator;T{:quotedFIu;http://schema.org/name;T{o:RDF::Literal	:@objectI"Software has license;T:@string@:@datatypeIu;,http://www.w3.org/2001/XMLSchema#string;T:
+@hashl-	r≥k§&^Ñ{;FIu;"http://schema.org/description;T{o;	;I"IThis check tries to determine if the project has published a license;T;@;@;l-	JT∂ÑSÛ{;FIu;http://schema.org/keywords;T{o;	;I"license;T;@;@;l+	!Ò˛—◊∆,{;Fo;	;I"metadata;T;@#;@;l+		é°\æ¢{;Fo;	;I"	fair;T;@';@;l+	)©áÛï§{;FIu;!http://schema.org/identifier;T{Iu;>https://w3id.org/everse/i/indicators/software_has_license;T{;FIu;)http://schema.org/creativeWorkStatus;T{o;	;I"Active;T;@1;@;l+	¡ç‡Ö∏¨º{;FIu;http://schema.org/version;T{o;	;I"
+1.0.0;T;@7;@;l+	ÃâÜâxÄ^{;FIu;http://schema.org/author;T{o:RDF::Node:@idI"
+g9120;T{;FIu;+http://www.w3.org/ns/dcat#contactPoint;T{o;;I"
+g9140;T{;Fo;;I"
+g9160;T{;FIu;$http://purl.org/dc/terms/source;T{o;;I"
+g9180;T{;Fo;;I"
+g9200;T{;FIu;)http://www.w3.org/ns/dqv#inDimension;T{Iu;2https://w3id.org/everse/i/dimensions/fairness;T{;FIu;"http://schema.org/dateCreated;T{o;	;I"23-05-2025;T;@V;@;l-	iÜÄÆ¶ã*&{;F@<{@{Iu;#http://schema.org/Organization;T{;FIu;http://schema.org/name;T{o;	;I"OpenSSF;T;@`;@;l+	¶zEé{;F@A{@{Iu;http://schema.org/Person;T{;FIu;http://schema.org/name;T{o;	;I"Daniel Garijo;T;@j;@;l-	@*Æ†Læª{;F@D{@{Iu;http://schema.org/Person;T{;FIu;http://schema.org/name;T{o;	;I"Andres Montero;T;@t;@;l-	tóé»<´1{;F@I{Iu;http://schema.org/name;T{o;	;I"OpenSSF Scorecard: License;T;@{;@;l+	£Ûné«B{;F@L{Iu;http://schema.org/name;T{o;	;I"1Reuse, licensing and legal aspects. RSMD-6.2;T;@};@;l+	<¸3{;F:@tx_classc,RDF::Transaction::SerializedTransaction

@@ -4,11 +4,11 @@ class FAIRTest
   def self.fc_metadata_uses_fair_vocabularies_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-      testname: 'FAIR Champion: Metadata uses FAIR vocabularies (strong)',
+      testname: 'OSTrails Core: Metadata uses FAIR vocabularies (strong)',
       testid: 'fc_metadata_uses_fair_vocabularies',
       description: 'Maturity Indicator to test if the linked data metadata uses terms that resolve to linked (FAIR) data.',
-      metric: 'https://doi.org/10.25504/FAIRsharing.0A9kNV',
-      indicators: 'https://w3id.org/fair/principles/latest/I2',
+      metric: 'https://doi.org/10.25504/FAIRsharing.RCUuvt',
+      indicators: 'https://doi.org/10.25504/FAIRsharing.96d4af',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
       keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -18,7 +18,7 @@ class FAIRTest
       responsible_developer: 'Mark D Wilkinson',
       email: 'mark.wilkinson@upm.es',
       response_description: 'The response is "pass", "fail" or "indeterminate"',
-      schemas: { 'subject' => ['string', 'the GUID being tested'] },
+      schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
       organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
       individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
       creator: 'https://orcid.org/0000-0001-6960-357X',

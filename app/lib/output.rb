@@ -11,10 +11,10 @@ module FAIRChampion
 
     def_delegators FAIRChampion::Output, :triplify
 
-    attr_accessor :score, :testedGUID, :testid, :uniqueid, :name, :description, :license, :dt, :metric, 
-                  :version, :summary, :completeness
+    attr_accessor :score, :testedGUID, :testid, :uniqueid, :name, :description, :license, :dt, :metric, :softwareid,
+                  :version, :summary, :completeness, :comments, :guidance, :creator, :protocol, :host, :basePath, :api
 
-    @@comments = []
+    OPUTPUT_VERSION = '1.1.1'
 
     def initialize(testedGUID:, meta:)
       @score = 'indeterminate'
@@ -28,86 +28,148 @@ module FAIRChampion
       @version = meta[:testversion]
       @summary = meta[:summary] || 'Summary:'
       @completeness = '100'
-      @testid = meta[:testid]
+      @comments = []
+      @guidance = meta.fetch(:guidance, [])
+      @creator = meta[:creator]
+      @protocol = meta[:protocol].gsub(%r{[:/]}, '')
+      @host = meta[:host].gsub(%r{[:/]}, '')
+      @basePath = meta[:basePath].gsub(%r{[:/]}, '')
+      @softwareid = "#{@protocol}://#{@host}/#{@basePath}/#{meta[:testid]}"
+      @api = "#{@softwareid}/api"
     end
 
     def createEvaluationResponse
       g = RDF::Graph.new
       schema = RDF::Vocab::SCHEMA
+      xsd = RDF::Vocab::XSD
+      dct = RDF::Vocab::DC
+      prov = RDF::Vocab::PROV
+      dcat = RDF::Vocab::DCAT
+      dqv = RDF::Vocabulary.new('https://www.w3.org/TR/vocab-dqv/')
       ftr = RDF::Vocabulary.new('https://w3id.org/ftr#')
+      sio = RDF::Vocabulary.new('http://semanticscience.org/resource/')
+      cwmo = RDF::Vocabulary.new('http://purl.org/cwmo/#')
+
       add_newline_to_comments
 
       if summary =~ /^Summary$/
-        summary = "Summary of test results: #{@@comments[-1]}"
-        summary ||= "Summary of test results: #{@@comments[-2]}"
+        summary = "Summary of test results: #{comments[-1]}"
+        summary ||= "Summary of test results: #{comments[-2]}"
       end
 
+      executionid = 'urn:ostrails:testexecutionactivity:' + SecureRandom.uuid
+
+      # tid = 'urn:ostrails:fairtestentity:' + SecureRandom.uuid
+      # The entity is no longer an anonymous node, it is the GUID Of the tested input
+
+      triplify(executionid, RDF.type, ftr.TestExecutionActivity, g)
+      triplify(executionid, prov.wasAssociatedWith, softwareid, g)
+      triplify(uniqueid, prov.wasGeneratedBy, executionid, g)
+
       triplify(uniqueid, RDF.type, ftr.TestResult, g)
-      triplify(uniqueid, schema.identifier, uniqueid, g)
-      triplify(uniqueid, schema.name, name, g)
-      triplify(uniqueid, schema.description, description, g)
-      triplify(uniqueid, schema.license, license, g)
-      triplify(uniqueid, ftr.status, score, g)
+      triplify(uniqueid, dct.identifier, uniqueid.to_s, g, xsd.string)
+      triplify(uniqueid, dct.title, "#{name} OUTPUT", g)
+      triplify(uniqueid, dct.description, "OUTPUT OF #{description}", g)
+      triplify(uniqueid, dct.license, license, g)
+      triplify(uniqueid, prov.value, score, g)
       triplify(uniqueid, ftr.summary, summary, g)
       triplify(uniqueid, RDF::Vocab::PROV.generatedAtTime, dt, g)
-      triplify(uniqueid, ftr.log, @@comments.join, g)
+      triplify(uniqueid, ftr.log, comments.join, g)
       triplify(uniqueid, ftr.completion, completeness, g)
-      triplify(uniqueid, ftr.definedBy, metric, g)
-      triplify(metric, RDF.type, ftr.TestSpecification, g)
 
-      tid = 'urn:ostrails:fairtestentity:' + SecureRandom.uuid
-      triplify(uniqueid, RDF::Vocab::PROV.wasDerivedFrom, tid, g)
-      triplify(tid, RDF.type, RDF::Vocab::PROV.Entity, g)
-      triplify(tid, schema.identifier, testedGUID, g)
-      triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
-
-      softwareid = 'urn:ostrails:fairtestsoftware:' + SecureRandom.uuid
-      triplify(uniqueid, RDF::Vocab::PROV.wasAttributedTo, softwareid, g)
-      triplify(softwareid, RDF.type, RDF::Vocab::PROV.SoftwareAgent, g)
+      triplify(uniqueid, ftr.outputFromTest, softwareid, g)
+      triplify(softwareid, RDF.type, ftr.Test, g)
       triplify(softwareid, RDF.type, schema.SoftwareApplication, g)
-      triplify(softwareid, schema.softwareVersion, version, g)
-      triplify(softwareid, schema.url, 'https://github.com/wilkinsonlab/FAIR-Core-Tests', g)
-      triplify(softwareid, schema.license, 'https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE', g)
-      triplify(softwareid, schema.identifier,
-               "https://github.com/wilkinsonlab/FAIR-Core-Tests/tree/main/app/tests/#{testid}.rb", g)
+      triplify(softwareid, RDF.type, dcat.DataService, g)
+      triplify(softwareid, dct.identifier, softwareid.to_s, g, xsd.string)
+      triplify(softwareid, dct.title, "#{name}", g)
+      triplify(softwareid, dct.description, description, g)
+      triplify(softwareid, dcat.endpointDescription, api, g) # returns yaml
+      triplify(softwareid, dcat.endpointURL, softwareid, g) # POST to execute
+      triplify(softwareid, 'http://www.w3.org/ns/dcat#version', "#{version} OutputVersion:#{OPUTPUT_VERSION}", g) # dcat namespace in library has no version - dcat 2 not 3
+      triplify(softwareid, dct.license, 'https://github.com/wilkinsonlab/FAIR-Core-Tests/blob/main/LICENSE', g)
+      triplify(softwareid, sio['SIO_000233'], metric, g) # implementation of
 
-      g.dump(:jsonld)
+      # deprecated after release 1.0
+      # triplify(uniqueid, prov.wasDerivedFrom, tid, g)
+      # triplify(executionid, prov.used, tid, g)
+      # triplify(tid, RDF.type, prov.Entity, g)
+      # triplify(tid, schema.identifier, testedGUID, g, xsd.string)
+      # triplify(tid, schema.url, testedGUID, g) if testedGUID =~ %r{^https?://}
+      testedguidnode = 'urn:ostrails:testedidentifiernode:' + SecureRandom.uuid
+
+      begin
+        triplify(uniqueid, ftr.assessmentTarget, testedguidnode, g)
+        triplify(executionid, prov.used, testedguidnode, g)
+        triplify(testedguidnode, RDF.type, prov.Entity, g)
+        triplify(testedguidnode, dct.identifier, testedGUID, g, 'xsd:string')
+      rescue StandardError
+        triplify(uniqueid, ftr.assessmentTarget, 'not a URI', g)
+        triplify(executionid, prov.used, 'not a URI', g)
+        score = 'fail'
+      end
+
+      unless score == 'pass'
+        guidance.each do |advice, label|
+          adviceid = 'urn:ostrails:testexecutionactivity:advice:' + SecureRandom.uuid
+          triplify(uniqueid, ftr.suggestion, adviceid, g)
+          triplify(adviceid, RDF.type, ftr.GuidanceContext, g)
+          triplify(adviceid, RDFS.label, label, g)
+          triplify(adviceid, dct.description, label, g)
+          triplify(adviceid, sio['SIO_000339'], RDF::URI.new(advice), g)
+        end
+      end
+
+      #      g.dump(:jsonld)
+      w = RDF::Writer.for(:jsonld)
+      w.dump(g, nil, prefixes: {
+               xsd: RDF::Vocab::XSD,
+               prov: RDF::Vocab::PROV,
+               dct: RDF::Vocab::DC,
+               dcat: RDF::Vocab::DCAT,
+               ftr: ftr,
+               sio: sio,
+               schema: schema
+             })
     end
 
     # can be called as FAIRChampion::Output.comments << "newcomment"
-    def self.comments
-      @@comments
+    class << self
+      attr_reader :comments
     end
 
-    def comments
-      @@comments
-    end
+    attr_reader :comments
 
     def self.clear_comments
-      @@comments = []
+      @comments = []
     end
 
     def add_newline_to_comments
       cleancomments = []
-      @@comments.each do |c|
+      @comments.each do |c|
         c += "\n" unless c =~ /\n$/
         cleancomments << c
       end
-      @@comments = cleancomments
+      @comments = cleancomments
     end
 
     def self.triplify(s, p, o, repo, datatype = nil)
+      begin
+        # warn "S-P-O #{s.to_s} #{p.to_s} #{o.to_s}"
+      rescue StandardError
+        warn 'input to #triplify seems totally invalid!'
+        return false
+      end
       s = s.strip if s.instance_of?(String)
       p = p.strip if p.instance_of?(String)
       o = o.strip if o.instance_of?(String)
 
       unless s.respond_to?('uri')
 
-        if s.to_s =~ %r{^\w+:/?/?[^\s]+}
-          s = RDF::URI.new(s.to_s)
-        else
-          abort "Subject #{s} must be a URI-compatible thingy"
-        end
+        raise "Subject #{s} must be a URI-compatible thingy" unless s.to_s =~ %r{^\w+:/?/?[^\s]+}
+
+        s = RDF::URI.new(s.to_s)
+
       end
 
       unless p.respond_to?('uri')
@@ -119,16 +181,17 @@ module FAIRChampion
         end
       end
 
-      unless o.respond_to?('uri')
+      unless o.respond_to?('uri?')
         o = if datatype
+              warn "DATATYPE #{datatype}"
               RDF::Literal.new(o.to_s, datatype: datatype)
             elsif o.to_s =~ %r{\A\w+:/?/?\w[^\s]+}
               RDF::URI.new(o.to_s)
             elsif o.to_s =~ /^\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d/
               RDF::Literal.new(o.to_s, datatype: RDF::XSD.date)
-            elsif o.to_s =~ /^[+-]?\d+\.\d+/ && o.to_s !~ /[^\+\-\d\.]/ # has to only be digits
+            elsif o.to_s =~ /^[+-]?\d+\.\d+/ && o.to_s !~ /[^+\-\d.]/ # has to only be digits
               RDF::Literal.new(o.to_s, datatype: RDF::XSD.float)
-            elsif o.to_s =~ /^[+-]?[0-9]+$/ && o.to_s !~ /[^\+\-\d\.]/ # has to only be digits
+            elsif o.to_s =~ /^[+-]?[0-9]+$/ && o.to_s !~ /[^+\-\d.]/ # has to only be digits
               RDF::Literal.new(o.to_s, datatype: RDF::XSD.int)
             else
               RDF::Literal.new(o.to_s, language: :en)

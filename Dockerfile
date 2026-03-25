@@ -1,28 +1,45 @@
-FROM ruby:3.2.0
 
-ENV LANG="en_US.UTF-8" LANGUAGE="en_US:UTF-8" LC_ALL="C.UTF-8"
-# RUN chmod a+r /etc/resolv.conf
-RUN apt-get update -q
-RUN apt-get dist-upgrade -y -q
-RUN apt-get update -q
-RUN apt-get install -y --no-install-recommends build-essential && \
-  apt-get install -y --no-install-recommends libxml++2.6-dev  libraptor2-0 && \
-  apt-get install -y --no-install-recommends libxslt1-dev locales software-properties-common cron && \
-  apt-get clean
+# Use explicit tag for reproducibility (Debian 12 / Bookworm)
+FROM ruby:3.2-bookworm
+
+# Set locale (prevents encoding issues in many gems / tools)
+ENV LANG=en_US.UTF-8 \
+    LANGUAGE=en_US:utf8 \
+    LC_ALL=en_US.UTF-8 \
+    RACK_ENV=production
 
 
-RUN curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-RUN python3 get-pip.py
-RUN pip install extruct
+# Combine all apt installs + cleanup in ONE layer for smaller image & better caching
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends \
+        build-essential \
+        libxml++2.6-dev \
+        libraptor2-0 \
+        libxslt1-dev \
+        locales \
+        cron \
+        python3-pip \
+        python3-extruct \
+    && apt-get clean && \
+       rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-
-RUN mkdir /server
+# Create app directory
+RUN mkdir -p /server
 WORKDIR /server
-RUN gem update --system
-RUN gem install bundler:2.3.12
-COPY . /server
-RUN bundle install
-WORKDIR /server
-#CMD ["rerun", "'ruby /server/fsp-harvester-server/app/controllers/application_controller.rb  -o 0.0.0.0'"]
-#CMD ["ruby", "./app/controllers/application_controller.rb",   "-o",  "0.0.0.0"]
-ENTRYPOINT ["sh", "/server/entrypoint.sh"]
+
+# Update RubyGems + pin Bundler version (good for reproducibility)
+RUN gem update --system \
+    && gem install bundler -v 2.3.12
+
+# Install gems first (cache layer — only rebuild if Gemfile changes)
+COPY Gemfile Gemfile.lock fair-core-tests.gemspec ./
+RUN bundle install --jobs 4 --retry 3
+
+# Copy the rest of the application code
+COPY . .
+
+# Expose the port your app listens on
+EXPOSE 8282
+
+# Start the app (adjust if run.rb needs different flags)
+CMD ["ruby", "/server/run.rb", "-o", "0.0.0.0", "-p", "8282"]

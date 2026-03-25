@@ -6,12 +6,12 @@ class FAIRTest
 
   def self.fc_unique_identifier_meta
     return {
-    testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
-    testname: "FAIR Champion: Unique Identifier",
+    testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
+    testname: "OSTrails Core: Unique Identifier",
     testid: "fc_unique_identifier",
     description: "Metric to test if the metadata resource has a unique identifier.  This is done by comparing the GUID to the patterns (by regexp) of known GUID schemas such as URLs and DOIs.  Known schema are registered in FAIRSharing (https://fairsharing.org/standards/?q=&selected_facets=type_exact:identifier%20schema)",
-    metric: 'https://doi.org/10.25504/FAIRsharing.r49beq',
-    indicators: 'https://w3id.org/fair/principles/latest/F1',
+    metric: 'https://doi.org/10.25504/FAIRsharing.NHCOKK',
+    indicators: 'https://doi.org/10.25504/FAIRsharing.b7f1ab',
     type: 'http://edamontology.org/operation_2428',
     license: 'https://creativecommons.org/publicdomain/zero/1.0/',
     keywords: ['FAIR Assessment', 'FAIR Principles'],
@@ -21,15 +21,16 @@ class FAIRTest
     responsible_developer: 'Mark D Wilkinson',
     email: 'mark.wilkinson@upm.es',
     response_description: 'The response is "pass", "fail" or "indeterminate"',
-    schemas: { 'subject' => ['string', 'the GUID being tested'] },
+    schemas: { 'resource_identifier' => ['string', 'the GUID being tested'] },
     organizations: [{ 'name' => 'OSTrails Project', 'url' => 'https://ostrails.eu/' }],
     individuals: [{ 'name' => 'Mark D Wilkinson', 'email' => 'mark.wilkinson@upm.es' }],
     creator: 'https://orcid.org/0000-0001-6960-357X',
     protocol: ENV.fetch('TEST_PROTOCOL', 'https'),
     host: ENV.fetch('TEST_HOST', 'localhost'),
-    basePath: ENV.fetch('TEST_PATH', '/tests')
-  }
-end
+    basePath: ENV.fetch('TEST_PATH', '/tests'),
+    guidance: [["urn:cat_graph:gdn.49738A73",  "You should be using a globally unique persistent identifier like a purl, ark, doi, or w3id"]],
+    }
+  end
 
   def self.fc_unique_identifier(guid:)
     FAIRChampion::Output.clear_comments
