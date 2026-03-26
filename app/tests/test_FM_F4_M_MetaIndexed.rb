@@ -1,13 +1,12 @@
 require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
 
 class FAIRTest
-  def self.test_FM_F4_M_MetaIndexed
+  def self.test_FM_F4_M_MetaIndexed_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
       testname: 'OSTrails Core: Searchable in major search engine',
       testid: 'test_FM_F4_M_MetaIndexed',
-      description: 'Tests whether a machine is able to discover the resource by search,
-      using Microsoft Bing.',
+      description: 'Tests whether a machine is able to discover the resource by search, using Microsoft Bing.',
       metric: 'https://w3id.org/fair-metrics/general/FM_F4_M_MetaIndexed',
       indicators: 'https://doi.org/10.25504/FAIRsharing.0c0d21',
       type: 'http://edamontology.org/operation_2428',
@@ -34,7 +33,7 @@ class FAIRTest
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: test_FM_F4_M_MetaIndexed
+      meta: test_FM_F4_M_MetaIndexed_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{test_FM_F4_M_MetaIndexed[:testversion]}'\n"
@@ -327,12 +326,12 @@ class FAIRTest
   end
 
   def self.test_FM_F4_M_MetaIndexed_api
-    api = OpenAPI.new(meta: test_FM_F4_M_MetaIndexed)
+    api = OpenAPI.new(meta: test_FM_F4_M_MetaIndexed_meta)
     api.get_api
   end
 
   def self.test_FM_F4_M_MetaIndexed_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_F4_M_MetaIndexed)
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_F4_M_MetaIndexed_meta)
     dcat.get_dcat
   end
 end

@@ -449,6 +449,7 @@ module FAIRChampion
       base_url = ENV['TEST_BASE_URL'] || 'http://localhost:8282' # Default to local server
       test_path = ENV['TEST_PATH'] || 'community-tests' # Default to local server
       labels = {}
+      landingpages = {}
       tests.each do |testid|
         warn "getting dcat for #{testid}    #{base_url}/#{test_path}/#{testid}"
         dcat = RestClient::Request.execute({

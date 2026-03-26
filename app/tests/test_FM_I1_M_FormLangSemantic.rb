@@ -33,15 +33,15 @@ class FAIRTest
     }
   end
 
-  def self.test_FM_I1_M_DbFormalLangSemantic(guid:)
+  def self.test_FM_I1_M_FormLangSemantic(guid:)
     FAIRChampion::Output.clear_comments
 
     output = FAIRChampion::Output.new(
       testedGUID: guid,
-      meta: test_FM_I1_M_DbFormalLangSemantic_meta
+      meta: test_FM_I1_M_FormLangSemantic_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{test_FM_I1_M_DbFormalLangSemantic_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_I1_M_FormLangSemantic_meta[:testversion]}'\n"
 
     metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
 
@@ -74,13 +74,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.test_FM_I1_M_DbFormalLangSemantic_api
-    api = OpenAPI.new(meta: test_FM_I1_M_DbFormalLangSemantic_meta)
+  def self.test_FM_I1_M_FormLangSemantic_api
+    api = OpenAPI.new(meta: test_FM_I1_M_FormLangSemantic_meta)
     api.get_api
   end
 
-  def self.test_FM_I1_M_DbFormalLangSemantic_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_I1_M_DbFormalLangSemantic_meta)
+  def self.test_FM_I1_M_FormLangSemantic_about
+    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_I1_M_FormLangSemantic_meta)
     dcat.get_dcat
   end
 end
