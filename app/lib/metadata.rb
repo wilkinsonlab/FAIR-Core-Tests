@@ -1,14 +1,13 @@
 module FAIRChampion
   class MetadataObject
-
     attr_accessor :hash, :graph, :guidtype, :full_response, :finalURI, :comments
 
-    # a hash of metadata 
-    # a RDF.rb graph of metadata  
-    # an array of comments  
+    # a hash of metadata
+    # a RDF.rb graph of metadata
+    # an array of comments
     # the type of GUID that was detected # will be an array of Net::HTTP::Response
 
-    def initialize()
+    def initialize
       @hash = {}
       @graph = RDF::Graph.new
       @full_response = []
@@ -16,17 +15,14 @@ module FAIRChampion
       @comments = []
     end
 
-    def comments
-      @comments
-    end 
-    def self.comments
-      @comments
-    end 
+    class << self
+      attr_reader :comments
+    end
 
     def self.clear_comments
       @comments = []
     end
-    
+
     def merge_hash(hash)
       # $stderr.puts "\n\n\nIncoming Hash #{hash.inspect}"
       self.hash = self.hash.merge(hash)
