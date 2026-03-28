@@ -1,6 +1,3 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
-
 class FAIRTest
   def self.fc_metadata_kr_language_strong_meta
     {
@@ -30,16 +27,16 @@ class FAIRTest
   end
 
   def self.fc_metadata_kr_language_strong(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: fc_metadata_kr_language_strong_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{fc_metadata_kr_language_strong_meta[:testversion]}'\n"
 
-    metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
+    metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
     metadata.comments.each do |c|
       output.comments << c
@@ -53,32 +50,30 @@ class FAIRTest
 
     _hash = metadata.hash
     graph = metadata.graph
-    # properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    # properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
 
-    if graph.size > 0  # have we found anything yet?
-      output.comments << "SUCCESS: Linked data was found.  "
-      output.score = "pass"
+    if graph.size > 0 # have we found anything yet?
+      output.comments << 'SUCCESS: Linked data was found.  '
+      output.score = 'pass'
     else
-      output.comments << "FAILURE: No linked data was found.  "
-      output.score = "fail"
+      output.comments << 'FAILURE: No linked data was found.  '
+      output.score = 'fail'
     end
-  
+
     output.createEvaluationResponse
   end
 
-
   def self.fc_metadata_kr_language_strong_api
-    api = OpenAPI.new(meta: fc_metadata_kr_language_strong_meta)
+    api = FtrRuby::OpenAPI.new(meta: fc_metadata_kr_language_strong_meta)
     api.get_api
   end
 
   def self.fc_metadata_kr_language_strong_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_kr_language_strong_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: fc_metadata_kr_language_strong_meta)
     dcat.get_dcat
   end
 end
-

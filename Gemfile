@@ -1,8 +1,8 @@
 source 'https://rubygems.org'
-ruby '~> 3.2'
+
 gemspec
 gem 'bcrypt'
-#gem 'debase', git: 'https://github.com/ruby-debug/debase.git', tag: 'v0.2.5.beta2'
+# gem 'debase', git: 'https://github.com/ruby-debug/debase.git', tag: 'v0.2.5.beta2'
 gem 'json', '~> 2.7.1'
 gem 'json-canonicalization', '~> 1.0.0'
 gem 'jsonpath', '~> 1.1'
@@ -37,4 +37,4 @@ group :test do
 end
 gem 'base64', '~> 0.3.0'
 
-gem "debase", "~> 0.2.5.beta2"
+gem 'debase', '~> 0.2.5.beta2'

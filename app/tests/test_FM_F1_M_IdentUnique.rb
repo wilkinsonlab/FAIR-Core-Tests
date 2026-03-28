@@ -1,5 +1,3 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
 class FAIRTest
   def self.test_FM_F1_M_IdentUnique_meta
     {
@@ -35,16 +33,16 @@ class FAIRTest
   end
 
   def self.test_FM_F1_M_IdentUnique(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: test_FM_F1_M_IdentUnique_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{test_FM_F1_M_IdentUnique_meta[:testversion]}'\n"
 
-    type = FAIRChampion::Harvester.typeit(guid) # this is where the magic happens!
+    type = FAIRChampionHarvester::Core.typeit(guid) # this is where the magic happens!
 
     unless type
       output.score = 'indeterminate'
@@ -54,7 +52,7 @@ class FAIRTest
 
     # hash = metadata.hash
     # graph = metadata.graph
-    # properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    # properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -65,12 +63,12 @@ class FAIRTest
   end
 
   def self.test_FM_F1_M_IdentUnique_api
-    api = OpenAPI.new(meta: test_FM_F1_M_IdentUnique_meta)
+    api = FtrRuby::OpenAPI.new(meta: test_FM_F1_M_IdentUnique_meta)
     api.get_api
   end
 
   def self.test_FM_F1_M_IdentUnique_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_F1_M_IdentUnique_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: test_FM_F1_M_IdentUnique_meta)
     dcat.get_dcat
   end
 end

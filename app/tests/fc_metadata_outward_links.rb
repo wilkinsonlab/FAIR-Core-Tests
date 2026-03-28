@@ -1,5 +1,3 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
 class FAIRTest
   def self.fc_metadata_outward_links_meta
     {
@@ -29,16 +27,16 @@ class FAIRTest
   end
 
   def self.fc_metadata_outward_links(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: fc_metadata_outward_links_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{fc_metadata_outward_links_meta[:testversion]}'\n"
 
-    metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
+    metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
     metadata.comments.each do |c|
       output.comments << c
@@ -52,7 +50,7 @@ class FAIRTest
 
     hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -108,12 +106,12 @@ class FAIRTest
   end
 
   def self.fc_metadata_outward_links_api
-    api = OpenAPI.new(meta: fc_metadata_outward_links_meta)
+    api = FtrRuby::OpenAPI.new(meta: fc_metadata_outward_links_meta)
     api.get_api
   end
 
   def self.fc_metadata_outward_links_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_outward_links_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: fc_metadata_outward_links_meta)
     dcat.get_dcat
   end
 end

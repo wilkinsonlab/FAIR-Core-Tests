@@ -8,12 +8,21 @@ require 'erb'
 require 'require_all'
 require 'jsonpath'
 require 'dotenv/load' unless ENV['RACK_ENV'] == 'production'
+require 'triple_easy'
+require 'fair_champion_harvester'
+require 'ftr_ruby'
+require 'yaml'
 
 require_rel './routes.rb'
 require_rel '../models'
 require_rel '../views'
 require_rel '../tests'
 require_rel '../lib'
+
+if defined?(Rack::Timeout)
+  use Rack::Timeout, service_timeout: 600 # 10 minutes; adjust as needed
+  # Or via ENV: ENV['RACK_TIMEOUT_SERVICE_TIMEOUT'] = '600'
+end
 
 class JSON::Ext::Generator::State
   # monkey patch due to incompatibilities between linkeddata gem and json-ld
@@ -58,9 +67,9 @@ class ApplicationController < Sinatra::Application
         key :name, 'MIT'
       end
     end
-    key :schemes, ['http']
-    key :host, ENV.fetch('HARVESTER', nil)
-    key :basePath, '/tests/'
+    key :schemes, [ENV.fetch('TEST_PROTOCOL', 'http')]
+    key :host, ENV.fetch('TEST_HOST', 'localhost')
+    key :basePath, ENV.fetch('TEST_PATH', '/tests/')
   end
 
   SWAGGERED_CLASSES = [ErrorModel, self].freeze

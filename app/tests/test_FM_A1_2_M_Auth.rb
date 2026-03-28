@@ -1,5 +1,3 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
 class FAIRTest
   def self.test_FM_A1_2_M_Auth_meta
     {
@@ -30,16 +28,16 @@ class FAIRTest
   end
 
   def self.test_FM_A1_2_M_Auth(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: test_FM_A1_2_M_Auth_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{test_FM_A1_2_M_Auth_meta[:testversion]}'\n"
 
-    metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
+    metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
     metadata.comments.each do |c|
       output.comments << c
@@ -53,7 +51,7 @@ class FAIRTest
 
     hash = metadata.hash
 
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
 
     output.comments << "INFO: Searching metadata for likely identifiers to the data record\n"
     id_hash = id_graph = nil # set to nil for now
@@ -65,7 +63,7 @@ class FAIRTest
       key = key.to_s
 
       output.comments << "INFO: Searching hash-style metadata for keys indicating a pointer to data.\n"
-      FAIRChampion::Utils::DATA_PREDICATES.each do |prop|
+      FAIRChampionHarvester::Utils::DATA_PREDICATES.each do |prop|
         prop =~ %r{.*[#/]([^#/]+)$}
         prop = Regexp.last_match(1)
         output.comments << "INFO: Searching for key: #{prop}.\n"
@@ -79,7 +77,7 @@ class FAIRTest
 
     if metadata.graph.size > 0 # have we found anything yet?
       output.comments << "INFO: Searching Linked Data metadata for predicates indicating a pointer to data.\n"
-      id_graph = FAIRChampion::CommonQueries::GetDataIdentifier(graph: metadata.graph)
+      id_graph = FAIRChampionHarvester::CommonQueries::GetDataIdentifier(graph: metadata.graph)
       warn "\n\nfound identifier #{id_graph} \n\n"
     end
 
@@ -89,7 +87,7 @@ class FAIRTest
       return output.createEvaluationResponse
     end
 
-    metadata2 = FAIRChampion::Harvester.typeit(id_hash || id_graph)
+    metadata2 = FAIRChampionHarvester::Core.typeit(id_hash || id_graph)
 
     if metadata2
       output.comments << "SUCCESS: The identifier #{@identifier} is recognized as a #{metadata2}, which is resolvable by an protocol that allows authorization/authentication.\n"
@@ -103,12 +101,12 @@ class FAIRTest
   end
 
   def self.test_FM_A1_2_M_Auth_api
-    api = OpenAPI.new(meta: test_FM_A1_2_M_Auth_meta)
+    api = FtrRuby::OpenAPI.new(meta: test_FM_A1_2_M_Auth_meta)
     api.get_api
   end
 
   def self.test_FM_A1_2_M_Auth_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_A1_2_M_Auth_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: test_FM_A1_2_M_Auth_meta)
     dcat.get_dcat
   end
 end

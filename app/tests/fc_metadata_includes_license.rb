@@ -1,12 +1,10 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
 class FAIRTest
   def self.fc_metadata_includes_license_meta
     {
       testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
       testname: 'OSTrails Core: Metadata Includes License (strong)',
       testid: 'fc_metadata_includes_license',
-      description: "Maturity Indicator to test if the linked data metadata contains an explicit pointer to the license.  Tests: xhtml, dvia, dcterms, cc, data.gov.au, and Schema license predicates in linked data, and validates the value of those properties.",
+      description: 'Maturity Indicator to test if the linked data metadata contains an explicit pointer to the license.  Tests: xhtml, dvia, dcterms, cc, data.gov.au, and Schema license predicates in linked data, and validates the value of those properties.',
       metric: 'https://doi.org/10.25504/FAIRsharing.VrP6sm',
       indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
       type: 'http://edamontology.org/operation_2428',
@@ -29,16 +27,16 @@ class FAIRTest
   end
 
   def self.fc_metadata_includes_license(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: fc_metadata_includes_license_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{fc_metadata_includes_license_meta[:testversion]}'\n"
 
-    metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
+    metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
     metadata.comments.each do |c|
       output.comments << c
@@ -52,7 +50,7 @@ class FAIRTest
 
     hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -118,16 +116,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-
-
-
   def self.fc_metadata_includes_license_api
-    api = OpenAPI.new(meta: fc_metadata_includes_license_meta)
+    api = FtrRuby::OpenAPI.new(meta: fc_metadata_includes_license_meta)
     api.get_api
   end
 
   def self.fc_metadata_includes_license_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_includes_license_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: fc_metadata_includes_license_meta)
     dcat.get_dcat
   end
 end

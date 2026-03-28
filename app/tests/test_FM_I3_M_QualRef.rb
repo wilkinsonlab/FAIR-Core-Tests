@@ -1,5 +1,3 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
 class FAIRTest
   def self.test_FM_I3_M_QualRef_meta
     {
@@ -30,16 +28,16 @@ class FAIRTest
   end
 
   def self.test_FM_I3_M_QualRef(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: test_FM_I3_M_QualRef_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{test_FM_I3_M_QualRef_meta[:testversion]}'\n"
 
-    metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
+    metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
     metadata.comments.each do |c|
       output.comments << c
@@ -53,7 +51,7 @@ class FAIRTest
 
     hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -109,12 +107,12 @@ class FAIRTest
   end
 
   def self.test_FM_I3_M_QualRef_api
-    api = OpenAPI.new(meta: test_FM_I3_M_QualRef_meta)
+    api = FtrRuby::OpenAPI.new(meta: test_FM_I3_M_QualRef_meta)
     api.get_api
   end
 
   def self.test_FM_I3_M_QualRef_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_I3_M_QualRef_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: test_FM_I3_M_QualRef_meta)
     dcat.get_dcat
   end
 end

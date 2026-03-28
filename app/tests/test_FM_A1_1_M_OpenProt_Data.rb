@@ -1,5 +1,3 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
 class FAIRTest
   def self.test_FM_A1_1_M_OpenProt_Data_meta
     {
@@ -33,16 +31,16 @@ class FAIRTest
   end
 
   def self.test_FM_A1_1_M_OpenProt_Data(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: test_FM_A1_1_M_OpenProt_Data_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{test_FM_A1_1_M_OpenProt_Data_meta[:testversion]}'\n"
 
-    metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
+    metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
     metadata.comments.each do |c|
       output.comments << c
@@ -56,7 +54,7 @@ class FAIRTest
 
     hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -72,7 +70,7 @@ class FAIRTest
       key = key.to_s
 
       output.comments << "INFO: Searching hash-style metadata for keys indicating a pointer to data.\n"
-      FAIRChampion::Utils::DATA_PREDICATES.each do |prop|
+      FAIRChampionHarvester::Utils::DATA_PREDICATES.each do |prop|
         prop =~ %r{.*[#/]([^#/]+)$}
         prop = ::Regexp.last_match(1)
         output.comments << "INFO: Searching for key: #{prop}.\n"
@@ -85,11 +83,11 @@ class FAIRTest
 
     if graph.size > 0 # have we found anything yet?
       output.comments << "INFO: Searching Linked Data metadata for predicates indicating a pointer to data.\n"
-      identifier = FAIRChampion::CommonQueries::GetDataIdentifier(graph: graph)
+      identifier = FAIRChampionHarvester::CommonQueries::GetDataIdentifier(graph: graph)
     end
 
     if identifier =~ /\w+/
-      metadata2 = FAIRChampion::Harvester.typeit(identifier)
+      metadata2 = FAIRChampionHarvester::Core.typeit(identifier)
       if metadata2
         output.comments << "SUCCESS: The identifier #{@identifier} is recognized as a #{metadata2}, which is resolvable by an open and free protocol.\n"
         output.score = 'pass'
@@ -99,19 +97,19 @@ class FAIRTest
       end
     else
       output.score = 'indeterminate'
-      output.comments <<  "INFO: Tested the following #{FAIRChampion::Utils::DATA_PREDICATES}(or their plain JSON hash-key equivalents)\n"
+      output.comments <<  "INFO: Tested the following #{FAIRChampionHarvester::Utils::DATA_PREDICATES}(or their plain JSON hash-key equivalents)\n"
       output.comments <<  'INDETERMINATE: Was unable to locate the data identifier in the metadata using any (common) property/predicate reserved for this purpose.'
     end
     output.createEvaluationResponse
   end
 
   def self.test_FM_A1_1_M_OpenProt_Data_api
-    api = OpenAPI.new(meta: test_FM_A1_1_M_OpenProt_Data_meta)
+    api = FtrRuby::OpenAPI.new(meta: test_FM_A1_1_M_OpenProt_Data_meta)
     api.get_api
   end
 
   def self.test_FM_A1_1_M_OpenProt_Data_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_A1_1_M_OpenProt_Data_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: test_FM_A1_1_M_OpenProt_Data_meta)
     dcat.get_dcat
   end
 end

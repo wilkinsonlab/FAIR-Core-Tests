@@ -1,5 +1,3 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
 class FAIRTest
   def self.test_FM_I2_M_FAIRVocabSemantic_meta
     {
@@ -31,16 +29,16 @@ class FAIRTest
   end
 
   def self.test_FM_I2_M_FAIRVocabSemantic(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: test_FM_I2_M_FAIRVocabSemantic_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{test_FM_I2_M_FAIRVocabSemantic_meta[:testversion]}'\n"
 
-    metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
+    metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
     metadata.comments.each do |c|
       output.comments << c
@@ -54,7 +52,7 @@ class FAIRTest
 
     hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -101,7 +99,7 @@ class FAIRTest
       end
 
       output.comments << "INFO:  testing resolution of predicate #{predicate.value}\n"
-      metadata2 = FAIRChampion::Harvester.resolveit(predicate.value) # this  sends the content-negotiation for linked data
+      metadata2 = FAIRChampionHarvester::Core.resolveit(predicate.value) # this  sends the content-negotiation for linked data
       g2 = metadata2.graph
       output.comments << if g2.size > 0
                            "INFO:  predicate #{predicate.value} resolved to linked data.\n"
@@ -136,12 +134,12 @@ class FAIRTest
   end
 
   def self.test_FM_I2_M_FAIRVocabSemantic_api
-    api = OpenAPI.new(meta: test_FM_I2_M_FAIRVocabSemantic_meta)
+    api = FtrRuby::OpenAPI.new(meta: test_FM_I2_M_FAIRVocabSemantic_meta)
     api.get_api
   end
 
   def self.test_FM_I2_M_FAIRVocabSemantic_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_I2_M_FAIRVocabSemantic_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: test_FM_I2_M_FAIRVocabSemantic_meta)
     dcat.get_dcat
   end
 end

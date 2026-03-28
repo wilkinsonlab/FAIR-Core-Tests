@@ -1,5 +1,3 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
 class FAIRTest
   def self.test_FM_I1_M_FormLangSemantic_Data_meta
     {
@@ -32,15 +30,15 @@ class FAIRTest
   end
 
   def self.test_FM_I1_M_FormLangSemantic_Data(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: test_FM_I1_M_FormLangSemantic_Data_meta
     )
     output.comments << "INFO: TEST VERSION '#{test_FM_I1_M_FormLangSemantic_Data_meta[:testversion]}'\n"
 
-    metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
+    metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
     metadata.comments.each do |c|
       output.comments << c
@@ -54,7 +52,7 @@ class FAIRTest
 
     hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -68,7 +66,7 @@ class FAIRTest
       key = key.to_s
 
       output.comments << "INFO: Searching hash-style metadata for keys indicating a pointer to data.\n"
-      FAIRChampion::Utils::DATA_PREDICATES.each do |prop|
+      FAIRChampionHarvester::Utils::DATA_PREDICATES.each do |prop|
         prop =~ %r{.*[#/]([^#/]+)$}
         prop = ::Regexp.last_match(1)
         output.comments << "INFO: Searching for key: #{prop}.\n"
@@ -81,7 +79,7 @@ class FAIRTest
 
     if graph.size > 0 # have we found anything yet?
       output.comments << "INFO: Searching Linked Data metadata for predicates indicating a pointer to data.\n"
-      identifier = FAIRChampion::CommonQueries::GetDataIdentifier(graph: graph)
+      identifier = FAIRChampionHarvester::CommonQueries::GetDataIdentifier(graph: graph)
     end
 
     if identifier =~ /\w+/
@@ -89,14 +87,14 @@ class FAIRTest
       testIdentifier(guid: identifier, output: output) # this will add more comments and a score to output
     else
       output.score = 'indeterminate'
-      output.comments <<  "INFO: Tested the following #{FAIRChampion::Utils::DATA_PREDICATES}(or their plain JSON hash-key equivalents)\n"
+      output.comments <<  "INFO: Tested the following #{FAIRChampionHarvester::Utils::DATA_PREDICATES}(or their plain JSON hash-key equivalents)\n"
       output.comments <<  'INDETERMINATE: Was unable to locate the data identifier in the metadata using any (common) property/predicate reserved for this purpose.'
     end
     output.createEvaluationResponse
   end
 
   def self.testIdentifier(guid:, output:)
-    type, url = FAIRChampion::Harvester.convertToURL(guid)
+    type, url = FAIRChampionHarvester::Core.convertToURL(guid)
     if url.nil?
       output.comments << "INDETERMINATE: The GUID identifier of the data #{guid} did not match any known identification system (tested inchi, doi, handle, uri) and therefore did not pass this metric.  If you think this is an error, please contact the FAIR Metrics group (http://fairmetrics.org)."
       output.score = 'indeterminate'
@@ -116,11 +114,11 @@ class FAIRTest
       output.score = 'indeterminate'
       return
     end
-    headers = FAIRChampion::Harvester.head(url, FAIRChampion::Utils::AcceptHeader) # returns headers or false
+    headers = FAIRChampionHarvester::Core.head(url, FAIRChampionHarvester::Utils::AcceptHeader) # returns headers or false
     if headers
       if headers.keys.include?(:content_type)
         type = headers[:content_type]
-        rdfformats = FAIRChampion::Utils::RDF_FORMATS.values.flatten
+        rdfformats = FAIRChampionHarvester::Utils::RDF_FORMATS.values.flatten
         if rdfformats.include?(type)
           output.comments << "SUCCESS: The reported content-type of the data is [#{type}] which is a known Linked Data format\n"
           output.score = 'pass'
@@ -136,19 +134,19 @@ class FAIRTest
         nil
       end
     else
-      output.comments << "INDETERMINATE: The url #{url} failed to resolve via a HEAD call with headers #{FAIRChampion::Utils::AcceptHeader}, therefore we cannot continue\n"
+      output.comments << "INDETERMINATE: The url #{url} failed to resolve via a HEAD call with headers #{FAIRChampionHarvester::Utils::AcceptHeader}, therefore we cannot continue\n"
       output.score = 'indeterminate'
       nil
     end
   end
 
   def self.test_FM_I1_M_FormLangSemantic_Data_api
-    api = OpenAPI.new(meta: test_FM_I1_M_FormLangSemantic_Data_meta)
+    api = FtrRuby::OpenAPI.new(meta: test_FM_I1_M_FormLangSemantic_Data_meta)
     api.get_api
   end
 
   def self.test_FM_I1_M_FormLangSemantic_Data_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: test_FM_I1_M_FormLangSemantic_Data_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: test_FM_I1_M_FormLangSemantic_Data_meta)
     dcat.get_dcat
   end
 end

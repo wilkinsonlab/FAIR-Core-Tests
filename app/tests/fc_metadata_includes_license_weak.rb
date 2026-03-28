@@ -1,5 +1,3 @@
-require_relative File.dirname(__FILE__) + '/../lib/harvester.rb'
-
 class FAIRTest
   def self.fc_metadata_includes_license_weak_meta
     {
@@ -29,16 +27,16 @@ class FAIRTest
   end
 
   def self.fc_metadata_includes_license_weak(guid:)
-    FAIRChampion::Output.clear_comments
+    FtrRuby::Output.clear_comments
 
-    output = FAIRChampion::Output.new(
+    output = FtrRuby::Output.new(
       testedGUID: guid,
       meta: fc_metadata_includes_license_weak_meta
     )
 
     output.comments << "INFO: TEST VERSION '#{fc_metadata_includes_license_weak_meta[:testversion]}'\n"
 
-    metadata = FAIRChampion::Harvester.resolveit(guid) # this is where the magic happens!
+    metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
     metadata.comments.each do |c|
       output.comments << c
@@ -52,27 +50,27 @@ class FAIRTest
 
     hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampion::Harvester.deep_dive_properties(hash)
+    properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
 
-        
-    output.score = "fail"
+    output.score = 'fail'
     if metadata.hash.size > 1
       output.comments << "INFO:  searching hash-style metadata for a match with /license/ in any case.\n"
-      properties = FAIRChampion::Harvester::deep_dive_properties(hash)
+      properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
 
       properties.each do |keyval|
-        key, value = nil, nil
-        (key, value) = keyval;
+        key = nil
+        value = nil
+        (key, value) = keyval
         key = key.to_s
-        if key =~ /license/i
-          output.comments << "SUCCESS: found #{key} in hashed metadata.\n"
-          output.score = "pass"
-          return output.createEvaluationResponse
-        end
+        next unless key =~ /license/i
+
+        output.comments << "SUCCESS: found #{key} in hashed metadata.\n"
+        output.score = 'pass'
+        return output.createEvaluationResponse
       end
     end
 
@@ -137,15 +135,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-
-
   def self.fc_metadata_includes_license_weak_api
-    api = OpenAPI.new(meta: fc_metadata_includes_license_weak_meta)
+    api = FtrRuby::OpenAPI.new(meta: fc_metadata_includes_license_weak_meta)
     api.get_api
   end
 
   def self.fc_metadata_includes_license_weak_about
-    dcat = ChampionDCAT::DCAT_Record.new(meta: fc_metadata_includes_license_weak_meta)
+    dcat = FtrRuby::DCAT_Record.new(meta: fc_metadata_includes_license_weak_meta)
     dcat.get_dcat
   end
 end
