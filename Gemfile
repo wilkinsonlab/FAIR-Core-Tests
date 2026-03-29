@@ -1,6 +1,5 @@
 source 'https://rubygems.org'
 
-gemspec
 gem 'bcrypt'
 # gem 'debase', git: 'https://github.com/ruby-debug/debase.git', tag: 'v0.2.5.beta2'
 gem 'json', '~> 2.7.1'
@@ -38,3 +37,5 @@ end
 gem 'base64', '~> 0.3.0'
 
 gem 'debase', '~> 0.2.5.beta2'
+
+gem 'ftr_ruby', '~> 0.1.4'

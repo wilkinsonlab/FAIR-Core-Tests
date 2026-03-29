@@ -107,6 +107,7 @@ class FAIRTest
 
   def self.fc_data_authorization_about
     dcat = FtrRuby::DCAT_Record.new(meta: fc_data_authorization_meta)
+    warn "basePath = #{fc_data_authorization_meta[:basePath]}"
     dcat.get_dcat
   end
 end
