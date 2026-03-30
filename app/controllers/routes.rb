@@ -26,6 +26,7 @@ def set_routes(classes: [])
     infra = FtrRuby::TestInfra.new(test_host: test_host, basepath: basepath, test_protocol: test_protocol)
 
     @labels, @lps = infra.get_tests_metrics(tests: @tests) # the local URL is built in this routine, and called
+    warn "landing pages #{@lps.inspect}"
     halt erb :listtests, layout: :listtests_layout
   end
 
