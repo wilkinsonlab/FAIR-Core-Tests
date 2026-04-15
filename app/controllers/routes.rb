@@ -30,11 +30,7 @@ def set_routes(classes: [])
     halt erb :listtests, layout: :listtests_layout
   end
 
-  # This is fixed here, but needs to be reflected in the Core Tests
-  # # TODO - fix Core Tests to have the same behavior
-  # # prefix 'community-tests' comes from basePath in the environment
-  # then endpointPath in the DCAT is created by appending /assess/test/ to that, followed by ID
-  # # we should do the same in the core tests
+  
   post "/#{basepath}/assess/test/:id" do
     content_type :json
     id = params[:id]

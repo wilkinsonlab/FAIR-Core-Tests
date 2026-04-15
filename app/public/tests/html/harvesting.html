@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Harvester • FAIR Champion Metadata Harvesting System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0ea5e9;
+        }
+        body {
+            font-family: 'Inter', system_ui, sans-serif;
+        }
+        .flow-step {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .flow-step:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        .predicate {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+    <!-- Header -->
+    <div class="bg-white border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+            <div class="flex items-center gap-x-4">
+                <div class="w-11 h-11 bg-sky-500 rounded-2xl flex items-center justify-center text-white text-2xl shadow-inner">
+                    🌾
+                </div>
+                <div>
+                    <h1 class="text-3xl font-semibold tracking-tight text-slate-900">The Harvester</h1>
+                    <p class="text-slate-500 text-sm -mt-1">FAIR Champion Metadata Harvesting System</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-x-8 text-sm">
+                <a href="https://tests.ostrails.eu/tests" 
+                   target="_blank"
+                   class="flex items-center gap-x-2 hover:text-sky-600 transition-colors">
+                    <i class="fa-brands fa-github"></i>
+                    <span>FAIR-Champion Tests</span>
+                </a>
+                <a href="https://github.com/markwilkinson/FAIR-Champion-Harvester" 
+                   target="_blank"
+                   class="flex items-center gap-x-2 hover:text-sky-600 transition-colors">
+                    <i class="fa-brands fa-github"></i>
+                    <span>Harvester Source Code</span>
+                </a>
+                <a href="https://app.diagrams.net/#G1heoYIi37Z1VwGHrRD4Fupm0rLUKC5E4R" 
+                   target="_blank"
+                   class="flex items-center gap-x-2 text-white bg-sky-500 hover:bg-sky-600 px-5 py-2.5 rounded-3xl font-medium transition-all">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span>View Full Harvester WOrkflow Diagram</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 py-12">
+        <!-- Hero -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7">
+                <div class="inline-flex items-center gap-x-2 bg-sky-100 text-sky-700 text-xs font-medium px-4 h-8 rounded-3xl mb-4">
+                    <i class="fa-solid fa-seedling"></i>
+                    FAIR Data Harvesting Engine
+                </div>
+                <h2 class="text-5xl font-semibold tracking-tighter text-slate-900 leading-none mb-6">
+                    How the Harvester automatically extracts the metadata needed by the FAIR Champion Tests
+                </h2>
+                
+                <div class="mt-8 flex items-center gap-x-4">
+                    <a href="https://tests.ostrails.eu/tests" 
+                       target="_blank"
+                       class="inline-flex items-center gap-x-3 bg-slate-900 hover:bg-black text-white px-8 h-14 rounded-3xl font-semibold text-lg">
+                        <i class="fa-brands fa-github text-xl"></i>
+                        View the Tests
+                    </a>
+                    <div class="text-sm text-slate-500">
+                        Used by the<br>
+                        <span class="font-semibold text-slate-700">FAIR Champion Core and Community Tests</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diagram preview card -->
+            <div class="lg:col-span-5 bg-white rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+                <div class="aspect-video bg-slate-950 flex items-center justify-center relative">
+                    <a href="https://app.diagrams.net/#G1heoYIi37Z1VwGHrRD4Fupm0rLUKC5E4R" target="_blank"
+                       class="block w-full h-full hover:scale-105 transition-transform">
+                        <img src="https://app.diagrams.net/images/logo-white.svg" alt="diagrams.net logo" class="absolute top-8 left-8 w-8 opacity-30">
+                        <div class="text-center px-12">
+                            <div class="text-white text-2xl font-semibold mb-2">The Harvester</div>
+                            <div class="text-sky-400 text-sm flex items-center justify-center gap-x-3">
+                                <div class="flex-1 h-px bg-sky-400/30"></div>
+                                Click to open interactive diagram
+                                <div class="flex-1 h-px bg-sky-400/30"></div>
+                            </div>
+                            <p class="text-slate-400 text-xs mt-8 leading-relaxed">
+                                Full visual workflow of the metadata harvesting process<br>
+                                (open in new tab for full resolution)
+                            </p>
+                        </div>
+                    </a>
+                </div>
+                <div class="px-8 py-6 text-sm text-slate-500 flex justify-between items-center">
+                    <div>📍 Latest version • April 2026</div>
+                    <div class="flex items-center gap-x-5 text-xs">
+                        <div class="flex items-center"><span class="w-3 h-3 bg-blue-500 rounded-full mr-2"></span>DC / RDF flow</div>
+                        <div class="flex items-center"><span class="w-3 h-3 bg-amber-500 rounded-full mr-2"></span>Content negotiation</div>
+                        <div class="flex items-center"><span class="w-3 h-3 bg-emerald-500 rounded-full mr-2"></span>Predicate matching</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="h-px bg-slate-200 my-16"></div>
+
+        <!-- General Workflow -->
+        <section class="mb-20">
+            <h3 class="text-3xl font-semibold mb-4 flex items-center gap-x-3">
+                <span class="text-sky-500">1.</span> 
+                General Workflow
+            </h3>
+            <p class="text-slate-600 max-w-2xl mb-10">
+                The Harvester is a lightweight, Ruby-based engine that turns any FAIR resource URL into structured metadata that the FAIR Champion tests can consume. 
+                It follows a predictable, reproducible sequence shown in the diagram above.
+            </p>
+
+            <div class="grid md:grid-cols-4 gap-6">
+                <div class="flow-step bg-white p-6 rounded-3xl border border-slate-100">
+                    <div class="text-sky-500 text-xs font-mono tracking-widest mb-1">STEP 01</div>
+                    <h4 class="font-semibold text-lg">Input</h4>
+                    <p class="text-slate-500 text-sm mt-2">A landing-page URL, PID, or any resolvable identifier is provided to the harvester.</p>
+                </div>
+                <div class="flow-step bg-white p-6 rounded-3xl border border-slate-100">
+                    <div class="text-sky-500 text-xs font-mono tracking-widest mb-1">STEP 02</div>
+                    <h4 class="font-semibold text-lg">Content Negotiation</h4>
+                    <p class="text-slate-500 text-sm mt-2">The harvester requests the resource in multiple formats (JSON-LD, Turtle, RDF/XML, HTML, plain JSON, etc.) using HTTP Accept headers.</p>
+                </div>
+                <div class="flow-step bg-white p-6 rounded-3xl border border-slate-100">
+                    <div class="text-sky-500 text-xs font-mono tracking-widest mb-1">STEP 03</div>
+                    <h4 class="font-semibold text-lg">Parsing &amp; Extraction</h4>
+                    <p class="text-slate-500 text-sm mt-2">Metadata is parsed according to its format. RDF graphs, JSON-LD, Microdata, and embedded schemas are all supported.</p>
+                </div>
+                <div class="flow-step bg-white p-6 rounded-3xl border border-slate-100">
+                    <div class="text-sky-500 text-xs font-mono tracking-widest mb-1">STEP 04</div>
+                    <h4 class="font-semibold text-lg">Predicate Matching</h4>
+                    <p class="text-slate-500 text-sm mt-2">Specific predicates and patterns are searched to locate the data record, self-identifier, license, and other key pieces of information.</p>
+                </div>
+            </div>
+
+            <p class="text-center text-sm text-slate-500 mt-10">
+                The entire process is deterministic and fully transparent. Every decision and discovered triple is logged for debugging.
+            </p>
+        </section>
+
+        <!-- Discovery Mechanisms -->
+        <section class="mb-20">
+            <h3 class="text-3xl font-semibold mb-8 flex items-center gap-x-3">
+                <span class="text-sky-500">2.</span> 
+                How the Harvester discovers specific metadata
+            </h3>
+
+            <div class="space-y-16">
+                <!-- Formats -->
+                <div>
+                    <h4 class="uppercase text-xs font-semibold text-slate-400 mb-4 tracking-widest">Supported metadata formats (content negotiation)</h4>
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 text-sm">
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100">
+                            <div class="font-medium mb-2 flex items-center"><span class="text-emerald-500">📄</span><span class="ml-2">Text</span></div>
+                            <code class="predicate text-xs">text/plain</code>
+                        </div>
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100">
+                            <div class="font-medium mb-2 flex items-center"><span class="text-purple-500">🧬</span><span class="ml-2">RDF</span></div>
+                            <div class="text-xs space-y-1">
+                                <code class="predicate block">application/ld+json</code>
+                                <code class="predicate block">text/turtle</code>
+                                <code class="predicate block">application/rdf+xml</code>
+                                <code class="predicate block">application/n-triples</code>
+                                <span class="text-slate-400 text-[10px]">+ 10 more variants</span>
+                            </div>
+                        </div>
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100">
+                            <div class="font-medium mb-2 flex items-center"><span class="text-amber-500">📜</span><span class="ml-2">XML / XHTML</span></div>
+                            <code class="predicate text-xs">text/xml • text/xhtml</code>
+                        </div>
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100">
+                            <div class="font-medium mb-2 flex items-center"><span class="text-orange-500">🌐</span><span class="ml-2">HTML</span></div>
+                            <code class="predicate text-xs">text/html • application/xhtml+xml</code>
+                        </div>
+                        <div class="bg-white rounded-2xl p-5 border border-slate-100">
+                            <div class="font-medium mb-2 flex items-center"><span class="text-rose-500">📦</span><span class="ml-2">Plain JSON</span></div>
+                            <code class="predicate text-xs">application/json</code>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Data pointer predicates -->
+                <div>
+                    <h4 class="uppercase text-xs font-semibold text-slate-400 mb-4 tracking-widest">How it finds the pointer to the data record</h4>
+                    <p class="text-slate-600 mb-6 text-sm max-w-prose">
+                        The harvester scans the parsed metadata for any of the following predicates (in order of preference). The first match becomes the <strong>pointer to the actual data</strong>.
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs bg-slate-900 text-slate-300 p-8 rounded-3xl font-mono leading-relaxed">
+                        <div>http://www.w3.org/ns/ldp#contains</div>
+                        <div>http://xmlns.com/foaf/0.1/primaryTopic</div>
+                        <div>http://purl.obolibrary.org/obo/IAO_0000136</div>
+                        <div>http://schema.org/mainEntity</div>
+                        <div>http://schema.org/distribution</div>
+                        <div>http://schema.org/contentUrl</div>
+                        <div>http://www.w3.org/ns/dcat#distribution</div>
+                        <div>http://www.w3.org/ns/dcat#downloadURL</div>
+                        <div>http://semanticscience.org/resource/SIO_000332</div>
+                        <div>https://purl.obolibrary.org/obo/IAO_0000136</div>
+                        <div class="col-span-full text-sky-400 text-[10px] mt-4">…and their https equivalents</div>
+                    </div>
+                </div>
+
+                <!-- Self-identifier predicates -->
+                <div>
+                    <h4 class="uppercase text-xs font-semibold text-slate-400 mb-4 tracking-widest">How it finds the self-identifier of the metadata record</h4>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-5 py-2 bg-white border border-slate-200 text-slate-700 rounded-3xl text-sm predicate">http://purl.org/dc/elements/1.1/identifier</span>
+                        <span class="px-5 py-2 bg-white border border-slate-200 text-slate-700 rounded-3xl text-sm predicate">http://purl.org/dc/terms/identifier</span>
+                        <span class="px-5 py-2 bg-white border border-slate-200 text-slate-700 rounded-3xl text-sm predicate">http://schema.org/identifier</span>
+                        <span class="px-5 py-2 bg-white border border-slate-200 text-slate-700 rounded-3xl text-sm predicate">https://purl.org/dc/terms/identifier</span>
+                        <span class="px-5 py-2 bg-white border border-slate-200 text-slate-700 rounded-3xl text-sm predicate">https://schema.org/identifier</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-4">The value of the first matching predicate is treated as the canonical identifier of the metadata record itself.</p>
+                </div>
+
+                <!-- GUID type detection -->
+                <div>
+                    <h4 class="uppercase text-xs font-semibold text-slate-400 mb-4 tracking-widest">How it detects the type of GUID / PID</h4>
+                    <p class="text-slate-600 mb-6 text-sm">The harvester applies a series of regular expressions (in priority order) to classify the identifier:</p>
+                    <table class="w-full text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-100">
+                                <th class="text-left py-4 px-6 font-medium">Type</th>
+                                <th class="text-left py-4 px-6 font-medium">Pattern (Ruby regex)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y font-mono text-xs">
+                            <tr><td class="py-4 px-6">inchi</td><td class="py-4 px-6">^\w{14}-\w{10}-\w$</td></tr>
+                            <tr><td class="py-4 px-6">doi</td><td class="py-4 px-6">^10\.\d{4,9}/[-._;()/:A-Z0-9]+$ (case-insensitive)</td></tr>
+                            <tr><td class="py-4 px-6">handle (legacy)</td><td class="py-4 px-6">^\d{4,5}/[-._;()/:A-Z0-9]+$</td></tr>
+                            <tr><td class="py-4 px-6">URI</td><td class="py-4 px-6">^\w+:/{0,2}[^\s]+$</td></tr>
+                            <tr><td class="py-4 px-6">ARK</td><td class="py-4 px-6">ark:/[0-9]+/[a-z0-9~=+*@_$.\-/]+</td></tr>
+                            <tr><td class="py-4 px-6">PURL</td><td class="py-4 px-6">contains “purl.”</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <div class="text-center text-xs text-slate-400 flex flex-col md:flex-row justify-between items-center gap-y-4">
+            <div>
+                Built for the FAIR Champion Test Suite • 
+                <a href="https://github.com/markwilkinson/FAIR-Champion-Harvester" class="hover:text-slate-600">Harvester source on GitHub</a>
+            </div>
+            <div class="flex items-center gap-x-6">
+                <a href="https://app.diagrams.net/#G1heoYIi37Z1VwGHrRD4Fupm0rLUKC5E4R" target="_blank" class="flex items-center hover:text-sky-600">
+                    <i class="fa-solid fa-diagram-project mr-2"></i> Interactive diagram
+                </a>
+                <div class="text-slate-300">•</div>
+                <span>Made to be shared • April 2026</span>
+            </div>
+            <div>Questions? Open an issue in the <a href="https://github.com/markwilkinson/FAIR-Champion" class="underline">FAIR-Champion repo</a></div>
+        </div>
+    </div>
+</body>
+</html>

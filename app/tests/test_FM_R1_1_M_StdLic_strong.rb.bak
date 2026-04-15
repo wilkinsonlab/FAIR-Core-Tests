@@ -1,10 +1,12 @@
 class FAIRTest
-  def self.fc_metadata_includes_license_meta
+  def self.test_FM_R1_1_M_StdLic_strong_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
       testname: 'OSTrails Core: Metadata Includes License (strong)',
-      testid: 'fc_metadata_includes_license',
-      description: 'Maturity Indicator to test if the linked data metadata contains an explicit pointer to the license.  Tests: xhtml, dvia, dcterms, cc, data.gov.au, and Schema license predicates in linked data, and validates the value of those properties.',
+      testid: 'test_FM_R1_1_M_StdLic_strong',
+      description: 'Maturity Indicator to test if the linked data metadata contains an explicit
+      pointer to the license.  Tests: xhtml, dvia, dcterms, cc, data.gov.au, and
+      Schema license predicates in linked data, and validates the value of those properties.',
       metric: 'https://w3id.org/fair-metrics/general/FM_R1-1_M_StdLic',
       indicators: 'https://doi.org/10.25504/FAIRsharing.8e0027',
       type: 'http://edamontology.org/operation_2428',
@@ -26,15 +28,15 @@ class FAIRTest
     }
   end
 
-  def self.fc_metadata_includes_license(guid:)
+  def self.test_FM_R1_1_M_StdLic_strong(guid:)
     FtrRuby::Output.clear_comments
 
     output = FtrRuby::Output.new(
       testedGUID: guid,
-      meta: fc_metadata_includes_license_meta
+      meta: test_FM_R1_1_M_StdLic_strong_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{fc_metadata_includes_license_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_R1_1_M_StdLic_strong_meta[:testversion]}'\n"
 
     metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
@@ -116,13 +118,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.fc_metadata_includes_license_api
-    api = FtrRuby::OpenAPI.new(meta: fc_metadata_includes_license_meta)
+  def self.test_FM_R1_1_M_StdLic_strong_api
+    api = FtrRuby::OpenAPI.new(meta: test_FM_R1_1_M_StdLic_strong_meta)
     api.get_api
   end
 
-  def self.fc_metadata_includes_license_about
-    dcat = FtrRuby::DCAT_Record.new(meta: fc_metadata_includes_license_meta)
+  def self.test_FM_R1_1_M_StdLic_strong_about
+    dcat = FtrRuby::DCAT_Record.new(meta: test_FM_R1_1_M_StdLic_strong_meta)
     dcat.get_dcat
   end
 end
