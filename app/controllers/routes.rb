@@ -21,7 +21,6 @@ def set_routes(classes: [])
   get %r{/#{basepath}/?} do
     ts = Dir["#{File.dirname(__FILE__)}/../tests/*.rb"]
     @tests = ts.map { |t| t.match(%r{.*/(\S+)\.rb$})[1] } # This is just the final field in the URL
-    @tests = ts.map { |t| t.match(%r{.*/(\S+)\.rb$})[1] } # This is just the final field in the URL
     # def initialize(test_host:, basepath:, test_protocol:)
     infra = FtrRuby::TestInfra.new(test_host: test_host, basepath: basepath, test_protocol: test_protocol)
     @basepath = basepath
@@ -30,7 +29,6 @@ def set_routes(classes: [])
     halt erb :listtests, layout: :listtests_layout
   end
 
-  
   post "/#{basepath}/assess/test/:id" do
     content_type :json
     id = params[:id]

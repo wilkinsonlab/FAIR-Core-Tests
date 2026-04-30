@@ -11,7 +11,7 @@ gem 'openapi3_parser', '~> 0.9.2'
 gem 'parseconfig', '~> 1.1.2'
 gem 'puma'
 gem 'rake', '~> 13.0'
-gem 'rdf-raptor', '3.1.0'
+gem 'rdf-raptor'
 gem 'rdf-vocab'
 gem 'require_all', '~> 3.0.0'
 gem 'rest-client', '~> 2.1.0'
@@ -38,10 +38,10 @@ gem 'base64', '~> 0.3.0'
 
 gem 'debase', '~> 0.2.5.beta2'
 
-gem 'ftr_ruby', '~> 0.1.4'
+gem 'ftr_ruby', '~> 0.1.8'
 
-gem "triple_easy", "~> 0.1.0"
+gem 'triple_easy', '~> 0.1.0'
 
-gem "fair_champion_harvester", "~> 0.1.4"
+gem 'fair_champion_harvester', '~> 0.1.4'
 
-gem "http", "~> 6.0"
+gem 'http', '~> 6.0'
