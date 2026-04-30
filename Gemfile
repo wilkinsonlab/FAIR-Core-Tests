@@ -39,3 +39,9 @@ gem 'base64', '~> 0.3.0'
 gem 'debase', '~> 0.2.5.beta2'
 
 gem 'ftr_ruby', '~> 0.1.4'
+
+gem "triple_easy", "~> 0.1.0"
+
+gem "fair_champion_harvester", "~> 0.1.4"
+
+gem "http", "~> 6.0"
