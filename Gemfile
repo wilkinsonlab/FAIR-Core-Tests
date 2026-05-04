@@ -16,7 +16,7 @@ gem 'rdf-vocab'
 gem 'require_all', '~> 3.0.0'
 gem 'rest-client', '~> 2.1.0'
 gem 'rubocop'
-gem 'ruby-debug-ide'
+# gem 'ruby-debug-ide'  # dev only — not installed in Docker
 gem 'shotgun'
 gem 'sinatra', '~> 2.2'
 gem 'sinatra-cross_origin'
@@ -36,12 +36,12 @@ group :test do
 end
 gem 'base64', '~> 0.3.0'
 
-gem 'debase', '~> 0.2.5.beta2'
+# gem 'debase', '~> 0.2.5.beta2'  # dev only — not installed in Docker
 
 gem 'ftr_ruby', '~> 0.1.8'
 
 gem 'triple_easy', '~> 0.1.0'
 
-gem 'fair_champion_harvester', '~> 0.1.4'
+gem 'fair_champion_harvester', '~> 0.1.8'
 
 gem 'http', '~> 6.0'

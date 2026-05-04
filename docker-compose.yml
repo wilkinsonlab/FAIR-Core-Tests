@@ -2,7 +2,7 @@ version: "3"
 services:
 
   tests: 
-    image: markw/fair-core-tests:0.1.46
+    image: markw/fair-core-tests:0.1.47
     container_name: tests
     environment:
       TEST_PROTOCOL: http
@@ -15,7 +15,7 @@ services:
       - "8282:8282"
 
   tika:
-    image: apache/tika:1.23
+    image: apache/tika:3.3.0.0
     container_name: evaluator-tika
     restart: always
 
