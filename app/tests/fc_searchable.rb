@@ -11,7 +11,7 @@ class FcSearchableSearxngError < StandardError; end
 class FAIRTest
   def self.fc_searchable_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.1.0',
       testname: 'OSTrails Core: Searchable in major search engine',
       testid: 'fc_searchable',
       description: 'Tests whether a machine is able to discover the resource using a SearXNG metasearch service.',
@@ -74,224 +74,230 @@ class FAIRTest
                     end
 
     target_uris = (Array(resolved_uris) + [guid]).compact
-      .map { |value| value.to_s.strip.downcase }
-      .reject(&:empty?)
-      .uniq
+                                                 .map { |value| value.to_s.strip.downcase }
+                                                 .reject(&:empty?)
+                  .uniq
+
+    # Title/keywords/graph-title/graph-name/graph-keywords clauses below often
+    # collide on the same phrase for a given resource; tracked here so we don't
+    # fire redundant SearXNG queries (each of which fans out to every configured
+    # engine) for a phrase already searched earlier in this test run.
+    searched_phrases = []
 
     begin
-    ###################  TITLE
-    output.comments << "INFO: testing any hash-style metadata for a key matching 'title' in any case.\n"
-    flatlist = hash.flatten(40) # hopefully no hash is more than 40 deep!
-    title = ''
-    for x in 1..flatlist.length
-      term = flatlist[x - 1]
-      next unless term.is_a? String
+      ###################  TITLE
+      output.comments << "INFO: testing any hash-style metadata for a key matching 'title' in any case.\n"
+      flatlist = hash.flatten(40) # hopefully no hash is more than 40 deep!
+      title = ''
+      for x in 1..flatlist.length
+        term = flatlist[x - 1]
+        next unless term.is_a? String
 
-      # warn term
-      if term.match(/title$/i) # in a flattened hash, find something matching 'title' at the end of the term
-        title = flatlist[x] # the next thing should be the title
-        break
-      end
-    end
-    unless title =~ /\w+/
-      output.comments << "WARN: could not find a structured reference to the title in the hash-style metadata.\n"
-    end
-
-    if title =~ /\w+/
-      output.comments << "INFO: found title #{title}.  Searching SearXNG\n"
-      warn "Calling SearXNG with title #{title}\n\n"
-
-      searchresults = callSearxngFcSearchable(title, output)
-      h = JSON.parse(searchresults)
-      if h['results']&.any?
-        output.comments << "INFO: found matches in SearXNG.  Checking for results that match any of #{target_uris.map do |b|
-          b.to_s
-        end}.\n"
-        h['results'].each do |p|
-          if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
-            output.comments << "SUCCESS: found a search record referencing #{p['url']} based on an exact-match title search against SearXNG.\n  "
-            output.score = 'pass'
-          end
+        # warn term
+        if term.match(/title$/i) # in a flattened hash, find something matching 'title' at the end of the term
+          title = flatlist[x] # the next thing should be the title
+          break
         end
-        unless output.score == 'pass'
-          output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
-        end
-      else
-        output.comments << "WARN:  SearXNG search for #{title} found no results.\n"
       end
-    end
-
-    #############  Keywords
-    flatlist = hash.flatten(40) # hopefully no hash is more than 40 deep!
-    keywords = ''
-    for x in 1..flatlist.length
-      term = flatlist[x - 1]
-      # warn term
-      next unless term.is_a? String
-
-      if term.match(/keywords?$/i) # in a flattened hash, find something matching 'keywords?' at the end of the term
-        keywords = flatlist[x] # the next thing should be the keywords
-        break
+      unless title =~ /\w+/
+        output.comments << "WARN: could not find a structured reference to the title in the hash-style metadata.\n"
       end
-    end
-    # keywords = keywords.gsub!("\,", "")
-    unless keywords =~ /\w+/
-      output.comments << "WARN: could not find any human-readeable keywords in hash-style metadata.\n"
-    end
 
-    if keywords =~ /\w+/
-      output.comments << "INFO: found keywords #{keywords}.  Now searching SearXNG.\n"
-      warn "Calling SearXNG with hash keywords #{keywords}\n\n"
+      if title =~ /\w+/
+        output.comments << "INFO: found title #{title}.  Searching SearXNG\n"
+        warn "Calling SearXNG with title #{title}\n\n"
 
-      searchresults = callSearxngFcSearchable(keywords, output)
-      h = JSON.parse(searchresults)
-      if h['results']&.any?
-        output.comments << "INFO: found matches in SearXNG.  Checking for results that match any of #{target_uris.map do |b|
-          b.to_s
-        end}\n"
-        h['results'].each do |p|
-          if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
-            output.comments << "SUCCESS: found a search hit matching #{p['url']} using metadata keywords in search on SearXNG.\n  "
-            output.score = 'pass'
-          end
-        end
-        unless output.score == 'pass'
-          output.comments << "INFO: No keyword search results from SearXNG included any of #{target_uris.map do |b|
+        searchresults = callSearxngFcSearchable(title, output, searched_phrases)
+        h = JSON.parse(searchresults)
+        if h['results']&.any?
+          output.comments << "INFO: found matches in SearXNG.  Checking for results that match any of #{target_uris.map do |b|
             b.to_s
           end}.\n"
+          h['results'].each do |p|
+            if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
+              output.comments << "SUCCESS: found a search record referencing #{p['url']} based on an exact-match title search against SearXNG.\n  "
+              output.score = 'pass'
+            end
+          end
+          unless output.score == 'pass'
+            output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
+          end
+        else
+          output.comments << "WARN:  SearXNG search for #{title} found no results.\n"
         end
-      else
-        output.comments << "INFO: SearXNG returned no search results for keywords #{keywords}.\n"
       end
-    end
 
-    #####################  now with the graph data
+      #############  Keywords
+      flatlist = hash.flatten(40) # hopefully no hash is more than 40 deep!
+      keywords = ''
+      for x in 1..flatlist.length
+        term = flatlist[x - 1]
+        # warn term
+        next unless term.is_a? String
 
-    g = metadata.graph
+        if term.match(/keywords?$/i) # in a flattened hash, find something matching 'keywords?' at the end of the term
+          keywords = flatlist[x] # the next thing should be the keywords
+          break
+        end
+      end
+      # keywords = keywords.gsub!("\,", "")
+      unless keywords =~ /\w+/
+        output.comments << "WARN: could not find any human-readeable keywords in hash-style metadata.\n"
+      end
 
-    if g.size > 0 # have we found anything
-      output.comments << "INFO: Testing Linked Data-formatted metadata for any predicate that contains 'title' in any case.\n "
-      query = SPARQL.parse("select distinct ?o where {?s ?p ?o  FILTER(CONTAINS(lcase(str(?p)), 'title'))}") # find predicate containing "title", take object
-      results = query.execute(g)
-      if results.any?
-        output.comments << "INFO: found title predicate.\n "
-        seen = Hash.new(false)  # appaerntly, distinct isn't working in the sparql...??
-        results.each do |res|
-          next if seen[res[:o].to_s]
+      if keywords =~ /\w+/
+        output.comments << "INFO: found keywords #{keywords}.  Now searching SearXNG.\n"
+        warn "Calling SearXNG with hash keywords #{keywords}\n\n"
 
-          seen[res[:o].to_s] = true
-
-          title = res[:o].to_s  # get the title
-          output.comments << "INFO: found possible Title:  #{title}.\n "
-          # warn "looking for #{title}"
-          output.comments << "INFO: Calling SearXNG search using #{title}.\n "
-          warn "Calling SearXNG with graph title #{title}\n\n"
-
-          searchresults = callSearxngFcSearchable(title, output) # search searxng
-          # warn JSON::pretty_generate(JSON(searchresults))
-          h = JSON.parse(searchresults) # parse json
-          if h['results']&.any? # are there results
-            output.comments << "INFO: SearXNG found results for#{title}.  Checking for results that match #{target_uris.map do |b|
+        searchresults = callSearxngFcSearchable(keywords, output, searched_phrases)
+        h = JSON.parse(searchresults)
+        if h['results']&.any?
+          output.comments << "INFO: found matches in SearXNG.  Checking for results that match any of #{target_uris.map do |b|
+            b.to_s
+          end}\n"
+          h['results'].each do |p|
+            if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
+              output.comments << "SUCCESS: found a search hit matching #{p['url']} using metadata keywords in search on SearXNG.\n  "
+              output.score = 'pass'
+            end
+          end
+          unless output.score == 'pass'
+            output.comments << "INFO: No keyword search results from SearXNG included any of #{target_uris.map do |b|
               b.to_s
             end}.\n"
-            h['results'].each do |p| # for each matching pge do
-              if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
-                output.comments << "SUCCESS: found a search record referencing #{p['url']} based on an exact-match title search against SearXNG.\n  "
-                output.score = 'pass'
+          end
+        else
+          output.comments << "INFO: SearXNG returned no search results for keywords #{keywords}.\n"
+        end
+      end
+
+      #####################  now with the graph data
+
+      g = metadata.graph
+
+      if g.size > 0 # have we found anything
+        output.comments << "INFO: Testing Linked Data-formatted metadata for any predicate that contains 'title' in any case.\n "
+        query = SPARQL.parse("select distinct ?o where {?s ?p ?o  FILTER(CONTAINS(lcase(str(?p)), 'title'))}") # find predicate containing "title", take object
+        results = query.execute(g)
+        if results.any?
+          output.comments << "INFO: found title predicate.\n "
+          seen = Hash.new(false)  # appaerntly, distinct isn't working in the sparql...??
+          results.each do |res|
+            next if seen[res[:o].to_s]
+
+            seen[res[:o].to_s] = true
+
+            title = res[:o].to_s  # get the title
+            output.comments << "INFO: found possible Title:  #{title}.\n "
+            # warn "looking for #{title}"
+            output.comments << "INFO: Calling SearXNG search using #{title}.\n "
+            warn "Calling SearXNG with graph title #{title}\n\n"
+
+            searchresults = callSearxngFcSearchable(title, output, searched_phrases) # search searxng
+            # warn JSON::pretty_generate(JSON(searchresults))
+            h = JSON.parse(searchresults) # parse json
+            if h['results']&.any? # are there results
+              output.comments << "INFO: SearXNG found results for#{title}.  Checking for results that match #{target_uris.map do |b|
+                b.to_s
+              end}.\n"
+              h['results'].each do |p| # for each matching pge do
+                if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
+                  output.comments << "SUCCESS: found a search record referencing #{p['url']} based on an exact-match title search against SearXNG.\n  "
+                  output.score = 'pass'
+                end
               end
+              unless output.score == 'pass'
+                output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
+              end
+            else
+              output.comments << "INFO: No search results from SearXNG using the title of the record\n  "
             end
-            unless output.score == 'pass'
-              output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
+          end
+        end
+        query = SPARQL.parse("select distinct ?o where {?s ?p ?o  FILTER(CONTAINS(lcase(str(?p)), 'name'))}") # find predicate containing "name", take object
+        results = query.execute(g)
+        if results.any?
+          output.comments << "INFO: found a 'name' predicate; presuming this is a pointer to a title.\n "
+          seen = Hash.new(false)  # appaerntly, distinct isn't working in the sparql...??
+          results.each do |res|
+            next if seen[res[:o].to_s]
+
+            seen[res[:o].to_s] = true
+            title = res[:o].to_s  # get the title
+            output.comments << "INFO: found possible Title:  #{title}.\n "
+            # warn "looking for #{title}"
+            output.comments << "INFO: Calling SearXNG search using #{title}.\n "
+            warn "Calling SearXNG with graph name #{title}\n\n"
+
+            searchresults = callSearxngFcSearchable(title, output, searched_phrases) # search searxng
+            # warn JSON::pretty_generate(JSON(searchresults))
+            h = JSON.parse(searchresults) # parse json
+            if h['results']&.any? # are there results
+              output.comments << "INFO: SearXNG found results for#{title}.  Checking for results that match #{target_uris.map do |b|
+                b.to_s
+              end}.\n"
+              h['results'].each do |p| # for each matching pge do
+                if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
+                  output.comments << "SUCCESS: found a search record referencing #{p['url']} based on an exact-match title search against SearXNG.\n  "
+                  output.score = 'pass'
+                end
+              end
+              unless output.score == 'pass'
+                output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
+              end
+            else
+              output.comments << "INFO: No search results from SearXNG\n  "
             end
-          else
-            output.comments << "INFO: No search results from SearXNG using the title of the record\n  "
           end
         end
       end
-      query = SPARQL.parse("select distinct ?o where {?s ?p ?o  FILTER(CONTAINS(lcase(str(?p)), 'name'))}") # find predicate containing "name", take object
-      results = query.execute(g)
-      if results.any?
-        output.comments << "INFO: found a 'name' predicate; presuming this is a pointer to a title.\n "
-        seen = Hash.new(false)  # appaerntly, distinct isn't working in the sparql...??
-        results.each do |res|
-          next if seen[res[:o].to_s]
 
-          seen[res[:o].to_s] = true
-          title = res[:o].to_s  # get the title
-          output.comments << "INFO: found possible Title:  #{title}.\n "
-          # warn "looking for #{title}"
-          output.comments << "INFO: Calling SearXNG search using #{title}.\n "
-          warn "Calling SearXNG with graph name #{title}\n\n"
+      #######  keywords in graph
 
-          searchresults = callSearxngFcSearchable(title, output) # search searxng
-          # warn JSON::pretty_generate(JSON(searchresults))
-          h = JSON.parse(searchresults) # parse json
-          if h['results']&.any? # are there results
-            output.comments << "INFO: SearXNG found results for#{title}.  Checking for results that match #{target_uris.map do |b|
-              b.to_s
-            end}.\n"
-            h['results'].each do |p| # for each matching pge do
-              if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
-                output.comments << "SUCCESS: found a search record referencing #{p['url']} based on an exact-match title search against SearXNG.\n  "
-                output.score = 'pass'
+      g = metadata.graph
+
+      if g.size > 0 # have we found anything
+        output.comments << "INFO: Testing Linked Data-formatted metadata for any predicate that contains 'keyword' in any case.\n "
+        query = SPARQL.parse("select distinct ?o where {?s ?p ?o  FILTER(CONTAINS(lcase(str(?p)), 'keyword'))}") # find predicate containing "title", take object
+        results = query.execute(g)
+        if results.any?
+          seen = Hash.new(false) # appaerntly, distinct isn't working in the sparql...??
+          results.each do |res|
+            next if seen[res[:o].to_s]
+
+            seen[res[:o].to_s] = true
+            keywords = res[:o].to_s # get the keywords
+            output.comments << "INFO: found keywords.\n "
+            output.comments << "INFO: found keywords #{keywords}.\n "
+            output.comments << "INFO: Calling SearXNG search using #{keywords}.\n "
+            warn "Calling SearXNG with graph keywords #{keywords}\n\n"
+
+            searchresults = callSearxngFcSearchable(keywords, output, searched_phrases) # search searxng
+            h = JSON.parse(searchresults) # parse json; malformed/non-JSON responses raise FcSearchableSearxngError from callSearxngFcSearchable
+
+            if h['results']&.any? # are there results
+              output.comments << "INFO: SearXNG found matches using #{keywords}. Testing matches for a reference to #{target_uris.map do |b|
+                b.to_s
+              end}\n"
+              h['results'].each do |p| # for each matching pge do
+                if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
+                  output.comments << "SUCCESS: found a search record referencing #{p['url']} based on a keyword search against SearXNG.\n  "
+                  output.score = 'pass'
+                end
               end
+              unless output.score == 'pass'
+                output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
+              end
+            else
+              output.comments << "INFO: No results from SearXNG using keywords #{keywords}.\n"
             end
-            unless output.score == 'pass'
-              output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
-            end
-          else
-            output.comments << "INFO: No search results from SearXNG\n  "
           end
         end
       end
-    end
 
-    #######  keywords in graph
-
-    g = metadata.graph
-
-    if g.size > 0 # have we found anything
-      output.comments << "INFO: Testing Linked Data-formatted metadata for any predicate that contains 'keyword' in any case.\n "
-      query = SPARQL.parse("select distinct ?o where {?s ?p ?o  FILTER(CONTAINS(lcase(str(?p)), 'keyword'))}") # find predicate containing "title", take object
-      results = query.execute(g)
-      if results.any?
-        seen = Hash.new(false) # appaerntly, distinct isn't working in the sparql...??
-        results.each do |res|
-          next if seen[res[:o].to_s]
-
-          seen[res[:o].to_s] = true
-          keywords = res[:o].to_s # get the keywords
-          output.comments << "INFO: found keywords.\n "
-          output.comments << "INFO: found keywords #{keywords}.\n "
-          output.comments << "INFO: Calling SearXNG search using #{keywords}.\n "
-          warn "Calling SearXNG with graph keywords #{keywords}\n\n"
-
-          searchresults = callSearxngFcSearchable(keywords, output) # search searxng
-          h = JSON.parse(searchresults) # parse json; malformed/non-JSON responses raise FcSearchableSearxngError from callSearxngFcSearchable
-
-          if h['results']&.any? # are there results
-            output.comments << "INFO: SearXNG found matches using #{keywords}. Testing matches for a reference to #{target_uris.map do |b|
-              b.to_s
-            end}\n"
-            h['results'].each do |p| # for each matching pge do
-              if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
-                output.comments << "SUCCESS: found a search record referencing #{p['url']} based on a keyword search against SearXNG.\n  "
-                output.score = 'pass'
-              end
-            end
-            unless output.score == 'pass'
-              output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
-            end
-          else
-            output.comments << "INFO: No results from SearXNG using keywords #{keywords}.\n"
-          end
-        end
+      unless output.score == 'pass'
+        output.comments << "FAILURE: Was unable to discover the metadata record by search in SearXNG using any method\n"
       end
-    end
-
-    unless output.score == 'pass'
-      output.comments << "FAILURE: Was unable to discover the metadata record by search in SearXNG using any method\n"
-    end
     rescue FcSearchableSearxngError => e
       output.score = 'indeterminate'
       output.comments << "INDETERMINATE: SearXNG search could not be completed: #{e.message}.\n"
@@ -307,7 +313,7 @@ class FAIRTest
   # discovered title/keyword/name), and pointing it at a public SearXNG instance
   # would leak resource metadata to a third party and risk that instance banning
   # our IP for automated traffic.
-  def self.callSearxngFcSearchable(phrase, output)
+  def self.callSearxngFcSearchable(phrase, output, searched_phrases = nil)
     warn "Calling SearXNG with phrase #{phrase}\n\n"
 
     phrase = phrase.to_s.dup
@@ -319,12 +325,19 @@ class FAIRTest
       return JSON.generate('results' => [])
     end
 
+    normalized_phrase = phrase.downcase
+    if searched_phrases&.include?(normalized_phrase)
+      output.comments << "INFO: skipping SearXNG search for '#{phrase}' (already searched earlier in this test run).\n"
+      return JSON.generate('results' => [])
+    end
+    searched_phrases << normalized_phrase if searched_phrases
+
     endpoint = ENV.fetch('SEARXNG_URL', 'http://searxng:8080/search')
     uri = URI(endpoint)
 
     params = URI.decode_www_form(uri.query || '')
     params << ['q', phrase[0, 1500]]
-    params << ['format', 'json'] # requires `search.formats: [html, json]` in searxng-config/settings.yml
+    params << %w[format json] # requires `search.formats: [html, json]` in searxng-config/settings.yml
 
     uri.query = URI.encode_www_form(params)
 

@@ -41,5 +41,6 @@ COPY . .
 # Expose the port your app listens on
 EXPOSE 8282
 
-# Start the app (adjust if run.rb needs different flags)
-CMD ["ruby", "/server/run.rb", "-o", "0.0.0.0", "-p", "8282"]
+# Start via Puma directly (config/puma.rb) instead of run.rb's Sinatra
+# defaults, so worker/thread counts and the connection backlog are bounded.
+CMD ["bundle", "exec", "puma", "-C", "config/puma.rb"]

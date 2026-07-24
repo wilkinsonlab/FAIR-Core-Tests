@@ -11,7 +11,7 @@ class MetaIndexedSearxngError < StandardError; end
 class FAIRTest
   def self.test_FM_F4_M_MetaIndexed_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-4.0.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-4.1.0',
       testname: 'OSTrails Core: Searchable in major search engine',
       testid: 'test_FM_F4_M_MetaIndexed',
       description: "Tests whether a machine is able to discover the
@@ -85,15 +85,21 @@ class FAIRTest
                     end
 
     target_uris = (Array(resolved_uris) + [guid]).compact
-      .map { |value| value.to_s.strip.downcase }
-      .reject(&:empty?)
-      .uniq
+                                                 .map { |value| value.to_s.strip.downcase }
+                                                 .reject(&:empty?)
+                  .uniq
+
+    # The titles array can contain duplicate/overlapping phrases (many RDF title
+    # properties plus the hash-style match often carry the same literal); tracked
+    # here so we don't fire redundant SearXNG queries (each of which fans out to
+    # every configured engine) for a phrase already searched earlier in this run.
+    searched_phrases = []
 
     begin
-    ###################  TITLE
-    output.comments << "INFO: testing any linked data metadata for a key matching 'title' in any case.\n"
+      ###################  TITLE
+      output.comments << "INFO: testing any linked data metadata for a key matching 'title' in any case.\n"
 
-    titlequery = SPARQL.parse("
+      titlequery = SPARQL.parse("
 PREFIX dc:      <http://purl.org/dc/elements/1.1/>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX schema:  <https://schema.org/>
@@ -125,53 +131,53 @@ SELECT DISTINCT ?subject ?titleProperty ?title WHERE {
 }
 ORDER BY ?subject ?titleProperty")
 
-    titles = []
-    graph.query(titlequery).each do |solution|
-      titles << solution[:title].to_s
-    end
-
-    output.comments << "INFO: testing any hash-style metadata for a key matching 'title' in any case.\n"
-    flatlist = hash.flatten(40) # hopefully no hash is more than 40 deep!
-    for x in 1..flatlist.length
-      term = flatlist[x - 1]
-      next unless term.is_a? String
-
-      # warn term
-      if term.match(/title$/i) # in a flattened hash, find something matching 'title' at the end of the term
-        titles << flatlist[x] # the next thing should be the title
+      titles = []
+      graph.query(titlequery).each do |solution|
+        titles << solution[:title].to_s
       end
-    end
-    unless titles.first
-      output.comments << "WARN: could not find a structured reference to the title in the hash-style metadata.\n"
-    end
 
-    titles.each do |title|
-      output.comments << "INFO: found title #{title}.  Searching SearXNG\n"
-      warn "Calling SearXNG with title #{title}\n\n"
+      output.comments << "INFO: testing any hash-style metadata for a key matching 'title' in any case.\n"
+      flatlist = hash.flatten(40) # hopefully no hash is more than 40 deep!
+      for x in 1..flatlist.length
+        term = flatlist[x - 1]
+        next unless term.is_a? String
 
-      searchresults = callSearxngMetaIndexed(title, output)
-      h = JSON.parse(searchresults)
-      if h['results']&.any?
-        output.comments << "INFO: found matches in SearXNG.  Checking for results that match any of #{target_uris.map do |b|
-          b.to_s
-        end}.\n"
-        h['results'].each do |p|
-          if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
-            output.comments << "SUCCESS: found a search record referencing #{p['url']} based on an exact-match title search against SearXNG.\n  "
-            output.score = 'pass'
+        # warn term
+        if term.match(/title$/i) # in a flattened hash, find something matching 'title' at the end of the term
+          titles << flatlist[x] # the next thing should be the title
+        end
+      end
+      unless titles.first
+        output.comments << "WARN: could not find a structured reference to the title in the hash-style metadata.\n"
+      end
+
+      titles.each do |title|
+        output.comments << "INFO: found title #{title}.  Searching SearXNG\n"
+        warn "Calling SearXNG with title #{title}\n\n"
+
+        searchresults = callSearxngMetaIndexed(title, output, searched_phrases)
+        h = JSON.parse(searchresults)
+        if h['results']&.any?
+          output.comments << "INFO: found matches in SearXNG.  Checking for results that match any of #{target_uris.map do |b|
+            b.to_s
+          end}.\n"
+          h['results'].each do |p|
+            if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
+              output.comments << "SUCCESS: found a search record referencing #{p['url']} based on an exact-match title search against SearXNG.\n  "
+              output.score = 'pass'
+            end
           end
+          unless output.score == 'pass'
+            output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
+          end
+        else
+          output.comments << "WARN:  SearXNG search for #{title} found no results.\n"
         end
-        unless output.score == 'pass'
-          output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
-        end
-      else
-        output.comments << "WARN:  SearXNG search for #{title} found no results.\n"
       end
-    end
 
-    #############  Keywords
+      #############  Keywords
 
-    keywordquery = SPARQL.parse("
+      keywordquery = SPARQL.parse("
     PREFIX dc:      <http://purl.org/dc/elements/1.1/>
 PREFIX dcterms: <http://purl.org/dc/terms/>
 PREFIX dcat:    <http://www.w3.org/ns/dcat#>
@@ -223,57 +229,57 @@ SELECT DISTINCT ?subject ?keywordProperty ?keyword WHERE {
 }
 ORDER BY ?subject ?keywordProperty")
 
-    keywords = []
-    graph.query(keywordquery).each do |solution|
-      keywords << solution[:keyword].to_s
-    end
-
-    flatlist = hash.flatten(40) # hopefully no hash is more than 40 deep!
-    for x in 1..flatlist.length
-      term = flatlist[x - 1]
-      # warn term
-      next unless term.is_a? String
-
-      if term.match(/keywords?$/i) # in a flattened hash, find something matching 'keywords?' at the end of the term
-        keywords << flatlist[x] # the next thing should be the keywords
+      keywords = []
+      graph.query(keywordquery).each do |solution|
+        keywords << solution[:keyword].to_s
       end
-    end
 
-    keywords = keywords.join(' ').gsub(',', '')
-    unless keywords =~ /\w+/
-      output.comments << "WARN: could not find any human-readeable keywords in hash-style metadata.\n"
-    end
+      flatlist = hash.flatten(40) # hopefully no hash is more than 40 deep!
+      for x in 1..flatlist.length
+        term = flatlist[x - 1]
+        # warn term
+        next unless term.is_a? String
 
-    if keywords =~ /\w+/
-      output.comments << "INFO: found keywords #{keywords}.  Now searching SearXNG.\n"
-      warn "Calling SearXNG with keywords #{keywords}\n\n"
-
-      searchresults = callSearxngMetaIndexed(keywords, output) # search searxng
-      h = JSON.parse(searchresults)
-      if h['results']&.any?
-        output.comments << "INFO: found matches in SearXNG.  Checking for results that match any of #{target_uris.map do |b|
-          b.to_s
-        end}\n"
-        h['results'].each do |p|
-          if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
-            output.comments << "SUCCESS: found a search hit matching #{p['url']} using metadata keywords in search on SearXNG.\n  "
-            output.score = 'pass'
-          end
+        if term.match(/keywords?$/i) # in a flattened hash, find something matching 'keywords?' at the end of the term
+          keywords << flatlist[x] # the next thing should be the keywords
         end
-        unless output.score == 'pass'
-          output.comments << "INFO: No keyword search results from SearXNG included any of #{target_uris.map do |b|
+      end
+
+      keywords = keywords.join(' ').gsub(',', '')
+      unless keywords =~ /\w+/
+        output.comments << "WARN: could not find any human-readeable keywords in hash-style metadata.\n"
+      end
+
+      if keywords =~ /\w+/
+        output.comments << "INFO: found keywords #{keywords}.  Now searching SearXNG.\n"
+        warn "Calling SearXNG with keywords #{keywords}\n\n"
+
+        searchresults = callSearxngMetaIndexed(keywords, output, searched_phrases) # search searxng
+        h = JSON.parse(searchresults)
+        if h['results']&.any?
+          output.comments << "INFO: found matches in SearXNG.  Checking for results that match any of #{target_uris.map do |b|
             b.to_s
-          end}.\n"
+          end}\n"
+          h['results'].each do |p|
+            if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
+              output.comments << "SUCCESS: found a search hit matching #{p['url']} using metadata keywords in search on SearXNG.\n  "
+              output.score = 'pass'
+            end
+          end
+          unless output.score == 'pass'
+            output.comments << "INFO: No keyword search results from SearXNG included any of #{target_uris.map do |b|
+              b.to_s
+            end}.\n"
+          end
+        else
+          output.comments << "INFO: SearXNG returned no search results for keywords #{keywords}.\n"
         end
-      else
-        output.comments << "INFO: SearXNG returned no search results for keywords #{keywords}.\n"
       end
-    end
 
-    unless output.score == 'pass'
-      output.score = 'fail'
-      output.comments << "FAILURE: Was unable to discover the metadata record by search in SearXNG using any method\n"
-    end
+      unless output.score == 'pass'
+        output.score = 'fail'
+        output.comments << "FAILURE: Was unable to discover the metadata record by search in SearXNG using any method\n"
+      end
     rescue MetaIndexedSearxngError => e
       output.score = 'indeterminate'
       output.comments << "INDETERMINATE: SearXNG search could not be completed: #{e.message}.\n"
@@ -292,7 +298,7 @@ ORDER BY ?subject ?keywordProperty")
   # Intentionally a standalone copy of fc_searchable's callSearxngFcSearchable
   # rather than a shared helper: fc_searchable is expected to be deprecated,
   # and this test should keep working unchanged when that happens.
-  def self.callSearxngMetaIndexed(phrase, output)
+  def self.callSearxngMetaIndexed(phrase, output, searched_phrases = nil)
     warn "Calling SearXNG with phrase #{phrase}\n\n"
 
     phrase = phrase.to_s.dup
@@ -304,12 +310,19 @@ ORDER BY ?subject ?keywordProperty")
       return JSON.generate('results' => [])
     end
 
+    normalized_phrase = phrase.downcase
+    if searched_phrases&.include?(normalized_phrase)
+      output.comments << "INFO: skipping SearXNG search for '#{phrase}' (already searched earlier in this test run).\n"
+      return JSON.generate('results' => [])
+    end
+    searched_phrases << normalized_phrase if searched_phrases
+
     endpoint = ENV.fetch('SEARXNG_URL', 'http://searxng:8080/search')
     uri = URI(endpoint)
 
     params = URI.decode_www_form(uri.query || '')
     params << ['q', phrase[0, 1500]]
-    params << ['format', 'json'] # requires `search.formats: [html, json]` in searxng-config/settings.yml
+    params << %w[format json] # requires `search.formats: [html, json]` in searxng-config/settings.yml
 
     uri.query = URI.encode_www_form(params)
 

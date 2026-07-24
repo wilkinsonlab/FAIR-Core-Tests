@@ -2,8 +2,15 @@ version: "3"
 services:
 
   tests:
-    image: markw/fair-core-tests:0.4.0
+    image: markw/fair-core-tests:0.5.2
     container_name: tests
+    restart: unless-stopped
+    # Hard ceiling so a burst of legitimate traffic can only ever exhaust
+    # resources given to THIS container, never the Docker host itself.
+    # Sized for the actual host: 4 cores / 7.8GB RAM, no swap. Reserves
+    # ~0.75 core and ~3.3GB for the host, searxng, tika, and OS overhead.
+    mem_limit: ${TESTS_MEM_LIMIT:-3g}
+    cpus: ${TESTS_CPU_LIMIT:-2.0}
     environment:
       TEST_PROTOCOL: http
 #      TEST_HOST: "tests:4567" # from the perspective of the evaluator container
@@ -13,6 +20,8 @@ services:
       SEARXNG_URL: http://searxng:8080/search
       SEARXNG_OPEN_TIMEOUT: "5"
       SEARXNG_READ_TIMEOUT: "20"
+      WEB_CONCURRENCY: ${WEB_CONCURRENCY:-3}
+      PUMA_MAX_THREADS: ${PUMA_MAX_THREADS:-3}
     ports:
       - "8282:8282"
     depends_on:
@@ -26,7 +35,9 @@ services:
   searxng:
     image: searxng/searxng:latest
     container_name: searxng
-    restart: always
+    restart: unless-stopped
+    mem_limit: ${SEARXNG_MEM_LIMIT:-512m}
+    cpus: ${SEARXNG_CPU_LIMIT:-0.3}
     volumes:
       - ./searxng-config/settings.yml:/etc/searxng/settings.yml:ro
     logging:
@@ -38,7 +49,9 @@ services:
   tika:
     image: apache/tika:3.3.0.0
     container_name: evaluator-tika
-    restart: always
+    restart: unless-stopped
+    mem_limit: ${TIKA_MEM_LIMIT:-1g}
+    cpus: ${TIKA_CPU_LIMIT:-0.75}
     logging:
       driver: "json-file"
       options:
