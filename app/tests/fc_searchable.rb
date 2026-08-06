@@ -11,7 +11,7 @@ class FcSearchableSearxngError < StandardError; end
 class FAIRTest
   def self.fc_searchable_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-3.1.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.1.1',
       testname: 'OSTrails Core: Searchable in major search engine',
       testid: 'fc_searchable',
       description: 'Tests whether a machine is able to discover the resource using a SearXNG metasearch service.',
@@ -261,36 +261,44 @@ class FAIRTest
         query = SPARQL.parse("select distinct ?o where {?s ?p ?o  FILTER(CONTAINS(lcase(str(?p)), 'keyword'))}") # find predicate containing "title", take object
         results = query.execute(g)
         if results.any?
+          # Collect every distinct keyword value first and search them as one
+          # combined phrase — a resource can carry many separate keyword
+          # triples (e.g. one per subject term), and firing a separate
+          # SearXNG query per keyword (each of which fans out to every
+          # configured search engine) is wasteful and was observed hammering
+          # the search backend for records with many keywords.
           seen = Hash.new(false) # appaerntly, distinct isn't working in the sparql...??
-          results.each do |res|
-            next if seen[res[:o].to_s]
+          graph_keywords = results.filter_map do |res|
+            value = res[:o].to_s
+            next if seen[value]
 
-            seen[res[:o].to_s] = true
-            keywords = res[:o].to_s # get the keywords
-            output.comments << "INFO: found keywords.\n "
-            output.comments << "INFO: found keywords #{keywords}.\n "
-            output.comments << "INFO: Calling SearXNG search using #{keywords}.\n "
-            warn "Calling SearXNG with graph keywords #{keywords}\n\n"
+            seen[value] = true
+            value
+          end
 
-            searchresults = callSearxngFcSearchable(keywords, output, searched_phrases) # search searxng
-            h = JSON.parse(searchresults) # parse json; malformed/non-JSON responses raise FcSearchableSearxngError from callSearxngFcSearchable
+          keywords = graph_keywords.join(' ')
+          output.comments << "INFO: found keywords #{keywords}.\n "
+          output.comments << "INFO: Calling SearXNG search using #{keywords}.\n "
+          warn "Calling SearXNG with graph keywords #{keywords}\n\n"
 
-            if h['results']&.any? # are there results
-              output.comments << "INFO: SearXNG found matches using #{keywords}. Testing matches for a reference to #{target_uris.map do |b|
-                b.to_s
-              end}\n"
-              h['results'].each do |p| # for each matching pge do
-                if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
-                  output.comments << "SUCCESS: found a search record referencing #{p['url']} based on a keyword search against SearXNG.\n  "
-                  output.score = 'pass'
-                end
+          searchresults = callSearxngFcSearchable(keywords, output, searched_phrases) # search searxng
+          h = JSON.parse(searchresults) # parse json; malformed/non-JSON responses raise FcSearchableSearxngError from callSearxngFcSearchable
+
+          if h['results']&.any? # are there results
+            output.comments << "INFO: SearXNG found matches using #{keywords}. Testing matches for a reference to #{target_uris.map do |b|
+              b.to_s
+            end}\n"
+            h['results'].each do |p| # for each matching pge do
+              if p['url'] && target_uris.include?(p['url'].to_s.downcase) # compare to the final URI from the Utils::fetch routine (the page of metadata)
+                output.comments << "SUCCESS: found a search record referencing #{p['url']} based on a keyword search against SearXNG.\n  "
+                output.score = 'pass'
               end
-              unless output.score == 'pass'
-                output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
-              end
-            else
-              output.comments << "INFO: No results from SearXNG using keywords #{keywords}.\n"
             end
+            unless output.score == 'pass'
+              output.comments << "INFO: No results from SearXNG included any of #{target_uris.map { |b| b.to_s }}.\n"
+            end
+          else
+            output.comments << "INFO: No results from SearXNG using keywords #{keywords}.\n"
           end
         end
       end

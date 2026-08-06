@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.7] - 2026-08-06
+
+### Fixed
+
+- `fc_searchable`'s "keywords in graph" block fired one SearXNG query per individual keyword triple instead of one combined query for all of them — for a resource with many `keyword`-like triples (e.g. a taxonomy/citation record with a dozen-plus subject terms), this meant a dozen-plus sequential SearXNG searches (each fanning out to every configured search engine) for a single test run. Observed contributing to sustained load on `tests.ostrails.eu`. Now collects all distinct keyword values first and searches them as one joined phrase, matching the pattern already used correctly by the "hash keywords" block earlier in the same file and by `test_FM_F4_M_MetaIndexed` (`fc_searchable`'s intended eventual replacement), which already batched this correctly. Bumped `fc_searchable`'s own `testversion` tag `Tst-3.1.0` → `Tst-3.1.1`.
+
 ## [0.5.6] - 2026-08-05
 
 ### Fixed
