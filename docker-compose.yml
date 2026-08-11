@@ -2,7 +2,7 @@ version: "3"
 services:
 
   tests:
-    image: markw/fair-core-tests:0.5.7
+    image: markw/fair-core-tests:0.5.8
     container_name: tests
     restart: unless-stopped
     # Hard ceiling so a burst of legitimate traffic can only ever exhaust
