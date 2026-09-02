@@ -1,7 +1,7 @@
 class FAIRTest
   def self.test_FM_R1_1_M_StdLic_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.1',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.2',
       testname: 'OSTrails Core: Metadata Includes License',
       testid: 'test_FM_R1_1_M_StdLic',
       description: "Maturity Indicator to test if the metadata contains an explicit pointer to the license.
@@ -74,7 +74,7 @@ class FAIRTest
     end
 
     g = graph # shorter
-    output.score = 'fail'
+    # output.score = 'fail'  # dont reset if found in non-linked-data
     queries = %w[
       http://www.w3.org/1999/xhtml/vocab#license https://www.w3.org/1999/xhtml/vocab#license
       http://purl.org/ontology/dvia#hasLicense	https://purl.org/ontology/dvia#hasLicense
