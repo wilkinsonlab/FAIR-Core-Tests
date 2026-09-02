@@ -1,7 +1,7 @@
 class FAIRTest
   def self.test_FM_A1_1_M_OpenProt_Data_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.1.0',
       testname: 'OSTrails Core: Data Protocol',
       testid: 'test_FM_A1_1_M_OpenProt_Data',
       description: 'Data may be retrieved by an open and free protocol.
@@ -90,8 +90,8 @@ class FAIRTest
         output.comments << "SUCCESS: The identifier #{@identifier} is recognized as a #{metadata2}, which is resolvable by an open and free protocol.\n"
         output.score = 'pass'
       else
-        output.comments << "FAILURE: The identifier #{@identifier} did not match any known identification system.\n"
-        output.score = 'fail'
+        output.comments << "INDETERMINATE: The identifier #{@identifier} did not match any known identification system.\n"
+        output.score = 'indeterminate'
       end
     else
       output.score = 'indeterminate'
