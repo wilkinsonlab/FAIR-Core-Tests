@@ -1,7 +1,7 @@
 class FAIRTest
   def self.test_FM_A1_2_M_DataAuth_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.1.0',
       testname: 'OSTrails Core: Data Authorization',
       testid: 'test_FM_A1_2_M_DataAuth',
       description: 'If the resolution protocol for the Data supports authentication and authorization for access to restricted content.',
@@ -81,7 +81,7 @@ class FAIRTest
 
     if id_hash.nil? && id_graph.nil?
       output.comments << "FAILURE: No data identifier was found in the metadata record.\n"
-      output.score = 'fail'
+      output.score = 'indeterminate'
       return output.createEvaluationResponse
     end
 
