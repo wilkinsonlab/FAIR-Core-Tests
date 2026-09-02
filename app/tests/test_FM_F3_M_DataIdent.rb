@@ -1,7 +1,7 @@
 class FAIRTest
   def self.test_FM_F3_M_DataIdent_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.1',
       testname: 'OSTrails Core: Data Identifier in Metadata',
       testid: 'test_FM_F3_M_DataIdent',
       description: 'Test that the identifier of the data is an unambiguous element of the metadata.
@@ -99,8 +99,8 @@ class FAIRTest
         output.comments << "SUCCESS: The GUID conforms with #{::Regexp.last_match(1)}, which is known to be persistent.\n"
         output.score = 'pass'
       else
-        output.comments << "FAILURE: The GUID does not conform with any known permanent-URL system.\n"
-        output.score = 'fail'
+        output.comments << "WARN: The GUID does not conform with any known permanent-URL system; however, this is not part of the metric definition, so it does not result in failure.\n"
+        output.score = 'pass'
       end
     else
       output.comments << "SUCCESS: The GUID of the data is a #{type}, which is known to be persistent.\n"
