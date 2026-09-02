@@ -1,5 +1,14 @@
 # Changelog
 
+
+## [0.5.9] - 2026-08-11
+
+### Fixed
+https://github.com/wilkinsonlab/FAIR-Core-Tests/issues/20
+https://github.com/wilkinsonlab/FAIR-Core-Tests/issues/19
+https://github.com/wilkinsonlab/FAIR-Core-Tests/issues/16
+
+
 ## [0.5.8] - 2026-08-11
 
 ### Fixed
