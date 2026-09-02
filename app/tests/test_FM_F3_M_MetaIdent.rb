@@ -1,10 +1,10 @@
 class FAIRTest
   def self.test_FM_F3_M_MetaIdent_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-3.0.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-4.0.0',
       testname: 'OSTrails Core: Data Identifier in Metadata',
       testid: 'test_FM_F3_M_MetaIdent',
-      description: "Test that the identifier of the metadata is an unambiguous element of the metadata.
+      description: "Test that the identifier of the data is an unambiguous element of the metadata.
       Tested options are #{FAIRChampionHarvester::Utils::SELF_IDENTIFIER_PREDICATES} ",
       metric: 'https://w3id.org/fair-metrics/general/FM_F3_M_MetaIdent',
 
@@ -27,15 +27,6 @@ class FAIRTest
       basePath: ENV.fetch('TEST_PATH', '/tests')
     }
   end
-
-  # TO DO - THIS TEST IS INCORRECT!  It is testing the data identifier, not the metadata identifier
-  # TO DO - THIS TEST IS INCORRECT!  It is testing the data identifier, not the metadata identifier
-  # TO DO - THIS TEST IS INCORRECT!  It is testing the data identifier, not the metadata identifier
-  # TO DO - THIS TEST IS INCORRECT!  It is testing the data identifier, not the metadata identifier
-  # TO DO - THIS TEST IS INCORRECT!  It is testing the data identifier, not the metadata identifier
-  # TO DO - THIS TEST IS INCORRECT!  It is testing the data identifier, not the metadata identifier
-  # TO DO - THIS TEST IS INCORRECT!  It is testing the data identifier, not the metadata identifier
-  # TO DO - THIS TEST IS INCORRECT!  It is testing the data identifier, not the metadata identifier
 
   def self.test_FM_F3_M_MetaIdent(guid:)
     FtrRuby::Output.clear_comments
@@ -66,46 +57,43 @@ class FAIRTest
     #############################################################################################################
     #############################################################################################################
 
-    output.comments << "INFO: Searching metadata for likely identifiers to the data record\n"
-    identifier = nil
+    output.comments << "INFO: Searching metadata for likely identifiers to the metadata record (i.e. reference to self)\n"
+    if graph.size > 0
+      output.comments << "INFO: Linked Data Found.  Now searching for the metadata identifier using appropriate linked data predicates (#{FAIRChampionHarvester::Utils::SELF_IDENTIFIER_PREDICATES}).\n"
 
-    properties.each do |keyval|
-      (key, value) = keyval
-      key = key.to_s
+      foundID = FAIRChampionHarvester::CommonQueries::GetSelfIdentifier(metadata.graph, output)
 
-      output.comments << "INFO: Searching hash-style metadata for keys indicating a pointer to data.\n"
-      FAIRChampionHarvester::Utils::SELF_IDENTIFIER_PREDICATES.each do |prop|
-        prop =~ %r{.*[#/]([^#/]+)$}
-        prop = ::Regexp.last_match(1)
-        output.comments << "INFO: Searching for key: #{prop}.\n"
-        if key == prop
-          output.comments << "INFO: found '#{prop}' in metadata.  Setting data GUID to #{value} for next test.\n"
-          identifier = value.to_s
-        end
+      # query pattern-match in an object position
+      unless foundID.first
+        output.score = 'fail'
+        output.comments << "FAILURE: No metadata identifiers were found in the metadata record\n"
+        return output.createEvaluationResponse  # release the result from all other tests
       end
+      if foundID.first.empty?
+        output.score = 'fail'
+        output.comments << "FAILURE: No metadata identifiers were found in the metadata record using predicates #{FAIRChampionHarvester::Utils::SELF_IDENTIFIER_PREDICATES}. \n"
+        return output.createEvaluationResponse  # release the result from all other tests
+      end
+      unless foundID.first =~ /\w/
+        output.score = 'fail'
+        output.comments << "FAILURE: No metadata identifiers were found in the metadata record using predicates #{FAIRChampionHarvester::Utils::SELF_IDENTIFIER_PREDICATES}. \n"
+        return output.createEvaluationResponse  # release the result from all other tests
+      end
+
+    else
+      output.score = 'indeterminate'
+      output.comments << "INDETERMINATE: linked data metadata was not found, so its identifier could not be located. \n"
+      return output.createEvaluationResponse
     end
 
-    if graph.size > 0 # have we found anything yet?
-      output.comments << "INFO: Searching Linked Data metadata for predicates indicating a pointer to data.\n"
-      identifier = FAIRChampionHarvester::CommonQueries::GetSelfIdentifier(graph)
-      identifier = identifier.first
-    end
-
-    if identifier =~ /\w+/
-      output.comments << "INFO: Found a likely identifier for the data record in the metadata: #{identifier}\n"
-      output.comments << "SUCCESS: Found a likely identifier for the data record in the metadata: #{identifier}\n"
+    if foundID.include?(guid)
       output.score = 'pass'
-      # this part of the test has been removed because it isn't in the definition of the metric,
-      # which only requires that the metadata identifier be unambiguous,
-      # not that it resolve to a known persistent identifier system.
-      # This test is already being done in IdentPersistent, and it is not necessary to do it here as well.
-      # output.comments << "INFO: Now resolving #{identifier} to test its properties.\n"
-      # testIdentifier(guid: identifier, output: output) # this will add more comments and a score to @swagger
+      output.comments << "SUCCESS: the starting identifier (#{guid}) was found in the structured metadata\n"
     else
       output.score = 'fail'
-      output.comments <<  "INFO: Tested the following #{FAIRChampionHarvester::Utils::SELF_IDENTIFIER_PREDICATES}(or their plain JSON hash-key equivalents)\n"
-      output.comments <<  'FAILURE: Was unable to locate the data identifier in the metadata using any (common) property/predicate reserved for this purpose.'
+      output.comments << "FAILURE: While (apparent) metadata record identifiers were found (#{foundID}) none of them matched the initial GUID provided to the test (#{guid}).  Exact identifier match is required.\n"
     end
+
     output.createEvaluationResponse
   end
 
