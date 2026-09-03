@@ -1,11 +1,10 @@
 class FAIRTest
-  def self.fc_metadata_uses_fair_vocabularies_meta
+  def self.test_FM_I2_M_FAIRVocabSyntax_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
-      testname: 'OSTrails Core: Metadata uses FAIR vocabularies (strong)',
-      testid: 'fc_metadata_uses_fair_vocabularies',
-      description: 'Maturity Indicator to test if the linked data metadata uses terms that resolve to linked (FAIR) data.',
-      # TODO: this is a placeholder pending a more specific "groundedness" metric -- see FM_I2_M_FAIRVocabSyntax
+      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
+      testname: 'OSTrails Core: Metadata uses FAIR vocabularies (syntax)',
+      testid: 'test_FM_I2_M_FAIRVocabSyntax',
+      description: 'Maturity Indicator to test if the linked data metadata uses terms that resolve (to anything).',
       metric: 'https://w3id.org/fair-metrics/general/FM_I2_M_FAIRVocabSyntax',
       indicators: 'https://doi.org/10.25504/FAIRsharing.96d4af',
       type: 'http://edamontology.org/operation_2428',
@@ -27,15 +26,15 @@ class FAIRTest
     }
   end
 
-  def self.fc_metadata_uses_fair_vocabularies(guid:)
+  def self.test_FM_I2_M_FAIRVocabSyntax(guid:)
     FtrRuby::Output.clear_comments
 
     output = FtrRuby::Output.new(
       testedGUID: guid,
-      meta: fc_metadata_uses_fair_vocabularies_meta
+      meta: test_FM_I2_M_FAIRVocabSyntax_meta
     )
 
-    output.comments << "INFO: TEST VERSION '#{fc_metadata_uses_fair_vocabularies_meta[:testversion]}'\n"
+    output.comments << "INFO: TEST VERSION '#{test_FM_I2_M_FAIRVocabSyntax_meta[:testversion]}'\n"
 
     metadata = FAIRChampionHarvester::Core.resolveit(guid) # this is where the magic happens!
 
@@ -49,9 +48,9 @@ class FAIRTest
       return output.createEvaluationResponse
     end
 
-    hash = metadata.hash
+    # hash = metadata.hash
     graph = metadata.graph
-    properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
+    # properties = FAIRChampionHarvester::Core.deep_dive_properties(hash)
     #############################################################################################################
     #############################################################################################################
     #############################################################################################################
@@ -132,13 +131,13 @@ class FAIRTest
     output.createEvaluationResponse
   end
 
-  def self.fc_metadata_uses_fair_vocabularies_api
-    api = FtrRuby::OpenAPI.new(meta: fc_metadata_uses_fair_vocabularies_meta)
+  def self.test_FM_I2_M_FAIRVocabSyntax_api
+    api = FtrRuby::OpenAPI.new(meta: test_FM_I2_M_FAIRVocabSyntax_meta)
     api.get_api
   end
 
-  def self.fc_metadata_uses_fair_vocabularies_about
-    dcat = FtrRuby::DCAT_Record.new(meta: fc_metadata_uses_fair_vocabularies_meta)
+  def self.test_FM_I2_M_FAIRVocabSyntax_about
+    dcat = FtrRuby::DCAT_Record.new(meta: test_FM_I2_M_FAIRVocabSyntax_meta)
     dcat.get_dcat
   end
 end

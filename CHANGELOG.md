@@ -1,6 +1,39 @@
 # Changelog
 
 
+## [0.5.11] - 2026-09-03
+
+### Fixed
+`fc_grounded_metadata` and `fc_metadata_uses_fair_vocabularies` pointed
+their `metric:` field at `https://w3id.org/fair-metrics/general/FM_I2_M_FAIRVocab`,
+which has never had a TTL file published anywhere in the `FAIRMetrics/Metrics`
+repo (confirmed via its GitHub file tree, not just the redirect) — the PURL
+303-redirected correctly but the target 404'd. `test_FM_I2_M_FAIRVocabSyntax`
+had the same problem pointing at `FM_I2_M_FAIRVocabSyntax`, whose TTL existed
+locally but had never been committed to the `Metrics` repo.
+
+As an interim fix (a more specific "groundedness" metric is planned),
+retargeted all three tests' `metric:` field at
+`https://w3id.org/fair-metrics/general/FM_I2_M_FAIRVocabSyntax`, now
+committed and pushed (`FAIRMetrics/Metrics@c30feeb`) and confirmed live,
+content-negotiating correctly to `text/turtle`. Bumped `Tst-2.0.0` to
+`Tst-2.0.1` on the two retargeted tests.
+
+## [0.5.10] - 2026-09-03
+
+### Fixed
+`fc_metadata_persistence`'s `metric:` field pointed at
+`https://doi.org/10.25504/FAIRsharing.lEZbPK`, which now 404s (the
+FAIRsharing record no longer exists) instead of resolving to the metric's
+TTL definition, as the FAIR Champion infrastructure expects. Replaced with
+`https://w3id.org/fair-metrics/general/FM_A2_M_MetaLong`, confirmed live
+and correctly content-negotiating to `text/turtle`; that metric's own TTL
+declares `dqv:inDimension <https://doi.org/10.25504/FAIRsharing.7c4d7f>`,
+the exact same FAIRsharing indicator this test already cites in its
+`indicators:` field, confirming it's the right match. Bumped `Tst-2.0.1`
+to `Tst-2.0.2`.
+
+
 ## [0.5.9] - 2026-08-11
 
 ### Fixed

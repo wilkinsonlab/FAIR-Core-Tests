@@ -1,13 +1,12 @@
 class FAIRTest
   def self.fc_metadata_persistence_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.2',
       testname: 'OSTrails Core: Metadata Persistence',
       testid: 'fc_metadata_persistence',
       description: 'Metric to test if the metadata contains a persistence policy, explicitly identified by a persistencePolicy key (in hashed data) or a http://www.w3.org/2000/10/swap/pim/doc#persistencePolicy predicate in Linked Data.  DOIs are assumed to have metadata persistence.',
       
-      #  NOTE THAT THERE IS NO GEN3 Metric for this test!  Persistence is handled by the ID type like DOI
-      metric: 'https://doi.org/10.25504/FAIRsharing.lEZbPK',
+      metric: 'https://w3id.org/fair-metrics/general/FM_A2_M_MetaLong',
       indicators: 'https://doi.org/10.25504/FAIRsharing.7c4d7f',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',

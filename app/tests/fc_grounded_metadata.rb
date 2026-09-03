@@ -1,11 +1,12 @@
 class FAIRTest
   def self.fc_grounded_metadata_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
       testname: 'OSTrails Core: Grounded Metadata',
       testid: 'fc_grounded_metadata',
       description: "Tests whether a machine is able to find 'grounded' metadata.  i.e. metadata terms that are in a resolvable namespace, where resolution leads to a definition of the meaning of the term. Examples include JSON-LD, embedded schema, or any form of RDF. This test currently excludes XML, even when terms are namespaced.  Future versions of this test may be more flexible.",
-      metric: 'https://w3id.org/fair-metrics/general/FM_I2_M_FAIRVocab',
+      # TODO: this is a placeholder pending a more specific "groundedness" metric -- see FM_I2_M_FAIRVocabSyntax
+      metric: 'https://w3id.org/fair-metrics/general/FM_I2_M_FAIRVocabSyntax',
       indicators: 'https://doi.org/10.25504/FAIRsharing.e05e98',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
