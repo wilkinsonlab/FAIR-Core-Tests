@@ -1,7 +1,7 @@
 class FAIRTest
   def self.test_FM_F3_M_MetaIdent_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-4.0.0',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-4.0.1',
       testname: 'OSTrails Core: Data Identifier in Metadata',
       testid: 'test_FM_F3_M_MetaIdent',
       description: "Test that the identifier of the data is an unambiguous element of the metadata.
@@ -86,7 +86,7 @@ class FAIRTest
       return output.createEvaluationResponse
     end
 
-    if foundID.include?(guid)
+    if foundID.any? { |f| doi_equivalent_forms(guid).include?(f) }
       output.score = 'pass'
       output.comments << "SUCCESS: the starting identifier (#{guid}) was found in the structured metadata\n"
     else
@@ -95,6 +95,19 @@ class FAIRTest
     end
 
     output.createEvaluationResponse
+  end
+
+  # DOIs are commonly written either bare ('10.123/abc') or as a resolver URL
+  # ('https://doi.org/10.123/abc'). Both forms identify the same resource, so
+  # accept either as a match regardless of which form the starting GUID used.
+  def self.doi_equivalent_forms(guid)
+    bare_match = guid.match(FAIRChampionHarvester::Utils::GUID_TYPES['doi'])
+    url_match = guid.match(%r{\Ahttps?://(?:dx\.)?doi\.org/(?<doi>10\.\d{4,9}/[-._;()/:A-Z0-9]+)\z}i)
+
+    bare = bare_match ? guid : (url_match && url_match[:doi])
+    return [guid] unless bare
+
+    [guid, bare, "https://doi.org/#{bare}", "http://doi.org/#{bare}", "https://dx.doi.org/#{bare}", "http://dx.doi.org/#{bare}"]
   end
 
   def self.testIdentifier(guid:, output:)

@@ -1,6 +1,19 @@
 # Changelog
 
 
+## [0.5.12] - 2026-09-11
+
+### Fixed
+`fc_metadata_identifier_in_metadata` and `test_FM_F3_M_MetaIdent` required an
+exact string match between the starting GUID and the identifiers found in the
+metadata record. For DOIs this meant a bare form (`10.1234/abd.234`) and a
+resolver-URL form (`https://doi.org/10.1234/abd.234`) were treated as
+different identifiers, so a record correctly self-identifying with one form
+failed the test if the assessment was started with the other. Both tests now
+accept either DOI form as a match. Bumped `Tst-2.0.0` to `Tst-2.0.1` on
+`fc_metadata_identifier_in_metadata` and `Tst-4.0.0` to `Tst-4.0.1` on
+`test_FM_F3_M_MetaIdent`.
+
 ## [0.5.11] - 2026-09-03
 
 ### Fixed
