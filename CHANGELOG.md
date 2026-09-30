@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [0.5.12] - 2026-09-30
+
+### Bump harvester gem
+0.1.18 which now has OAI-PMH support and issues a specific user agent header 
+to be allowed in to blocked websites
+
+
+
 ## [0.5.12] - 2026-09-11
 
 ### Fixed
