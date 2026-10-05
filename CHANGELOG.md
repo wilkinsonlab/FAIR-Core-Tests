@@ -1,6 +1,21 @@
 # Changelog
 
 
+## [0.5.14] - 2026-10-05
+
+### Added
+- `test_FM_I2_M_ResolvabilityOfValues` (FM_I2_M_ResolvabilityOfValues): passes if
+  at least one http(s) URI found among the metadata values resolves; fails if URIs
+  are present but none resolve; indeterminate if there are no URIs.
+- `test_FM_I2_M_ResolvabilityOfTerms` (FM_I2_M_ResolvabilityOfTerms): same logic
+  applied to the property terms (predicates). Structural predicates (RDF, RDFS, OWL,
+  XHTML vocab, RDFa/XHV) are skipped so that only the vocabularies chosen by the
+  provider are assessed.
+
+### Removed
+- `test_FM_I2_M_FAIRVocabSyntax`, superseded by the two tests above.
+
+
 ## [0.5.12] - 2026-09-30
 
 ### Bump harvester gem
