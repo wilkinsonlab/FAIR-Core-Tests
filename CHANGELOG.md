@@ -1,6 +1,14 @@
 # Changelog
 
 
+## [0.5.15] - 2026-10-05
+
+### Fixed
+`fc_grounded_metadata` and `fc_metadata_uses_fair_vocabularies` pointed their
+`metric:` at `FM_I2_M_FAIRVocabSyntax`, which was removed in 0.5.14. They now
+point at `FM_I2_M_ResolvabilityOfTerms`. Bumped `Tst-2.0.1` to `Tst-2.0.2` on both.
+
+
 ## [0.5.14] - 2026-10-05
 
 ### Added

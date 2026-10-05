@@ -1,12 +1,12 @@
 class FAIRTest
   def self.fc_metadata_uses_fair_vocabularies_meta
     {
-      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.1',
+      testversion: HARVESTER_VERSION + ':' + 'Tst-2.0.2',
       testname: 'OSTrails Core: Metadata uses FAIR vocabularies (strong)',
       testid: 'fc_metadata_uses_fair_vocabularies',
       description: 'Maturity Indicator to test if the linked data metadata uses terms that resolve to linked (FAIR) data.',
-      # TODO: this is a placeholder pending a more specific "groundedness" metric -- see FM_I2_M_FAIRVocabSyntax
-      metric: 'https://w3id.org/fair-metrics/general/FM_I2_M_FAIRVocabSyntax',
+      # TODO: this is a placeholder pending a more specific "groundedness" metric -- see FM_I2_M_ResolvabilityOfTerms
+      metric: 'https://w3id.org/fair-metrics/general/FM_I2_M_ResolvabilityOfTerms',
       indicators: 'https://doi.org/10.25504/FAIRsharing.96d4af',
       type: 'http://edamontology.org/operation_2428',
       license: 'https://creativecommons.org/publicdomain/zero/1.0/',
