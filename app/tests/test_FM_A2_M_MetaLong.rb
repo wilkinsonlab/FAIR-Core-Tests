@@ -61,8 +61,8 @@ class FAIRTest
       results = query.execute(g)
       if results.any?
         output.comments << "INFO: Found persistence policy predicate with #{results.first[:o]} as its value.  This should be a resolveable URL; Now testing resolution.\n"
-        policyuri = results.first[:o].value
-        unless policyuri =~ %r{://\w+\.\w+} # the structure of a URI
+        policyURI = results.first[:o].value
+        unless policyURI =~ %r{://\w+\.\w+} # the structure of a URI
           output.comments << "FAILURE: http://www.w3.org/2000/10/swap/pim/doc#persistencePolicy states that the range of the property must be a resource.  The discovered value (#{polucyURI}) is not a URL.\n"
           output.score = 'fail'
           return output.createEvaluationResponse
