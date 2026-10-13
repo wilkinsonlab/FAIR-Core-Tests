@@ -1,6 +1,15 @@
 # Changelog
 
 
+## [0.5.14] - 2026-10-13
+
+### Added
+`test_FM_I3_M_RRO` (`Tst-1.0.0`), the test for the new `FM_I3_M_RRO` metric
+("Contains Qualified Links to Related Research Objects"). It is a near-copy of
+`test_FM_I3_M_QualRef`, except that the referenced IRI is NOT required to be on
+a different host from the metadata, so cross-references between records in the
+same database (domain) count towards a pass.
+
 ## [0.5.12] - 2026-09-30
 
 ### Bump harvester gem
