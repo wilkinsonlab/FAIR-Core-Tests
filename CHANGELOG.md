@@ -1,7 +1,7 @@
 # Changelog
 
 
-## [0.5.14] - 2026-10-13
+## [0.5.16] - 2026-10-13
 
 ### Added
 `test_FM_I3_M_RRO` (`Tst-1.0.0`), the test for the new `FM_I3_M_RRO` metric
@@ -9,6 +9,29 @@
 `test_FM_I3_M_QualRef`, except that the referenced IRI is NOT required to be on
 a different host from the metadata, so cross-references between records in the
 same database (domain) count towards a pass.
+
+## [0.5.15] - 2026-10-05
+
+### Fixed
+`fc_grounded_metadata` and `fc_metadata_uses_fair_vocabularies` pointed their
+`metric:` at `FM_I2_M_FAIRVocabSyntax`, which was removed in 0.5.14. They now
+point at `FM_I2_M_ResolvabilityOfTerms`. Bumped `Tst-2.0.1` to `Tst-2.0.2` on both.
+
+
+## [0.5.14] - 2026-10-05
+
+### Added
+- `test_FM_I2_M_ResolvabilityOfValues` (FM_I2_M_ResolvabilityOfValues): passes if
+  at least one http(s) URI found among the metadata values resolves; fails if URIs
+  are present but none resolve; indeterminate if there are no URIs.
+- `test_FM_I2_M_ResolvabilityOfTerms` (FM_I2_M_ResolvabilityOfTerms): same logic
+  applied to the property terms (predicates). Structural predicates (RDF, RDFS, OWL,
+  XHTML vocab, RDFa/XHV) are skipped so that only the vocabularies chosen by the
+  provider are assessed.
+
+### Removed
+- `test_FM_I2_M_FAIRVocabSyntax`, superseded by the two tests above.
+
 
 ## [0.5.12] - 2026-09-30
 
